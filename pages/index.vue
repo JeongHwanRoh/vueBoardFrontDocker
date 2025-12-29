@@ -8,7 +8,7 @@
 <script setup>
 import '@/assets/css/common.css'
 import '@/assets/css/login.css' // login.css import
-import LoginForm from '@/components/login/LoginForm.vue'  // LoginForm 컴포넌트 가져오기
+import LoginForm from '@/components/organisms/login/LoginForm.vue'  // LoginForm 컴포넌트 가져오기
 definePageMeta({
     ssr: false
 })

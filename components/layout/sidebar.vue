@@ -18,9 +18,9 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import BoardSearch from "@/components/board/BoardSearch.vue"; // 게시글 검색 컴포넌트
-import BoardModal from "@/components/board/BoardModal.vue"; // 새 게시글 작성 모달 컴포넌트
-import ChatModal from '@/components/chat/ChatModal.vue'; // 채팅 모달 컴포넌트
+import BoardSearch from "@/components/organisms/board/BoardSearch.vue"; // 게시글 검색 컴포넌트
+import BoardModal from "@/components/organisms/board/BoardModal.vue"; // 새 게시글 작성 모달 컴포넌트
+import ChatModal from '@/components/organisms/chat/ChatModal.vue'; // 채팅 모달 컴포넌트
 
 // BoardSidebar 컴포넌트에서 props로 상위 페이지에서 boards 객체를 가져옴
 const props = defineProps({
