@@ -1,20 +1,46 @@
 <template>
-    <div class="login-view">
-        <h1>로그인 페이지</h1>
-        <LoginForm />
-        <!-- <LoginForm /> LoginForm 컴포넌트 가져오기 -->
-    </div>
+  <LoginForm
+    :error-message="errorMessage"
+    :loading="loading"
+    @submit="handleLogin"
+  />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import '@/assets/css/common.css'
-import '@/assets/css/login.css' // login.css import
-import LoginForm from '@/components/organisms/login/LoginForm.vue'  // LoginForm 컴포넌트 가져오기
+import '@/assets/css/login.css'
+import { ref } from 'vue'
+import { useRouter } from '#app'
+import LoginForm from '@/components/organisms/login/LoginForm.vue'
+import { login } from '@/lib/userApi'
+
+const router = useRouter()
+
+const errorMessage = ref('')
+const loading = ref(false)
+
+const handleLogin = async (payload: { userId: string; password: string }) => {
+  errorMessage.value = ''
+  loading.value = true
+
+  try {
+    const res = await login(payload.userId, payload.password)
+    if (res.success) {
+      alert('로그인 성공!')
+      router.push('/')
+    } else {
+      errorMessage.value = '아이디 또는 비밀번호가 올바르지 않습니다.'
+    }
+  } catch (err) {
+    console.error(err)
+    errorMessage.value = '서버 통신 오류가 발생했습니다.'
+  } finally {
+    loading.value = false
+  }
+}
+
 definePageMeta({
-    layout:false,
-    ssr: false
+  layout: false,
+  ssr: false
 })
-
 </script>
-
-<style scoped></style>
