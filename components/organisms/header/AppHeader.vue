@@ -1,8 +1,5 @@
 <template>
-  <header class="board-header">
-    <h1 v-if="user">👋 {{ user.memberId }}님 환영합니다</h1>
-    <h1 v-else>🔒 로그인이 필요합니다</h1>
-  </header>
+
 </template>
 
 <script setup>
