@@ -1,5 +1,5 @@
 
-import axiosApi from "~/lib/axiosApi";
+import axiosApi from "./axiosApi";
 
 /* 로그인 관련 AXIOS요청 정의 */
 export const login = async (userId: string, password: string) => {
