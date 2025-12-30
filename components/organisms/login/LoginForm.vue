@@ -29,7 +29,7 @@ const doLogin = async () => {
     const res = await login(userId.value, password.value)
     if (res.success) {
       alert('로그인 성공!')
-      router.push('/board/main') // 게시판 페이지로 이동
+      router.push('/') // 메인 페이지로 이동
     } else {
       errorMessage.value = '아이디 또는 비밀번호가 올바르지 않습니다.'
     }

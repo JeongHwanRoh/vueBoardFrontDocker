@@ -114,7 +114,7 @@ onMounted(() => {
   doLoadBoards();
 });
 
-definePageMeta({ ssr: false });
+// definePageMeta({ ssr: false });
 </script>
 
 <style scoped>
