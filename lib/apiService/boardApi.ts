@@ -1,4 +1,4 @@
-import axiosApi from "~/lib/axiosApi";
+import axiosApi from '~/lib/apiService/axiosApi';
 
 
 /* 게시글 목록조회 관련 AXIOS 요청 정의 */

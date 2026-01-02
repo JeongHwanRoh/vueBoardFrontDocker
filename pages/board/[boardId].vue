@@ -1,6 +1,5 @@
 <template>
   <div class="board-detail-container" v-if="board">
-    <h2 align="center">게시글 상세보기</h2>
 
     <!-- editMode일 경우 제목-> input모드로, 내용->textarea 모드로 -->
     <div class="board-info">
@@ -9,7 +8,7 @@
         <span v-if="!editMode">{{ board.title }}</span>
         <input v-else v-model="editBoard.title" class="edit-input" type="text" />
       </p>
-      <p><strong>작성자:</strong> {{ board.writerId }}</p>
+      <p><strong>작성자:</strong> {{ board.writer }}</p>
       <p><strong>등록일:</strong> {{ formatDate(board.regdate) }}</p>
     </div>
 
@@ -47,7 +46,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import '@/assets/css/boardDetail.css'
-import {sessionUser} from "@/lib/userApi.ts"; // userApi.ts의 sessionUser 함수 불러오기
+import {sessionUser} from "@/lib/apiService/userApi"; // userApi.ts의 sessionUser 함수 불러오기
 
 // 라우터
 const route = useRoute()
@@ -57,11 +56,11 @@ const router = useRouter()
 const board = ref(null)
 const editBoard = ref({})
 const editMode = ref(false)
-const boardId = computed(() => route.query.id)
 const user = ref(null) // 로그인 사용자 정보
-
+const boardId = computed(() => Number(route.params.boardId))
+console.log("route로 받아온 boardId:", boardId.value);
 // 게시글 상세 조회
-const getBoardDetail = async () => {
+const fetchBoardById = async () => {
   try {
     const res = await axios.get(`/api/board/${boardId.value}`)
     board.value = res.data
@@ -117,7 +116,7 @@ const updateBoard = async () => {
     })
     alert("게시글이 수정되었습니다.")
     editMode.value = false // editMode 비활성화
-    getBoardDetail() // 수정된 게시물 상세보기 조회
+    fetchBoardById() // 수정된 게시물 상세보기 조회
   } catch (err) {
     console.error("게시글 수정 실패:", err)
     alert("수정 중 오류가 발생했습니다.")
@@ -150,21 +149,20 @@ const formatDate = (date) => new Date(date).toLocaleString()
 // 초기 로드: 세션 불러온 후 상세 게시글 조회
 onMounted(() => {
   loadSessionUser()
-  if (boardId.value) getBoardDetail(boardId.value)
-  else alert('잘못된 접근입니다.')
 })
 
 watch(
-  () => route.query.id,
-  (newId) => {
-    if (newId) {
-      getBoardDetail(newId)
-    } else {
-      alert("잘못된 접근입니다.")
+  () => route.params.boardId,
+  () => {
+    if (!boardId.value || Number.isNaN(boardId.value)) {
+      router.replace('/board')
+      return
     }
+    fetchBoardById()
   },
-  { immediate: true } // 첫 마운트 시에도 바로 실행
+  { immediate: true }
 )
+
 
 // 본 페이지에 대한 서버 측 렌더링을 끈다.
 // 쿼리와 세션 기반 비동기 데이터 로딩이 ssr 시점에 처리되게 하기 위해 브라우저에서만 렌더링되도록 설정

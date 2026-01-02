@@ -41,18 +41,13 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
 
-//  props: 상위에서 게시글 목록 받아오기
-const props = defineProps({
-  boards: {
-    type: Array,
-    required: true,
-  },
-});
+import boardApi from '@/lib/apiService/boardApi.ts';
 
-//  emit: detail, delete 이벤트 부모로 전달
-const emit = defineEmits(["detail", "delete"]);
+
+
+
+
 
 //  날짜 포맷 함수 (단순 변환)
 const formatDate = (date) => new Date(date).toLocaleDateString();
