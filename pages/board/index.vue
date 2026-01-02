@@ -30,7 +30,7 @@ const {
     currentPage,
     totalCount,
     totalPages,
-    getNotice,
+    getBoard,
     changePage
 
 } = useBoard(10)
@@ -74,8 +74,8 @@ function addNotice() {
 }
 
 // 마운트 시 실행
-onMounted(() => {
-    getNotice();
+onMounted(async() => {
+    await getBoard();
     // console.log("boardid값: ", boards.value[0]?.boardId);
 
 })

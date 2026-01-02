@@ -22,7 +22,6 @@ defineEmits(["changePage"]);
 <style scoped>
 /* 페이징버튼 중앙정렬 css */
 #pageBtn{
-
     display:flex;
     justify-content: center;
 }

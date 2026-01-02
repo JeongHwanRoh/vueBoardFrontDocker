@@ -8,6 +8,12 @@ export const loadBoards = async (currentPage: number, pageSize: number) => {
     });
     return res.data;
 };
+    
+/* 게시글 목록 상세조회 관련 AXIOS 요청 정의 */
+export const loadBoardDetail = async (boardId: number) => {
+    const res = await axiosApi.get(`/board/${boardId}`);
+    return res.data;
+};
 
 /* 게시글 등록 관련 AXIOS 요청 정의  */
 export const createBoard = async (board: object) => {
@@ -20,9 +26,6 @@ export const createBoard = async (board: object) => {
 };
 
 /* 게시글 삭제 관련 AXIOS 요청 정의  */
-export const deleteBoard = async (boardId: number) => {
-    const res = await axiosApi.delete(`/board/delete/${boardId}`,{
-        params: {boardId:boardId},
-    });
-    
+export const deleteBoards = async (boardId: number) => {
+  return axiosApi.delete(`/board/delete/${boardId}`)
 }
