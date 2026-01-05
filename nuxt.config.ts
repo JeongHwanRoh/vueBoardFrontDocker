@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   ],
 
   // nitor.devProxy ->  Vite devServer proxy 방식으로 변경(3.9 이상 version에서)
-  // 실제 version: 4.1.3 ㅜ
+  // 실제 version: 4.1.3 
   vite: {
     server: {
       cors: false, // nuxt dev 서버가 CORS 헤더 추가하지 않도록 설정

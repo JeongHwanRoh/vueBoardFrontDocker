@@ -25,6 +25,16 @@ export const createBoard = async (board: object) => {
     return res.data;
 };
 
+/* 게시글 수정 관련 AXIOS 요청 정의  */
+export const updateBoard = async (boardId: number, board: object) => {
+    const res = await axiosApi.put(
+        `/board/update/${boardId}`,
+        board, // 실제 body
+        { withCredentials: true }
+    );
+    return res.data;
+};
+
 /* 게시글 삭제 관련 AXIOS 요청 정의  */
 export const deleteBoards = async (boardId: number) => {
   return axiosApi.delete(`/board/delete/${boardId}`)

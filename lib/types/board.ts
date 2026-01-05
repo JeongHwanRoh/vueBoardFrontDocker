@@ -9,3 +9,11 @@ export interface BoardResponse{
     viewcnt: number;
     category: string;
 }
+
+export interface BoardCreateRequest{
+    title: string;
+    content: string;
+    writer: string;
+    pn: number;
+    regdate: Date;
+}
