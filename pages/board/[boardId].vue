@@ -9,7 +9,7 @@
     </button>
     <!-- 쿼리 스트링 방식으로 boardId 매개변수 전달 -->
     <router-link :to="{
-      path: `board/create`,
+      path: `/board/create`,
       query: { id: boardId }
     }" class="btn btn-primary">
       수정

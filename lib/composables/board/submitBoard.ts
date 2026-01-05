@@ -44,7 +44,6 @@ export const submitBoards = async () => {
             return;
         }
 
-
         let targetId: number | null = null;
 
         // 게시글 수정일 경우
