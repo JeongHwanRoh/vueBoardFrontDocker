@@ -30,25 +30,24 @@ const {
     currentPage,
     totalCount,
     totalPages,
-    getBoard,
+    getBoardByPage,
     changePage
 
 } = useBoard(10)
 
 
 // 날짜 포맷 함수
-const formatDate = (timestamp: string | number | null | undefined) => {
-    if (!timestamp) return '-'
-    return new Date(timestamp).toLocaleDateString('ko-KR', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
+const formatDate = (timestamp: string | null | undefined) => {
+  if (!timestamp) return '-'
 
-    })
+  // UTC 기준이라고 가정
+  const date = new Date(timestamp + 'Z')
+
+  return date.toLocaleString('ko-KR', {
+    timeZone: 'Asia/Seoul'
+  })
 }
+
 
 // 테이블 컬럼 정의(BoardTable 컴포넌트에 보낼 컬럼)
 const tableColumns = [
@@ -74,8 +73,8 @@ function addNotice() {
 }
 
 // 마운트 시 실행
-onMounted(async() => {
-    await getBoard();
+onMounted(async () => {
+    await getBoardByPage();
     // console.log("boardid값: ", boards.value[0]?.boardId);
 
 })

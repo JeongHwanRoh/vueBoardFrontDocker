@@ -7,8 +7,8 @@ export const useBoard=(pageSize=10)=>{
     const totalCount = ref(0);
     const totalPages = computed(() => Math.ceil(totalCount.value / pageSize));
 
-        // 게시글 목록 조회
-    const getBoard = async () => {
+    // 게시글 목록 조회(페이징 포함)
+    const getBoardByPage = async () => {
         try {
             const res = await loadBoards(currentPage.value, pageSize);
             boards.value = res.boards; 
@@ -25,7 +25,7 @@ export const useBoard=(pageSize=10)=>{
     const changePage = async (page: number) => {
         if (page < 1 || page > totalPages.value) return;
         currentPage.value = page;
-        await getBoard();
+        await getBoardByPage();
     }
 
     return {
@@ -33,7 +33,7 @@ export const useBoard=(pageSize=10)=>{
         currentPage,
         totalCount,
         totalPages,
-        getBoard,
+        getBoardByPage,
         changePage,
     }
 

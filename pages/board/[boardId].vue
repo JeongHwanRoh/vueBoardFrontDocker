@@ -43,7 +43,7 @@ const {
   currentPage,
   totalCount,
   totalPages,
-  getBoard,
+  getBoardByPage,
   changePage
 
 } = useBoard(10)
@@ -67,15 +67,13 @@ const {
 // } = fetchFileDownload()
 
 // 날짜 포맷 함수
-const formatDate = (timestamp: string | number | null | undefined) => {
+const formatDate = (timestamp: string | null | undefined) => {
   if (!timestamp) return '-'
-  return new Date(timestamp).toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
+  // UTC 기준이라고 가정
+  const date = new Date(timestamp + 'Z')
+
+  return date.toLocaleString('ko-KR', {
+    timeZone: 'Asia/Seoul'
   })
 }
 
@@ -105,7 +103,7 @@ const tableColumns = [
 // 마운트 시 실행
 onMounted(() => {
   fetchBoard()
-  getBoard()
+  getBoardByPage()
 })
 
 </script>
