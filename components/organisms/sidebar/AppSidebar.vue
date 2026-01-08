@@ -1,24 +1,16 @@
 <template>
   <aside class="sidebar">
-    <nav>
-      <ul>
-        <li v-for="item in menu" :key="item.path" :class="{ active: isActive(item.path) }" @click="go(item.path)">
-          {{ item.label }}
-        </li>
-      </ul>
-    </nav>
-    <div>
-      <button type="button" @click="logoutHandler"> <!-- 브라우저 기본 동작 및 상위로 이벤트 전달 차단 => POST방식이 [GET]/login?logout으로 바뀌는거 방지 -->
-        로그아웃
-      </button>
-    </div>
+    <!-- 사이드바 메뉴 -->
+    <sideBarMenu :menu="menu" :active-path="route.path" @navigate="go" />
+    <!-- 로그아웃 버튼 -->
+    <sideBarLogout />
   </aside>
 </template>
 
 <script setup lang="ts">
 import { useRouter, useRoute } from '#app'
-import { logout } from '~/lib/apiService/userApi'
-import { logoutHandlers } from '~/lib/composables/login/logoutHandler'
+import sideBarMenu from '~/components/molecules/sidebar/sideBarMenu.vue'
+import sideBarLogout from '~/components/molecules/sidebar/sideBarLogout.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -26,7 +18,7 @@ const route = useRoute()
 const menu = [
   { label: '메인대시보드', path: '/dashboard' },
   { label: '게시판', path: '/board' },
-  { label: '채팅', path: '/chat' }
+  { label: '채팅', path: '/chat' },
 ]
 
 const go = (path: string) => {
@@ -34,16 +26,6 @@ const go = (path: string) => {
     router.push(path)
   }
 }
-
-const isActive = (path: string) => {
-  return route.path.startsWith(path)
-}
-
-// 로그아웃 핸들러
-const{logoutHandler} = await logoutHandlers();
-
-
-
 </script>
 
 <style scoped>
@@ -52,26 +34,5 @@ const{logoutHandler} = await logoutHandlers();
   background-color: #1b2f63;
   color: white;
   padding: 1rem;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-li {
-  padding: 12px 10px;
-  cursor: pointer;
-  border-radius: 6px;
-}
-
-li:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-li.active {
-  background-color: rgba(255, 255, 255, 0.25);
-  font-weight: bold;
 }
 </style>
