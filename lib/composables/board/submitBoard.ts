@@ -1,6 +1,6 @@
 import { createBoard, updateBoard } from '~/lib/apiService/boardApi';
 import type { BoardCreateRequest } from '~/lib/types/board';
-
+import { useUserStore } from '~/stores/userStore';
 
 export const submitBoards = async () => {
     const route = useRoute();
@@ -11,8 +11,8 @@ export const submitBoards = async () => {
         title: '',
         content: '',
         // pinia 구현 후 구현 예정
-        writer: '노정환', //writer: pinia의 user 객체의 name을 직접 가져오기(향후 진행)
-        pn: 1, //pn: pinia의 user 객체의 pn을 직접 가져오기(향후 진행)
+        writer: useUserStore().name, //writer: pinia의 user 객체의 name을 직접 가져오기(향후 진행)
+        pn: useUserStore().pn, //pn: pinia의 user 객체의 pn을 직접 가져오기(향후 진행)
         regdate: new Date(), //현재 날짜(시분초까지),
         
     })

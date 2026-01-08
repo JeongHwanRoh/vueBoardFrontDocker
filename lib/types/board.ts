@@ -4,7 +4,7 @@ export interface BoardResponse{
     title: string;
     content: string;
     pn: number;
-    writer: string;
+    writer: string | null;
     regdate: string | number | null;
     viewcnt: number;
     category: string;
@@ -13,7 +13,7 @@ export interface BoardResponse{
 export interface BoardCreateRequest{
     title: string;
     content: string;
-    writer: string;
-    pn: number;
+    writer: string | null;
+    pn: number | null;
     regdate: Date;
 }

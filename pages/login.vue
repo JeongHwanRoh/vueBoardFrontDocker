@@ -5,13 +5,13 @@
 <script setup lang="ts">
 import '@/assets/css/login.css'
 import LoginForm from '@/components/organisms/login/LoginForm.vue'
-import { loginHandler } from '~/lib/composables/login/loginHandler'
+import { useLoginHandler } from '~/lib/composables/login/loginHandler'
 
 const {
   errorMessage,
   loading,
   handleLogin,
-} = loginHandler();
+} = useLoginHandler();
 
 definePageMeta({
   layout: false,

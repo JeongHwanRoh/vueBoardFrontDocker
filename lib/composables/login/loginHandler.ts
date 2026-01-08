@@ -1,38 +1,41 @@
-import { login } from "~/lib/apiService/userApi"
+import { ref } from 'vue'
+import { useRouter } from '#app'
+import { login } from '~/lib/apiService/userApi'
+import { useUserStore } from '~/stores/userStore'
 
-export const loginHandler = () => {
-    {
+export const useLoginHandler = () => {
+  const router = useRouter()
+  const userStore = useUserStore()
 
-        const router = useRouter()
-        const errorMessage = ref('')
-        const loading = ref(false)
+  const errorMessage = ref('')
+  const loading = ref(false)
 
-        const handleLogin = async (payload: { userId: string; password: string }) => {
-            errorMessage.value = ''
-            loading.value = true
+  const handleLogin = async (payload: { userId: string; password: string }) => {
+    errorMessage.value = ''
+    loading.value = true
 
-            try {
-                const res = await login(payload.userId, payload.password)
-                if (res.success) {
-                    alert('로그인 성공!')
-                    console.log('로그인 응답 데이터:', res)
-                    router.push('/board')
-                } else {
-                    errorMessage.value = '아이디 또는 비밀번호가 올바르지 않습니다.'
-                }
-            } catch (err) {
-                console.error(err)
-                errorMessage.value = '서버 통신 오류가 발생했습니다.'
-            } finally {
-                loading.value = false
-            }
-        }
+    try {
+      const res = await login(payload.userId, payload.password)
 
-        return {
-            errorMessage,
-            loading,
-            handleLogin,
-        }
-
+      if (res.success) {
+        userStore.setUser(res.user)
+        console.log('Login - userStore state:', userStore.$state)
+        alert('로그인이 완료되었습니다.')
+        router.push('/board')
+      } else {
+        errorMessage.value = '아이디 또는 비밀번호가 올바르지 않습니다.'
+      }
+    } catch (err) {
+      console.error(err)
+      errorMessage.value = '서버 통신 오류가 발생했습니다.'
+    } finally {
+      loading.value = false
     }
+  }
+
+  return {
+    errorMessage,
+    loading,
+    handleLogin,
+  }
 }

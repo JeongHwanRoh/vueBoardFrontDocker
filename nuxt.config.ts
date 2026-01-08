@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url'
 export default defineNuxtConfig({
   builder: 'vite',
   devtools: { enabled: true },
+  modules:['@pinia/nuxt'],
   css: ['~/assets/css/styles.min.css',
     '~/assets/css/paging.css'
   ],
