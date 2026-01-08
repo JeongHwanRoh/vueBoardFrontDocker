@@ -1,21 +1,26 @@
-<!-- 실제 로그인 동작 및 입력 UI 담당 컴포넌트 -->
+<!-- 회원가입 입력 UI 담당 컴포넌트 -->
 <template>
   <div class="page-wrapper login-viewport radial-gradient">
     <div class="login-card">
       <a class="logo-link">
         <img src="~/assets/images/Hwani.png" class="logo-image" alt="" />
       </a>
-      <input v-model="localUserId" placeholder="아이디를 입력하세요" />
+      <input v-model="localName" placeholder="이름을 입력하세요" /> 
+      <input v-model="localEmail" placeholder="이메일 주소를 입력하세요" /> 
+      <input v-model="localmemberId" placeholder="아이디를 입력하세요" />
       <input v-model="localPassword" type="password" placeholder="비밀번호를 입력하세요" />
-      <button class="login-button btn btn-primary" :disabled="loading" @click="onSubmit">
-        로그인
+      <button class="login-button btn btn-primary" :disabled="loading" @click="onSubmitJoin">
+        회원가입
       </button>
-      <button class="login-button btn btn-primary" @click="$router.push('/join')">
-        회원가입 페이지로 이동
+      <button class="login-button btn btn-primary"  @click="$router.push('/login')">
+        로그인 페이지로 이동
       </button>
-      <p v-if="errorMessage" class="error">
+   <!--    <p v-if="errorMessage" class="error">
         {{ errorMessage }}
-      </p>
+      </p> -->
+
+      <!-- 에러메시지 및 중복체크 영역 -->
+       
     </div>
   </div>
 </template>
@@ -29,22 +34,27 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'submit', payload: { userId: string; password: string }): void
+  (e: 'submit', payload: { memberId: string; password: string; name: string; email: string }): void
 }>()
 
 
-const localUserId = ref('')
+const localmemberId = ref('')
 const localPassword = ref('')
+const localName = ref('')
+const localEmail = ref('')
 
-const onSubmit = () => {
+const onSubmitJoin = () => {
   emit('submit', {
-    userId: localUserId.value,
-    password: localPassword.value
+    memberId: localmemberId.value,
+    password: localPassword.value,
+    name: localName.value,
+    email: localEmail.value
   })
 }
 </script>
 
 <style scoped>
+
 input {
   display: block;
   width: 100%;
