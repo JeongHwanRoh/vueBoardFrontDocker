@@ -18,6 +18,7 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from '#app'
 import { logout } from '~/lib/apiService/userApi'
+import { logoutHandlers } from '~/lib/composables/login/logoutHandler'
 
 const router = useRouter()
 const route = useRoute()
@@ -38,11 +39,11 @@ const isActive = (path: string) => {
   return route.path.startsWith(path)
 }
 
-const logoutHandler = async () => {
-  await logout();
-  router.push('/login')
+// 로그아웃 핸들러
+const{logoutHandler} = await logoutHandlers();
 
-};
+
+
 </script>
 
 <style scoped>
