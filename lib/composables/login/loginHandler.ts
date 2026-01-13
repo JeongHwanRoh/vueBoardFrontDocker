@@ -12,13 +12,11 @@ export const useLoginHandler = () => {
 
   const handleLogin = async (payload: { userId: string; password: string }) => {
     errorMessage.value = ''
-    loading.value = true
 
     try {
       const res = await login(payload.userId, payload.password)
-
       if (res.success) {
-        userStore.setUser(res.user)
+        userStore.setUser(res.user) // PINIA에 사용자 정보 저장ㄴ
         console.log('Login - userStore state:', userStore.$state)
         alert('로그인이 완료되었습니다.')
         router.push('/board')
@@ -28,9 +26,8 @@ export const useLoginHandler = () => {
     } catch (err) {
       console.error(err)
       errorMessage.value = '서버 통신 오류가 발생했습니다.'
-    } finally {
-      loading.value = false
-    }
+    } 
+
   }
 
   return {
