@@ -3,7 +3,6 @@ import axiosApi from "./axiosApi";
 
 /* 로그인 관련 AXIOS요청 정의 */
 export const login = async (userId: string, password: string) => {
-
     const res = await axiosApi.post('/login', {
         userId,
         password,
@@ -26,10 +25,11 @@ export const logout = async () => {
   }
 };
 
-
-/* 세션 조회 관련 AXIOS요청 정의 */
-// withCredential: true =>AXIOS 요청에서 쿠키나 인증정보 함께 보낼지 여부 지정
-export const sessionUser= async()=>{
-    const res=await axiosApi.get('/session',{withCredentials:true}); 
-    return res.data;
+/* 
+토큰으로 인증된 사용자 정보 조회 AXIOS요청 정의(새로고침 시 다시 사용자정보 불러올 떄 사용)
+*/
+export const getMe = async () => {
+  const res = await axiosApi.get('/me')
+  console.log('새로고침시 인증된 사용자 정보:', res.data);
+  return res.data
 }

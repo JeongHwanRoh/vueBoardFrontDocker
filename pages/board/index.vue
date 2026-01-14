@@ -38,14 +38,14 @@ const {
 
 // 날짜 포맷 함수
 const formatDate = (timestamp: string | null | undefined) => {
-  if (!timestamp) return '-'
+    if (!timestamp) return '-'
 
-  // UTC 기준이라고 가정
-  const date = new Date(timestamp + 'Z')
+    // UTC 기준이라고 가정
+    const date = new Date(timestamp + 'Z')
 
-  return date.toLocaleString('ko-KR', {
-    timeZone: 'Asia/Seoul'
-  })
+    return date.toLocaleString('ko-KR', {
+        timeZone: 'Asia/Seoul'
+    })
 }
 
 

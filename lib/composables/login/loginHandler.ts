@@ -16,7 +16,7 @@ export const useLoginHandler = () => {
     try {
       const res = await login(payload.userId, payload.password)
       if (res.success) {
-        userStore.setUser(res.user) // PINIA에 사용자 정보 저장ㄴ
+        userStore.setUser(res.user) // PINIA에 사용자 정보 저장 
         console.log('Login - userStore state:', userStore.$state)
         alert('로그인이 완료되었습니다.')
         router.push('/board')
