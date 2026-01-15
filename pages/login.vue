@@ -14,7 +14,7 @@ const {
 } = useLoginHandler();
 
 definePageMeta({
-  layout: false,
+  layout: 'auth',
   ssr: false
 })
 </script>
