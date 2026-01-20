@@ -10,11 +10,10 @@ export const submitBoards = async () => {
     const board = ref({
         title: '',
         content: '',
-        // pinia 구현 후 구현 예정
-        writer: useUserStore().name, //writer: pinia의 user 객체의 name을 직접 가져오기(향후 진행)
-        pn: useUserStore().pn, //pn: pinia의 user 객체의 pn을 직접 가져오기(향후 진행)
+        writer: useUserStore().name, //writer: pinia의 user 객체의 name을 직접 가져오기
+        pn: useUserStore().pn, //pn: pinia의 user 객체의 pn을 직접 가져오기
         regdate: new Date(), //현재 날짜(시분초까지),
-        
+
     })
 
     /* 
@@ -53,13 +52,23 @@ export const submitBoards = async () => {
                 await updateBoard(targetId, board.value);
                 alert("게시글 수정이 완료되었습니다.")
             } catch (error: any) {
-                // 권한 에러(403 Forbidden)
-                if (error.response.status === 403) {
-                    console.log("error response : ", error.response)
-                    alert(error.response.data.title) // 본인이 작성한 공지만 수정할 수 있습니다.
-                } else {
+                if (error.response) { //response 에러인 경우
+                    console.log("error response:", error.response);
+                    // 권한 에러(403 Forbidden)
+                    if (error.response.status === 403) {
+                        console.log("error response : ", error.response)
+                        alert(error.response.data?.title ?? "본인이 작성한 공지만 수정 가능합니다.") // 본인이 작성한 공지만 수정할 수 있습니다.
+                    }else{
+                        alert("서버 에러 발생")
+                    }
+                }else if(error.request){ //request 에러인 경우
+                    console.log("error request:", error.request);
+                    alert("서버에서 응답이 없습니다. (네트워크/CORS/서버에러)")
                 }
-                console.error("공지 수정 실패: ", error)
+                else {
+                    console.error("Error:", error.message);
+                    alert("요청 중 오류 발생")
+                }
             }
         }
         else {
@@ -74,6 +83,6 @@ export const submitBoards = async () => {
         isSubmit.value = true;
 
     }
-    return { board, boardId, isUpdate, isSubmit, submitBoard};
+    return { board, boardId, isUpdate, isSubmit, submitBoard };
 
 }
