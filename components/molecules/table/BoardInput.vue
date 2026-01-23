@@ -17,30 +17,28 @@ ex)
 
 <template>
   <div class="row g-3">
-      <!-- 제목 -->
-      <div class="mb-3">
-          <label class="form-label">{{ titleLabel }}</label>
-          <input 
-              v-model="localModel[titleKey]" 
-              class="form-control" 
-              :placeholder="titlePlaceholder" 
-          />
+    <!-- 제목 -->
+    <div class="mb-3">
+      <label class="form-label">{{ titleLabel }}</label>
+      <input v-model="localModel[titleKey]" class="form-control" :placeholder="titlePlaceholder" />
+    </div>
+    <!-- 내용 -->
+    <div class="mb-3">
+      <label class="form-label">{{ contentLabel }}</label>
+      <!-- tiptap editor 적용 -->
+      <div class="page-wrapper">
+        <client-only>
+          <TipTapEditor v-model="localModel[contentKey]" />
+        </client-only>
       </div>
-      <!-- 내용 -->
-      <div class="mb-3">
-          <label class="form-label">{{ contentLabel }}</label>
-          <textarea 
-              v-model="localModel[contentKey]" 
-              class="form-control" 
-              rows="20" 
-              :placeholder="contentPlaceholder">
-          </textarea>
-      </div>
+    </div>
 
   </div>
 </template>
 
 <script setup lang="ts">
+import TipTapEditor from '~/components/organisms/tiptap/TipTapEditor.vue';
+
 
 const props = defineProps({
   modelValue: {
@@ -66,13 +64,13 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue"]);
 
 // props.modelValue를 그대로 반응형 객체로 감싸기
-const localModel = reactive(props.modelValue );
+const localModel = reactive(props.modelValue);
 
 // 부모 → 자식 동기화
 watch(
   () => props.modelValue,
-  (newValue) => {Object.assign(localModel, newValue)},
-  {deep: true, immediate: true}
+  (newValue) => { Object.assign(localModel, newValue) },
+  { deep: true, immediate: true }
 );
 
 // 자식 → 부모 반영 (v-model 역할)
@@ -85,13 +83,13 @@ watch(
 
 <style scoped>
 .form-control {
-    width: 100%;
-    padding: 8px;
-    font-size: 0.875rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: var(--bs-body-color);
-    background-color: transparent;
-    border: var(--bs-border-width) solid #dbe1e6;
+  width: 100%;
+  padding: 8px;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--bs-body-color);
+  background-color: transparent;
+  border: var(--bs-border-width) solid #dbe1e6;
 }
 </style>

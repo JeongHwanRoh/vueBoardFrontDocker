@@ -26,6 +26,7 @@ const menu = [
   { label: '메인대시보드', path: '/dashboard' },
   { label: '게시판', path: '/board' },
   { label: '채팅', path: '/chat' },
+  { label: 'tiptap', path: '/tiptap' },
 ]
 
 const go = (path: string) => {
