@@ -64,13 +64,10 @@ export default {
 
 .toolbar {
     display: flex;
-    gap: 6px;
+    gap: 10px;
     padding: 8px;
-    background: #fafafa;
+    background: rgba(230, 230, 234, 0.3);
     border-bottom: 1px solid #eee;
-    position: sticky;
-    top: 0;
-    z-index: 10;
 }
 
 .toolbar button {

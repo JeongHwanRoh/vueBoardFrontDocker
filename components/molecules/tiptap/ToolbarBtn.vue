@@ -1,23 +1,30 @@
 <template>
     <div class="toolbar">
         <button :class="{ active: editor?.isActive('bold') }" @click="editor.chain().focus().toggleBold().run()">
-            Bold
+            <strong>B</strong>
         </button>
         <button :class="{ active: editor?.isActive('italic') }" @click="editor.chain().focus().toggleItalic().run()">
-            Italic
+            <i>I</i>
         </button>
-        <button v-for="level in 6" :key="level" :class="{ active: editor?.isActive('heading', { level: level as 1 | 2 | 3 | 4 | 5 | 6 }) }"
+        <button v-for="level in 6" :key="level"
+            :class="{ active: editor?.isActive('heading', { level: level as 1 | 2 | 3 | 4 | 5 | 6 }) }"
             @click="editor.chain().focus().toggleHeading({ level: level as 1 | 2 | 3 | 4 | 5 | 6 }).run()">
-            H{{ level }}
+            h{{ level }}
         </button>
-        <button :class="{ active: editor?.isActive('bulletList') }"
+        <button class="list-btn" :class="{ active: editor?.isActive('bulletList') }"
             @click="editor.chain().focus().toggleBulletList().run()">
-            • List
+            <div>•</div>
+            <div>•</div>
+            <div>•</div>
         </button>
-        <button :class="{ active: editor?.isActive('orderedList') }"
+
+        <button class="list-btn" :class="{ active: editor?.isActive('orderedList') }"
             @click="editor.chain().focus().toggleOrderedList().run()">
-            1. List
+            <div>1</div>
+            <div>2</div>
+            <div>3</div>
         </button>
+
     </div>
 </template>
 <script setup lang="ts">
@@ -27,3 +34,27 @@ defineProps<{
     editor: Editor
 }>()
 </script>
+<style scoped>
+.toolbar>button {
+    border: none;
+    background-color: transparent;
+}
+
+.list-btn {
+    display: flex;
+    flex-direction: column;
+    /* ⭐ 세로 배치 핵심 */
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+
+    width: 32px;
+    height: 32px;
+    padding: 0;
+}
+
+.list-btn div {
+    font-size: 10px;
+    line-height: 1;
+}
+</style>

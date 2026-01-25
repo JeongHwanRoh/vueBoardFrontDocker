@@ -1,6 +1,5 @@
 <template>
-
-    <h1>게시글 작성</h1>
+    <h5 class="card-title fw-semibold mb-4">게시글 작성</h5>
     <BoardInputForm :board="board" :isUpdate="isUpdate" :isSubmit="isSubmit" @submit="submitBoard" @cancel="goBack" />
 </template>
 <script setup lang="ts">
