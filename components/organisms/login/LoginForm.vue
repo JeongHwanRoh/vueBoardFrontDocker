@@ -48,8 +48,8 @@ const onSubmit = () => {
 input {
   display: block;
   width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
+  padding: 10px 0px;
+  margin: 0px 0px 24px;
   border: 1px solid #ccc;
 }
 
