@@ -1,202 +1,174 @@
-<script setup lang="ts">
-import { Icon } from '@iconify/vue'
-</script>
-
 <template>
-  <!--  Body Wrapper -->
-  <div class="row">
-    <div class="col-lg-8">
-        <div class="card">
-            <div class="card-body">
-            <h5 class="card-title">게시판 현황</h5>
-            <div class="table-responsive">
-            <table class="table text-nowrap align-middle mb-0">
-                <thead>
-                <tr class="border-2 border-bottom border-primary border-0"> 
-                    <th scope="col" class="ps-0">Page Title</th>
-                    <th scope="col" >Link</th>
-                    <th scope="col" class="text-center">Pageviews</th>
-                    <th scope="col" class="text-center">Page Value</th>
-                </tr>
-                </thead>
-                <tbody class="table-group-divider">
-                <tr>
-                    <th scope="row" class="ps-0 fw-medium">
-                    <span class="table-link1 text-truncate d-block">Welcome to our
-                        website</span>
-                    </th>
-                    <td>
-                    <a href="javascript:void(0)" class="link-primary text-dark fw-medium d-block">/index.html</a>
-                    </td>
-                    <td class="text-center fw-medium">18,456</td>
-                    <td class="text-center fw-medium">$2.40</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="ps-0 fw-medium">
-                    <span class="table-link1 text-truncate d-block">Modern Admin
-                        Dashboard Template</span>
-                    </th>
-                    <td>
-                    <a href="javascript:void(0)" class="link-primary text-dark fw-medium d-block">/dashboard</a>
-                    </td>
-                    <td class="text-center fw-medium">17,452</td>
-                    <td class="text-center fw-medium">$0.97</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="ps-0 fw-medium">
-                    <span class="table-link1 text-truncate d-block">Explore our
-                        product catalog</span>
-                    </th>
-                    <td>
-                    <a href="javascript:void(0)" class="link-primary text-dark fw-medium d-block">/product-checkout</a>
-                    </td>
-                    <td class="text-center fw-medium">12,180</td>
-                    <td class="text-center fw-medium">$7,50</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="ps-0 fw-medium">
-                    <span class="table-link1 text-truncate d-block">Comprehensive
-                        User Guide</span>
-                    </th>
-                    <td>
-                    <a href="javascript:void(0)" class="link-primary text-dark fw-medium d-block">/docs</a>
-                    </td>
-                    <td class="text-center fw-medium">800</td>
-                    <td class="text-center fw-medium">$5,50</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="ps-0 fw-medium border-0">
-                    <span class="table-link1 text-truncate d-block">Check out our
-                        services</span>
-                    </th>
-                    <td class="border-0">
-                    <a href="javascript:void(0)" class="link-primary text-dark fw-medium d-block">/services</a>
-                    </td>
-                    <td class="text-center fw-medium border-0">1300</td>
-                    <td class="text-center fw-medium border-0">$2,15</td>
-                </tr>
-                </tbody>
-            </table>
-            </div>
-        </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card">
-        <div class="card-body text-center">
-            <img src="../assets/images/backgrounds/product-tip.png" alt="image" class="img-fluid" width="205">
-            <h4 class="mt-7">Productivity Tips!</h4>
-            <p class="card-subtitle mt-2 mb-3">Duis at orci justo nulla in libero id leo
-            molestie sodales phasellus justo.</p>
-            <button class="btn btn-primary mb-3">View All Tips</button>
-        </div>
-        </div>
-    </div>
-    <div class="col-lg-8">
-        <div class="card">
-            <div class="card-body">
-            <h5 class="card-title">채팅현황</h5>
-            <div class="table-responsive">
-            <table class="table text-nowrap align-middle mb-0">
-                <thead>
-                <tr class="border-2 border-bottom border-primary border-0"> 
-                    <th scope="col" class="ps-0">Page Title</th>
-                    <th scope="col" >Link</th>
-                    <th scope="col" class="text-center">Pageviews</th>
-                    <th scope="col" class="text-center">Page Value</th>
-                </tr>
-                </thead>
-                <tbody class="table-group-divider">
-                <tr>
-                    <th scope="row" class="ps-0 fw-medium">
-                    <span class="table-link1 text-truncate d-block">Welcome to our
-                        website</span>
-                    </th>
-                    <td>
-                    <a href="javascript:void(0)" class="link-primary text-dark fw-medium d-block">/index.html</a>
-                    </td>
-                    <td class="text-center fw-medium">18,456</td>
-                    <td class="text-center fw-medium">$2.40</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="ps-0 fw-medium">
-                    <span class="table-link1 text-truncate d-block">Modern Admin
-                        Dashboard Template</span>
-                    </th>
-                    <td>
-                    <a href="javascript:void(0)" class="link-primary text-dark fw-medium d-block">/dashboard</a>
-                    </td>
-                    <td class="text-center fw-medium">17,452</td>
-                    <td class="text-center fw-medium">$0.97</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="ps-0 fw-medium">
-                    <span class="table-link1 text-truncate d-block">Explore our
-                        product catalog</span>
-                    </th>
-                    <td>
-                    <a href="javascript:void(0)" class="link-primary text-dark fw-medium d-block">/product-checkout</a>
-                    </td>
-                    <td class="text-center fw-medium">12,180</td>
-                    <td class="text-center fw-medium">$7,50</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="ps-0 fw-medium">
-                    <span class="table-link1 text-truncate d-block">Comprehensive
-                        User Guide</span>
-                    </th>
-                    <td>
-                    <a href="javascript:void(0)" class="link-primary text-dark fw-medium d-block">/docs</a>
-                    </td>
-                    <td class="text-center fw-medium">800</td>
-                    <td class="text-center fw-medium">$5,50</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="ps-0 fw-medium border-0">
-                    <span class="table-link1 text-truncate d-block">Check out our
-                        services</span>
-                    </th>
-                    <td class="border-0">
-                    <a href="javascript:void(0)" class="link-primary text-dark fw-medium d-block">/services</a>
-                    </td>
-                    <td class="text-center fw-medium border-0">1300</td>
-                    <td class="text-center fw-medium border-0">$2,15</td>
-                </tr>
-                </tbody>
-            </table>
-            </div>
-        </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title d-flex align-items-center gap-2 mb-5 pb-3">유저별 게시글 등록 현황<span><Icon icon="solar:question-circle-bold" class="fs-7 d-flex text-muted" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="tooltip-success" data-bs-title="Locations"></Icon></span>
+    <div class="container-fluid">
 
-                </h5>
-                <div class="row">
-                    <div class="col-4">
-                        <Icon icon="solar:laptop-minimalistic-line-duotone" class="fs-7 d-flex text-primary"></Icon>
-                        <span class="fs-11 mt-2 d-block text-nowrap">노정환</span>
-                        <h4 class="mb-0 mt-1">87%</h4>
+        <!-- 공지사항 + 우측 카드 -->
+        <div class="row">
+            <!-- 공지사항 -->
+            <div class="col-lg-8">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title fw-semibold mb-4">공지사항</h5>
+                        <BoardTable :columns="tableColumns" :rows="boards" idKey="boardId" />
                     </div>
-                    <div class="col-4">
-                        <Icon icon="solar:smartphone-line-duotone" class="fs-7 d-flex text-secondary"></Icon>
-                        <span class="fs-11 mt-2 d-block text-nowrap">이민아</span>
-                        <h4 class="mb-0 mt-1">9.2%</h4>
-                    </div>
-                    <div class="col-4">
-                        <Icon icon="solar:tablet-line-duotone" class="fs-7 d-flex text-success"></Icon>
-                        <span class="fs-11 mt-2 d-block text-nowrap">Jason</span>
-                        <h4 class="mb-0 mt-1">3.1%</h4>
+                </div>
+            </div>
+
+            <!-- 공지사항 우측 카드 -->
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex align-items-center gap-2 mb-5 pb-3">
+                            유저별 게시글 등록 현황
+                            <Icon icon="solar:question-circle-bold" class="fs-7 d-flex text-muted" />
+                        </h5>
+
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <Icon icon="solar:laptop-minimalistic-line-duotone" class="fs-5 text-primary" />
+                                <span class="fs-11 mt-2 d-block text-nowrap">노정환</span>
+                                <h4 class="mb-0 mt-1">87%</h4>
+                            </div>
+                            <div class="col-4">
+                                <Icon icon="solar:smartphone-line-duotone" class="fs-5 text-secondary" />
+                                <span class="fs-11 mt-2 d-block text-nowrap">이민아</span>
+                                <h4 class="mb-0 mt-1">9.2%</h4>
+                            </div>
+                            <div class="col-4">
+                                <Icon icon="solar:tablet-line-duotone" class="fs-5 text-success" />
+                                <span class="fs-11 mt-2 d-block text-nowrap">Jason</span>
+                                <h4 class="mb-0 mt-1">3.1%</h4>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- 채팅현황 (아래) -->
+        <div class="row">
+
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">채팅현황</h5>
+
+                        <div class="table-responsive">
+                            <table class="table text-nowrap align-middle mb-0">
+                                <thead>
+                                    <tr class="border-bottom border-primary">
+                                        <th class="ps-0">Page Title</th>
+                                        <th>Link</th>
+                                        <th class="text-center">Pageviews</th>
+                                        <th class="text-center">Page Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th class="ps-0">Welcome to our website</th>
+                                        <td>/index.html</td>
+                                        <td class="text-center">18,456</td>
+                                        <td class="text-center">$2.40</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="ps-0">Modern Admin Dashboard</th>
+                                        <td>/dashboard</td>
+                                        <td class="text-center">17,452</td>
+                                        <td class="text-center">$0.97</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="ps-0">Explore our product catalog</th>
+                                        <td>/product-checkout</td>
+                                        <td class="text-center">12,180</td>
+                                        <td class="text-center">$7.50</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="ps-0">Comprehensive User Guide</th>
+                                        <td>/docs</td>
+                                        <td class="text-center">800</td>
+                                        <td class="text-center">$5.50</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="ps-0">Check out our services</th>
+                                        <td>/services</td>
+                                        <td class="text-center">1,300</td>
+                                        <td class="text-center">$2.15</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex align-items-center gap-2 mb-5 pb-3">
+                            기타 대시보드
+                            <Icon icon="solar:question-circle-bold" class="fs-7 d-flex text-muted" />
+                        </h5>
+
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <Icon icon="solar:laptop-minimalistic-line-duotone" class="fs-5 text-primary" />
+                                <span class="fs-11 mt-2 d-block text-nowrap">노정환</span>
+                                <h4 class="mb-0 mt-1">87%</h4>
+                            </div>
+                            <div class="col-4">
+                                <Icon icon="solar:smartphone-line-duotone" class="fs-5 text-secondary" />
+                                <span class="fs-11 mt-2 d-block text-nowrap">이민아</span>
+                                <h4 class="mb-0 mt-1">9.2%</h4>
+                            </div>
+                            <div class="col-4">
+                                <Icon icon="solar:tablet-line-duotone" class="fs-5 text-success" />
+                                <span class="fs-11 mt-2 d-block text-nowrap">Jason</span>
+                                <h4 class="mb-0 mt-1">3.1%</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 
-  </div>
 </template>
 
-<style scoped>
-</style>
+<script setup lang="ts">
+import BoardTable from '~/components/molecules/table/BoardTable.vue'
+import { useRecentFiveBoard } from '~/lib/composables/board/fetchAllBoard'
+
+const { boards, getLatestBoards } = useRecentFiveBoard()
+
+const tableColumns = [
+    { key: 'boardId', label: '번호' },
+    {
+        key: 'title',
+        label: '제목',
+        isLink: true,
+        to: (row: any) => `/board/${row.boardId}`
+    },
+    { key: 'writer', label: '작성자' },
+    {
+        key: 'regdate',
+        label: '등록날짜',
+        format: (_: any, row: any) => formatDate(row.updatedAt || row.regdate)
+    },
+    { key: 'viewcnt', label: '조회수' }
+]
+
+const formatDate = (timestamp?: string) => {
+    if (!timestamp) return '-'
+    return new Date(timestamp + 'Z').toLocaleString('ko-KR', {
+        timeZone: 'Asia/Seoul'
+    })
+}
+
+onMounted(() => {
+    getLatestBoards()
+})
+</script>
+
+<style scoped></style>

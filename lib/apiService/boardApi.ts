@@ -8,6 +8,15 @@ export const loadBoards = async (currentPage: number, pageSize: number) => {
     });
     return res.data;
 };
+
+/* 게시글 최신 5개 목록조회(board_id 기준) */
+export const loadRecentFiveBoards=async()=>{
+
+    const res=await axiosApi.get("/board/listRecentFive");
+    return res.data;
+
+}
+
     
 /* 게시글 목록 상세조회 관련 AXIOS 요청 정의 */
 export const loadBoardDetail = async (boardId: number) => {

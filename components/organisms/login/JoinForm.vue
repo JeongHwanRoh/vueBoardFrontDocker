@@ -133,7 +133,7 @@ button:hover {
   flex-direction: column;
   min-width: 0;
   color: #768b9e;
-  background-color: #fff;
+  background-color: rgb(253,253,253);
   border-radius: 12px;
   box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.03);
   width: 100%;
