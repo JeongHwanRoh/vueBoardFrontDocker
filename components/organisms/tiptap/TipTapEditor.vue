@@ -4,15 +4,18 @@
         <ToolbarBtn :editor="editor" />
 
         <!-- Editor -->
-        <editor-content class="tiptap" :editor="editor" />
+        <TipTapEditorContent :editor="editor" class="tiptap" />
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import { Editor, EditorContent } from '@tiptap/vue-3'
+import { Editor } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import ToolbarBtn from '~/components/molecules/tiptap/ToolbarBtn.vue'
+import Image from '@tiptap/extension-image'
+import TipTapEditorContent from '~/components/molecules/tiptap/TipTapEditorContent.vue'
+
 
 /* props */
 const props = defineProps<{
@@ -30,7 +33,7 @@ const editor = ref<Editor>()
 /* lifecycle */
 onMounted(() => {
   editor.value = new Editor({
-    extensions: [StarterKit],
+    extensions: [StarterKit,Image],
     content: props.modelValue ?? '',
     autofocus: true,
     onUpdate: () => {
