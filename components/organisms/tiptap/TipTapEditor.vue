@@ -8,53 +8,52 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import ToolbarBtn from '~/components/molecules/tiptap/ToolbarBtn.vue'
 
-export default {
-    components: { EditorContent, ToolbarBtn },
+/* props */
+const props = defineProps<{
+  modelValue?: string
+}>()
 
-    props: {
-        modelValue: {
-            type: String,
-            default: '',
-        },
+/* emits */
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void
+}>()
+
+/* state */
+const editor = ref<Editor>()
+
+/* lifecycle */
+onMounted(() => {
+  editor.value = new Editor({
+    extensions: [StarterKit],
+    content: props.modelValue ?? '',
+    autofocus: true,
+    onUpdate: () => {
+      if (!editor.value) return
+      emit('update:modelValue', editor.value.getHTML())
     },
+  })
+})
 
-    emits: ['update:modelValue'],
+watch(
+  () => props.modelValue,
+  (value) => {
+    if (!editor.value || value == null) return
+    if (editor.value.getHTML() === value) return
+    editor.value.commands.setContent(value)
+  }
+)
 
-    data() {
-        return {
-            editor: null,
-        }
-    },
-
-    mounted() {
-        this.editor = new Editor({
-            extensions: [StarterKit],
-            content: this.modelValue,
-            autofocus: true,
-            onUpdate: () => {
-                this.$emit('update:modelValue', this.editor.getHTML())
-            },
-        })
-    },
-
-    watch: {
-        modelValue(value) {
-            if (!this.editor) return
-            if (this.editor.getHTML() === value) return
-            this.editor.commands.setContent(value)
-        },
-    },
-
-    beforeUnmount() {
-        this.editor?.destroy()
-    },
-}
+onBeforeUnmount(() => {
+  editor.value?.destroy()
+})
 </script>
+
 
 <style scoped>
 .editor-wrapper {
