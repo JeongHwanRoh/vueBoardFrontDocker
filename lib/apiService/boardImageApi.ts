@@ -17,8 +17,9 @@ export const uploadImage = async (file: File) => {
 }
 /* 업로드된 이미지 게시글 저장할 때 같이 저장 => TB_BOARD_IMAGE */
 export const saveUploadedImage = async (targetId: number, content: string) => {
-    debugger;
-    const res = await axiosApi.post(`/board/image/save/${targetId}`,
+    const boardId = targetId;
+    console.log('boardId 값:', boardId);
+    const res = await axiosApi.post(`/board/image/save/${boardId}`,
         content, {
         headers: {
             'Content-Type': 'text/plain'
