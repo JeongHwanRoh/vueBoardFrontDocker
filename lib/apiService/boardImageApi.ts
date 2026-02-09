@@ -1,17 +1,29 @@
 import axiosApi from '~/lib/apiService/axiosApi';
 
+/* 이미지 업로드(임시 저장용) => TB_TEMP_IMAGE */
+export const uploadImage = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
 
-export const uploadImage=async(file:File)=>{
-    const formData=new FormData();
-    formData.append("file",file);
-
-    const res=await axiosApi.post("/board/image/upload",formData,{
-        headers:{
-            "Content-Type":"multipart/form-data"
+    const res = await axiosApi.post("/board/image/upload", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data"
         },
-        withCredentials:true
+        withCredentials: true
     });
 
-    return res.data as { imageUrl:string}
+    return res.data as { imageUrl: string }
 
+}
+/* 업로드된 이미지 게시글 저장할 때 같이 저장 => TB_BOARD_IMAGE */
+export const saveUploadedImage = async (targetId: number, content: string) => {
+    debugger;
+    const res = await axiosApi.post(`/board/image/save/${targetId}`,
+        content, {
+        headers: {
+            'Content-Type': 'text/plain'
+        },
+        withCredentials: true
+    });
+    return res.data;
 }

@@ -7,7 +7,6 @@
         <div class="image-upload-overlay" @click="openFile">
             이미지 추가
         </div>
-
         <input ref="fileInput" type="file" accept="image/*" hidden @change="onFileChange" />
     </div>
 </template>
@@ -16,7 +15,6 @@
 import { ref } from 'vue'
 import { EditorContent } from '@tiptap/vue-3'
 import type { Editor } from '@tiptap/vue-3'
-// import { uploadImage } from '~/lib/apiService/boardImageApi';
 import {uploadImage} from '~/lib/apiService/boardImageApi';
 
 const props = defineProps<{
@@ -34,8 +32,7 @@ const onFileChange = async (e: Event) => {
     const file = (e.target as HTMLInputElement).files?.[0]
     if (!file) return
 
-    // 서버 없이 테스트용 (향후 서버 업로드도 진행하고 배포 시에는 서버 업로드로 변경 필요)
-    // const imageUrl = URL.createObjectURL(file)
+    // 이미지 서버 업로드
     try {
 
         const { imageUrl } = await uploadImage(file)

@@ -1,4 +1,5 @@
 import { createBoard, updateBoard } from '~/lib/apiService/boardApi';
+import { saveUploadedImage } from '~/lib/apiService/boardImageApi';
 import type { BoardCreateRequest } from '~/lib/types/board';
 import { useUserStore } from '~/stores/userStore';
 
@@ -58,10 +59,10 @@ export const submitBoards = async () => {
                     if (error.response.status === 403) {
                         console.log("error response : ", error.response)
                         alert(error.response.data?.title ?? "본인이 작성한 공지만 수정 가능합니다.") // 본인이 작성한 공지만 수정할 수 있습니다.
-                    }else{
+                    } else {
                         alert("서버 에러 발생")
                     }
-                }else if(error.request){ //request 에러인 경우
+                } else if (error.request) { //request 에러인 경우
                     console.log("error request:", error.request);
                     alert("서버에서 응답이 없습니다. (네트워크/CORS/서버에러)")
                 }
@@ -77,6 +78,18 @@ export const submitBoards = async () => {
             targetId = res.boardId; // auto increment된 id
             newBoardId.value = targetId; // 필요할 경우 저장
             alert('게시글 등록이 완료되었습니다.')
+        }
+        console.log("submitBoard - targetId:", targetId);
+        // 업로드한 이미지 저장 로직(targetId)
+        if (targetId !== null) {
+            const result = await saveUploadedImage(targetId, content);
+            console.log("saveUploadedImage result:", result);
+
+            if (!result) {
+
+                alert("이미지 저장 중 오류가 발생했습니다.");
+            }
+
         }
 
         // 제출 시
