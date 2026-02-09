@@ -26,6 +26,10 @@ export default defineNuxtConfig({
           secure: false, // HTTP 환경에서 SSL 검사 비활성화
           ws: true, // websocket proxy 활성화
           rewrite: (path) => path,
+        },
+        '/uploads': {
+          target: process.env.NUXT_PUBLIC_API_BASE, // 백엔드 주소(base url)
+          changeOrigin: true, 
         }
       },
     },

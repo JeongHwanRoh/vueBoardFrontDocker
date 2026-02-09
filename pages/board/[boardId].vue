@@ -1,7 +1,7 @@
 <template>
   <h5 class="card-title fw-semibold mb-4">공지사항</h5>
   <!-- 게시판 세부사항 영역 -->
-  <BoardDetail :board="board"  :formatter="formatDate" />
+  <BoardDetail :board="board" :formatter="formatDate" />
   <!-- 버튼 영역 -->
   <div id="btnList" class="d-flex justify-content-end mt-4">
     <button type="button" class="btn btn-primary" @click="goBack()">

@@ -37,8 +37,11 @@ NoticeDetail.vue, [noticeId].vue 참고
         </div>
     </div>
     <!-- 내용 부분 -->
+     <!-- res.content -->
     <div class="mb-3">
-        <textarea class="form-control" rows="20" readonly>{{ item?.[contentKey] }}</textarea>
+        <!-- <textarea class="form-control" rows="20" readonly>{{ item?.[contentKey] }}</textarea>
+          -->
+        <div class="board-content" v-html="item?.[contentKey]"></div>
     </div>
 </template>
 
