@@ -6,9 +6,9 @@ export const uploadImage = async (file: File) => {
     formData.append("file", file);
 
     const res = await axiosApi.post("/board/image/upload", formData, {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        },
+        // headers: {
+        //     "Content-Type": "multipart/form-data"
+        // },
         withCredentials: true
     });
 
@@ -20,11 +20,8 @@ export const saveUploadedImage = async (targetId: number, content: string) => {
     const boardId = targetId;
     console.log('boardId 값:', boardId);
     const res = await axiosApi.post(`/board/image/save/${boardId}`,
-        content, {
-        headers: {
-            'Content-Type': 'text/plain'
-        },
-        withCredentials: true
-    });
+        { content },
+        {headers:{ "Content-Type": "application/json" }, withCredentials: true}
+    );
     return res.data;
 }

@@ -2,9 +2,9 @@ import axios, { type AxiosInstance, AxiosError } from "axios";
 
 const axiosApi: AxiosInstance = axios.create({
     baseURL: "http://localhost:8092", //BASE URL
-    headers: {
-        "Content-Type": "application/json", // json 형식
-    },
+    // headers: {
+    //     "Content-Type": "application/json", // json 형식
+    // },
     withCredentials: true,
 });
 

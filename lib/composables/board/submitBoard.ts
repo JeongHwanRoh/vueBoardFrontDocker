@@ -86,9 +86,9 @@ export const submitBoards = async () => {
             console.log("saveUploadedImage result:", result);
 
             if (!result) {
-
                 alert("이미지 저장 중 오류가 발생했습니다.");
             }
+
 
         }
 

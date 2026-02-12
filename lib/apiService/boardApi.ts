@@ -16,7 +16,6 @@ export const loadRecentFiveBoards=async()=>{
     return res.data;
 
 }
-
     
 /* 게시글 목록 상세조회 관련 AXIOS 요청 정의 */
 export const loadBoardDetail = async (boardId: number) => {
