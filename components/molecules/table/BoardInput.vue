@@ -92,4 +92,5 @@ watch(
   background-color: transparent;
   border: var(--bs-border-width) solid #dbe1e6;
 }
+
 </style>

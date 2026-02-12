@@ -13,35 +13,10 @@
                 </div>
             </div>
 
-            <!-- 공지사항 우측 카드 -->
-            <div class="col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title d-flex align-items-center gap-2 mb-5 pb-3">
-                            유저별 게시글 등록 현황
-                            <Icon icon="solar:question-circle-bold" class="fs-7 d-flex text-muted" />
-                        </h5>
-
-                        <div class="row text-center">
-                            <div class="col-4">
-                                <Icon icon="solar:laptop-minimalistic-line-duotone" class="fs-5 text-primary" />
-                                <span class="fs-11 mt-2 d-block text-nowrap">노정환</span>
-                                <h4 class="mb-0 mt-1">87%</h4>
-                            </div>
-                            <div class="col-4">
-                                <Icon icon="solar:smartphone-line-duotone" class="fs-5 text-secondary" />
-                                <span class="fs-11 mt-2 d-block text-nowrap">이민아</span>
-                                <h4 class="mb-0 mt-1">9.2%</h4>
-                            </div>
-                            <div class="col-4">
-                                <Icon icon="solar:tablet-line-duotone" class="fs-5 text-success" />
-                                <span class="fs-11 mt-2 d-block text-nowrap">Jason</span>
-                                <h4 class="mb-0 mt-1">3.1%</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- 달력(Full Calendar) -->
+              <div class="col-lg-4">
+                  <CalendarTemplate />
+              </div>
         </div>
 
         <!-- 채팅현황 (아래) -->
@@ -50,7 +25,7 @@
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">채팅현황</h5>
+                        <h5 class="card-title">업무현황</h5>
 
                         <div class="table-responsive">
                             <table class="table text-nowrap align-middle mb-0">
@@ -137,6 +112,7 @@
 </template>
 
 <script setup lang="ts">
+import CalendarTemplate from '~/components/molecules/calendar/calendarTemplate.vue'
 import BoardTable from '~/components/molecules/table/BoardTable.vue'
 import { useRecentFiveBoard } from '~/lib/composables/board/fetchAllBoard'
 
@@ -171,4 +147,17 @@ onMounted(() => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+div>.row {
+  --bs-gutter-x: 30px;
+  --bs-gutter-y: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex !important;
+  flex-wrap: nowrap;
+  margin-top: calc(-1 * var(--bs-gutter-y));
+  margin-right: calc(-0.5 * var(--bs-gutter-x));
+  margin-left: calc(-0.5 * var(--bs-gutter-x));
+}
+
+</style>

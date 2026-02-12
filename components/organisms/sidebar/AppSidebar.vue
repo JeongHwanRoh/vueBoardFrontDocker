@@ -25,8 +25,8 @@ console.log("사이드바에서 불러온 유저 이름:",name);
 const menu = [
   { label: '메인대시보드', path: '/dashboard' },
   { label: '게시판', path: '/board' },
-  { label: '채팅', path: '/chat' },
-  { label: 'tiptap', path: '/tiptap' },
+  { label: '업무현황', path: '/work' },
+  // { label: 'tiptap', path: '/tiptap' },
 ]
 
 const go = (path: string) => {
