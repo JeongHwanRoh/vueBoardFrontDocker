@@ -7,7 +7,7 @@
         <div class="image-upload-overlay" @click="openFile">
             이미지 추가
         </div>
-        <input ref="fileInput" type="file" accept="image/*" hidden @change="onFileChange" />
+        <input ref="fileInput" type="file" accept="image/png, image/jpeg, image/jpg , image/gif" hidden @change="onFileChange" />
     </div>
 </template>
 
