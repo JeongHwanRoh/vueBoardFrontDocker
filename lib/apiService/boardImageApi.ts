@@ -25,3 +25,9 @@ export const saveUploadedImage = async (targetId: number, content: string) => {
     );
     return res.data;
 }
+
+/* 게시글 이미지 삭제 */
+export const deleteBoardImage = async (boardId: number) => {
+    const res = await axiosApi.delete(`/board/image/delete/${boardId}`, { withCredentials: true });
+    return res.data;
+}

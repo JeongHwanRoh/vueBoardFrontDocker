@@ -10,13 +10,13 @@ export const loadBoards = async (currentPage: number, pageSize: number) => {
 };
 
 /* 게시글 최신 5개 목록조회(board_id 기준) */
-export const loadRecentFiveBoards=async()=>{
+export const loadRecentFiveBoards = async () => {
 
-    const res=await axiosApi.get("/board/listRecentFive");
+    const res = await axiosApi.get("/board/listRecentFive");
     return res.data;
 
 }
-    
+
 /* 게시글 목록 상세조회 관련 AXIOS 요청 정의 */
 export const loadBoardDetail = async (boardId: number) => {
     const res = await axiosApi.get(`/board/${boardId}`);
@@ -45,5 +45,15 @@ export const updateBoard = async (boardId: number, board: object) => {
 
 /* 게시글 삭제 관련 AXIOS 요청 정의  */
 export const deleteBoards = async (boardId: number) => {
-  return axiosApi.delete(`/board/delete/${boardId}`)
+    return axiosApi.delete(`/board/delete/${boardId}`)
 }
+
+/* // TB_BOARD.CONTENT 내 이미지 URL 경로도 TB_BOARD_IMAGE의 IMAGE_URL로 변경 처리 */
+export const updateBoardContent = async (boardId:number) => {
+    const res=await axiosApi.put(
+    `/board/content/update/${boardId}`,  
+     { withCredentials: true }
+    );
+    return res.data;
+
+};

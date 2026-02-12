@@ -1,4 +1,4 @@
-import { createBoard, updateBoard } from '~/lib/apiService/boardApi';
+import { createBoard, updateBoard, updateBoardContent } from '~/lib/apiService/boardApi';
 import { saveUploadedImage } from '~/lib/apiService/boardImageApi';
 import type { BoardCreateRequest } from '~/lib/types/board';
 import { useUserStore } from '~/stores/userStore';
@@ -89,6 +89,9 @@ export const submitBoards = async () => {
                 alert("이미지 저장 중 오류가 발생했습니다.");
             }
 
+            // TB_BOARD.CONTENT 내 이미지 URL 경로도 TB_BOARD_IMAGE의 IMAGE_URL로 변경 처리
+            const result2=await updateBoardContent(targetId);
+            console.log("updateBoardContent result:", result2);
 
         }
 

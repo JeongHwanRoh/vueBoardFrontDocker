@@ -1,6 +1,7 @@
 import type { BoardResponse } from '~/lib/types/board';
 import { useRouter, useRoute } from 'vue-router';
 import { loadBoardDetail, deleteBoards } from '~/lib/apiService/boardApi';
+import { deleteBoardImage } from '~/lib/apiService/boardImageApi';
 
 
 export const fetchBoardAndDelete = () => {
@@ -28,6 +29,9 @@ export const fetchBoardAndDelete = () => {
         try {
             if (!boardId.value) throw new Error('게시글 ID 없음')
             await deleteBoards(boardId.value)
+            await deleteBoardImage(boardId.value)
+            alert('게시글이 삭제되었습니다.')
+
             router.push('/board')
         } catch (error) {
             console.error('게시글 삭제 실패:', error)
