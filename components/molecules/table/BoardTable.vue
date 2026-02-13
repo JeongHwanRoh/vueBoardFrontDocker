@@ -15,7 +15,7 @@ columns 형태와 rows에 사용할 Entity 정의하고,
 <template>
   <table class="table text-nowrap align-middle mb-0">
     <thead>
-      <tr class="border-2 border-bottom border-primary border-0">
+      <tr id="boardHead" class="border-2 border-bottom border-primary border-0">
         <th v-for="col in columns" :key="col.key">
           {{ col.label }}
         </th>
@@ -69,4 +69,10 @@ const props = defineProps<{
 // rowIdKey 기본값 설정 (props 변경에 자동 갱신되도록 computed 설정) 
 const rowIdKey=computed(()=>props.idKey ?? 'id');
 </script>
+<style scoped>
 
+#boardHead {
+  background-color: gray !important; 
+}
+
+</style>
