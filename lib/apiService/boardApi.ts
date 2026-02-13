@@ -45,7 +45,8 @@ export const updateBoard = async (boardId: number, board: object) => {
 
 /* 게시글 삭제 관련 AXIOS 요청 정의  */
 export const deleteBoards = async (boardId: number) => {
-    return axiosApi.delete(`/board/delete/${boardId}`)
+    const res = await axiosApi.delete(`/board/delete/${boardId}`,{ withCredentials: true })
+    return res.data;
 }
 
 /* // TB_BOARD.CONTENT 내 이미지 URL 경로도 TB_BOARD_IMAGE의 IMAGE_URL로 변경 처리 */

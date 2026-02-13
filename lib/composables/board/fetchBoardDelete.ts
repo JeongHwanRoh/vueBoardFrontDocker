@@ -9,6 +9,7 @@ export const fetchBoardAndDelete = () => {
     const route = useRoute();
     const board = ref<BoardResponse | null>(null);
     const boardId = ref(Number(route.params.boardId))
+    
 
 
     // 게시글 목록 중 해당 boardId에 해당하는 게시글 상세조회
@@ -33,8 +34,13 @@ export const fetchBoardAndDelete = () => {
             alert('게시글이 삭제되었습니다.')
 
             router.push('/board')
-        } catch (error) {
-            console.error('게시글 삭제 실패:', error)
+        } catch (error:any) {
+            console.log('게시글 삭제 실패 메시지:', error)
+            if(error.response?.status===403){
+                alert(error.response.data.title)
+            }else{
+                alert('게시글 삭제 중 서버 오류가 발생했습니다.')
+            }
         }
     }
 
