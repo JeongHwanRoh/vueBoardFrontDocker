@@ -4,8 +4,10 @@ export default defineNuxtConfig({
   builder: 'vite',
   devtools: { enabled: true },
   modules:['@pinia/nuxt'],
-  css: ['~/assets/css/styles.min.css',
-    '~/assets/css/paging.css'
+  css: [
+    '~/assets/css/styles.min.css',
+    '~/assets/css/paging.css',
+    '~/assets/css/tailwind.css',
   ],
 
   // nitor.devProxy ->  Vite devServer proxy 방식으로 변경(3.9 이상 version에서)
@@ -41,11 +43,5 @@ export default defineNuxtConfig({
       },
     },
 
-  },
-  routeRules: {
-    // SSR 비활성화: 서버에서 html 미리 렌더링하지 않고 클라이언트에서만 실행
-    // prerendering 비활성화: 동적 스트림 기능을 가진 /ws-chat가 정상 작동 위해 정적 렌더링 비활성화
-    // 웹소켓 연결 과정에서 기존 렌더링 과정과의 충돌을 방지하는 역할
-    '/ws-chat/**': { ssr: false, prerender: false },
   },
 })

@@ -41,7 +41,7 @@ main {
   flex: 1;
   /* 남은 공간을 다 채움 */
   padding: 1rem;
-  overflow: auto;
+  overflow: hidden;
   /* 내용이 넘칠 때 스크롤 */
 }
 </style>
