@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { Board, Column, Task } from "@/lib/types";
+import type { Board, Column, Task } from "~/lib/types/kanban";
 
 export const useKanbanStore = defineStore("kanban", {
   state: () => ({
