@@ -69,10 +69,3 @@ const props = defineProps<{
 // rowIdKey 기본값 설정 (props 변경에 자동 갱신되도록 computed 설정) 
 const rowIdKey=computed(()=>props.idKey ?? 'id');
 </script>
-<style scoped>
-
-#boardHead {
-  background-color: gray !important; 
-}
-
-</style>

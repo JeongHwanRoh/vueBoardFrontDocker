@@ -1,11 +1,47 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import Draggable from 'vuedraggable'
+import KanbanBoard from '~/components/organisms/kanban/KanbanBoard.vue'
+import TaskModal from '~/components/organisms/board/TaskModal.vue'
 import type { Column, Card } from '~/lib/types/kanban'
+import BtnBW from '~/components/atoms/BtnBW.vue'
 
 const modalCheck = ref(false)
 const newTaskTitle = ref('')
 const selectedColumnId = ref('todo')
+
+// 모달 드래그 관련 상태
+const modalPosition = ref({ top: '35%', left: '50%' })
+const isDragging = ref(false)
+let dragOffset = { x: 0, y: 0 }
+
+// 모달 드래그 시작
+const startDrag = (e: MouseEvent) => {
+  isDragging.value = true
+  const modal = document.getElementById('draggable-modal')
+  if (modal) {
+    const rect = modal.getBoundingClientRect()
+    dragOffset.x = e.clientX - rect.left
+    dragOffset.y = e.clientY - rect.top
+  }
+  document.addEventListener('mousemove', onDrag)
+  document.addEventListener('mouseup', stopDrag)
+}
+
+// 모달 드래그 중
+const onDrag = (e: MouseEvent) => {
+  if (!isDragging.value) return
+  const left = e.clientX - dragOffset.x
+  const top = e.clientY - dragOffset.y
+  modalPosition.value.left = left + 'px'
+  modalPosition.value.top = top + 'px'
+}
+
+// 모달 드래그 종료
+const stopDrag = () => {
+  isDragging.value = false
+  document.removeEventListener('mousemove', onDrag)
+  document.removeEventListener('mouseup', stopDrag)
+}
 
 // 초기 칸반 데이터
 const columns = ref<Column[]>([
@@ -34,7 +70,10 @@ const columns = ref<Column[]>([
 ])
 
 // 업무 추가 함수
-const addTask=() => {
+const addTask = () => {
+  debugger;
+  console.log("addTask 실행")
+  console.log("newTaskTitle:", newTaskTitle.value)
   if (newTaskTitle.value.trim() === '') return
 
   const newCard: Card = {
@@ -50,10 +89,12 @@ const addTask=() => {
   }
 }
 
-
-const taskModal = () => {
+// 모달 열기
+const modalOpen = () => {
   modalCheck.value = true
 }
+
+// 모달 닫기
 const modalClose = () => {
   modalCheck.value = false
 }
@@ -66,44 +107,22 @@ watch(columns, (newVal) => {
 </script>
 
 <template>
-  <button @click="taskModal">업무 추가</button>
-  
-  <div class="modal">
-      <div class="modal-wrap" v-show="modalCheck">
-      <h2>업무 추가</h2>
-      <input v-model="newTaskTitle" type="text" placeholder="업무 제목 입력" />
-      <select v-model="selectedColumnId">
-        <option value="todo">예정</option>
-        <option value="inProgress">진행중</option>
-        <option value="done">완료</option>
-      </select>
-    </div>
-    <div class="modal-btn">
-      <button @click="addTask">추가</button>
-      <button @click="modalClose">닫기</button>
-
-    </div>
+  <div class="addTaskBtn">
+    <BtnBW field="업무 추가" @click="modalOpen"></BtnBW>
   </div>
-  <div class="kanban-board">
-    <div v-for="column in columns" :key="column.id" class="kanban-column">
-      <h3 class="column-title">{{ column.title }}</h3>
-
-      <Draggable v-model="column.cards" group="kanban" item-key="id" class="card-list">
-        <template #item="{ element }">
-          <div class="kanban-card">
-            {{ element.title }}
-          </div>
-        </template>
-      </Draggable>
-    </div>
-  </div>
+  <!-- 업무 추가 모달 -->
+  <TaskModal :modalCheck="modalCheck" :modalPosition="modalPosition" :newTaskTitle="newTaskTitle"
+    :selectedColumnId="selectedColumnId" :addTask="addTask" :modalClose="modalClose" :startDrag="startDrag"
+    @update:newTaskTitle="val => newTaskTitle = val" @update:selectedColumnId="val => selectedColumnId = val" />
+  <!-- 칸반보드 Column -->
+  <KanbanBoard :columns="columns" />
 </template>
 
-<style scoped>
+<style>
 .kanban-board {
   display: flex;
   gap: 16px;
-  padding: 24px;
+  padding: 24px 0px;
 }
 
 .kanban-column {
@@ -142,13 +161,10 @@ watch(columns, (newVal) => {
   left: 0;
   width: 100vw;
   height: 100vh;
-
   background: rgba(0, 0, 0, 0.4);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   z-index: 1000;
 }
 
@@ -157,7 +173,21 @@ watch(columns, (newVal) => {
   padding: 24px;
   border-radius: 8px;
   width: 320px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  height: 30vh;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  /* top, left는 style 바인딩으로 제어 */
+}
+
+.modal-header {
+  width: 100%;
+  font-weight: bold;
+  cursor: move;
+  user-select: none;
 }
 
 .modal-btn {
@@ -165,5 +195,11 @@ watch(columns, (newVal) => {
   justify-content: flex-end;
   gap: 8px;
   margin-top: 16px;
+}
+
+.addTaskBtn {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
 }
 </style>
