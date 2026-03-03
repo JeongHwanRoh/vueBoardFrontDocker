@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import KanbanBoard from '~/components/organisms/kanban/KanbanBoard.vue'
-import TaskModal from '~/components/organisms/board/TaskModal.vue'
-import type { Column, Card } from '~/lib/types/kanban'
+import { ref, onMounted } from 'vue'
+import type { KanbanCard, KanbanColumn, KanbanBoard } from '~/lib/types/kanban'
 import BtnBW from '~/components/atoms/BtnBW.vue'
+import KanbanBoardComponent from '~/components/organisms/kanban/KanbanBoard.vue'
+import { fetchKanbanCards, createKanbanCard, updateKanbanCard, deleteKanbanCard } from '~/lib/apiService/kanbanApi'
+import TaskModal from '~/components/organisms/board/TaskModal.vue'
 
 const modalCheck = ref(false)
 const newTaskTitle = ref('')
+const newTaskDescription = ref('')
 const selectedColumnId = ref('todo')
 
 // 모달 드래그 관련 상태
@@ -44,48 +46,96 @@ const stopDrag = () => {
 }
 
 // 초기 칸반 데이터
-const columns = ref<Column[]>([
+const columns = ref<KanbanColumn[]>([
   {
     id: 'todo',
     title: '예정',
-    cards: [
-      { id: 1, title: '기획안 작성' },
-      { id: 2, title: '요구사항 정리' }
-    ]
+    status: 'todo',
+    cards: []
   },
   {
     id: 'inProgress',
     title: '진행중',
-    cards: [
-      { id: 3, title: '프론트엔드 개발' }
-    ]
+    status: 'inProgress',
+    cards: []
   },
   {
     id: 'done',
     title: '완료',
-    cards: [
-      { id: 4, title: '프로젝트 세팅' }
-    ]
+    status: 'done',
+    cards: []
   }
 ])
 
+// 백엔드에서 칸반 데이터 불러오기
+const loadKanbanData = async () => {
+  try {
+    const cards = await fetchKanbanCards()
+
+    // 각 컬럼별로 카드 분류
+    columns.value.forEach(column => {
+      column.cards = cards.filter(card => card.status === column.status)
+        .sort((a, b) => a.order - b.order)
+    })
+  } catch (error) {
+    console.error('칸반 데이터 로드 실패:', error)
+  }
+}
+
 // 업무 추가 함수
-const addTask = () => {
-  debugger;
+const addTask = async () => {
   console.log("addTask 실행")
   console.log("newTaskTitle:", newTaskTitle.value)
   if (newTaskTitle.value.trim() === '') return
 
-  const newCard: Card = {
-    id: Date.now(),
-    title: newTaskTitle.value
-  }
-
   const column = columns.value.find(col => col.id === selectedColumnId.value)
-  if (column) {
+  if (!column) return
+
+  try {
+    const newCard = await createKanbanCard({
+      title: newTaskTitle.value,
+      description: newTaskDescription.value || undefined,
+      status: selectedColumnId.value,
+      order: column.cards.length
+    })
+
     column.cards.push(newCard)
     newTaskTitle.value = ''
+    newTaskDescription.value = ''
     modalCheck.value = false
+  } catch (error) {
+    console.error('업무 추가 실패:', error)
+  }
+}
+
+// 카드 업데이트 함수
+const updateCard = async (cardId: string, updates: Partial<KanbanCard>) => {
+  try {
+    await updateKanbanCard({ id: cardId, ...updates })
+  } catch (error) {
+    console.error('카드 업데이트 실패:', error)
+  }
+}
+
+// 카드 편집 함수
+const editCard = (card: KanbanCard) => {
+  // 편집 로직 구현 (모달 열기 등)
+  console.log('카드 편집:', card)
+  // TODO: 편집 모달 구현
+}
+
+// 카드 삭제 함수
+const deleteCard = async (cardId: string) => {
+  if (!confirm('정말 삭제하시겠습니까?')) return
+
+  try {
+    await deleteKanbanCard(cardId)
+    // UI에서 카드 제거
+    columns.value.forEach(column => {
+      column.cards = column.cards.filter(card => card.id !== cardId)
+    })
+  } catch (error) {
+    console.error('카드 삭제 실패:', error)
   }
 }
 
@@ -99,6 +149,11 @@ const modalClose = () => {
   modalCheck.value = false
 }
 
+// 컴포넌트 마운트 시 데이터 로드
+onMounted(() => {
+  loadKanbanData()
+})
+
 // 데이터 변화 감지 로직
 watch(columns, (newVal) => {
   console.log('칸반 데이터 변경:', newVal)
@@ -111,11 +166,13 @@ watch(columns, (newVal) => {
     <BtnBW field="업무 추가" @click="modalOpen"></BtnBW>
   </div>
   <!-- 업무 추가 모달 -->
-  <TaskModal :modalCheck="modalCheck" :modalPosition="modalPosition" :newTaskTitle="newTaskTitle"
-    :selectedColumnId="selectedColumnId" :addTask="addTask" :modalClose="modalClose" :startDrag="startDrag"
-    @update:newTaskTitle="val => newTaskTitle = val" @update:selectedColumnId="val => selectedColumnId = val" />
+  <TaskModal :modalCheck="modalCheck" :modalPosition="modalPosition" v-model:newTaskTitle="newTaskTitle"
+    v-model:newTaskDescription="newTaskDescription" v-model:selectedColumnId="selectedColumnId" :addTask="addTask"
+    :modalClose="modalClose" :startDrag="startDrag" />
+
   <!-- 칸반보드 Column -->
-  <KanbanBoard :columns="columns" />
+  <KanbanBoardComponent :columns="columns" @editCard="editCard" @deleteCard="deleteCard"
+    @cardsReordered="loadKanbanData" />
 </template>
 
 <style>
