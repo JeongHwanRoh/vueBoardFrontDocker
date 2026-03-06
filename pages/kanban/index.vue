@@ -3,18 +3,19 @@ import { ref, onMounted } from 'vue'
 import type { KanbanCard, KanbanColumn, KanbanBoard } from '~/lib/types/kanban'
 import BtnBW from '~/components/atoms/BtnBW.vue'
 import KanbanBoardComponent from '~/components/organisms/kanban/KanbanBoard.vue'
-import { fetchKanbanCards, createKanbanCard, updateKanbanCard, deleteKanbanCard } from '~/lib/apiService/kanbanApi'
+import { fetchKanbanCards, createKanbanCard} from '~/lib/apiService/kanbanApi'
 import TaskModal from '~/components/organisms/board/TaskModal.vue'
 
 const modalCheck = ref(false)
 const newTaskTitle = ref('')
 const newTaskDescription = ref('')
 const selectedColumnId = ref('todo')
+const boardId='01KANBANDEFAULT00000000000' // 향후 DB에서 TB_KANBAN_BOARD에서 가져올 예정
 
 // 모달 드래그 관련 상태
-const modalPosition = ref({ top: '35%', left: '50%' })
+const modalPosition = ref({ top: '30%', left: '50%' })
 const isDragging = ref(false)
-let dragOffset = { x: 0, y: 0 }
+let dragOffset = { x: 0, y: 0 } // 드래그 시작 시 마우스 위치와 모달의 좌상단 위치 차이 계산하는 좌표
 
 // 모달 드래그 시작
 const startDrag = (e: MouseEvent) => {
@@ -22,8 +23,10 @@ const startDrag = (e: MouseEvent) => {
   const modal = document.getElementById('draggable-modal')
   if (modal) {
     const rect = modal.getBoundingClientRect()
-    dragOffset.x = e.clientX - rect.left
-    dragOffset.y = e.clientY - rect.top
+    // dragOffset: 마우스 위치와 모달의 좌상단 위치 차이 계산
+    // 드래그 시작 때 계산
+    dragOffset.x = e.clientX - rect.left // 마우스 x좌표에서 모달의 좌상단 x좌표를 빼서 dragOffset.x 계산
+    dragOffset.y = e.clientY - rect.top // 마우스 y좌표에서 모달의 좌상단 y좌표를 빼서 dragOffset.y 계산
   }
   document.addEventListener('mousemove', onDrag)
   document.addEventListener('mouseup', stopDrag)
@@ -32,10 +35,12 @@ const startDrag = (e: MouseEvent) => {
 // 모달 드래그 중
 const onDrag = (e: MouseEvent) => {
   if (!isDragging.value) return
-  const left = e.clientX - dragOffset.x
-  const top = e.clientY - dragOffset.y
-  modalPosition.value.left = left + 'px'
-  modalPosition.value.top = top + 'px'
+  // 드래그 중 위치 계산
+  const left = e.clientX - dragOffset.x  // x좌표에서 dragOffset.x를 빼서 모달의 좌상단이 마우스 위치에 오도록 계산
+  const top = e.clientY - dragOffset.y  // y좌표에서 dragOffset.y를 빼서 모달의 좌상단이 마우스 위치에 오도록 계산
+  modalPosition.value.left = left + 'px' // 계산된 left값을 모달 위치에 적용
+  modalPosition.value.top = top + 'px'  // 계산된 top값을 모달 위치에 적용
+  console.log('드래그 중 - left:', left, 'top:', top)
 }
 
 // 모달 드래그 종료
@@ -48,19 +53,19 @@ const stopDrag = () => {
 // 초기 칸반 데이터
 const columns = ref<KanbanColumn[]>([
   {
-    id: 'todo',
+    columnId: 'todo',
     title: '예정',
     status: 'todo',
     cards: []
   },
   {
-    id: 'inProgress',
+    columnId: 'inProgress',
     title: '진행중',
     status: 'inProgress',
     cards: []
   },
   {
-    id: 'done',
+    columnId: 'done',
     title: '완료',
     status: 'done',
     cards: []
@@ -70,12 +75,15 @@ const columns = ref<KanbanColumn[]>([
 // 백엔드에서 칸반 데이터 불러오기
 const loadKanbanData = async () => {
   try {
-    const cards = await fetchKanbanCards()
+    const cards = await fetchKanbanCards(boardId)
 
     // 각 컬럼별로 카드 분류
+    // 'todo', 'inProgress', 'done'에 따라 카드 분류 후 order 순서대로 정렬
+    // status: 어떤 컬럼에 속하는가? (todo, inProgress, done 중 하나)
+    // order: 각 컬럼 내 카드의 순서 (숫자가 낮을수록 상단에 위치=>먼저 들어온 카드)
     columns.value.forEach(column => {
       column.cards = cards.filter(card => card.status === column.status)
-        .sort((a, b) => a.order - b.order)
+        .sort((a, b) => a.orderNum - b.orderNum)  // a.orderNum-b.orderNum>0: a가 앞, a.orderNum-b.orderNum<0: b가 앞, a.orderNum-b.orderNum=0: 순서 유지
     })
   } catch (error) {
     console.error('칸반 데이터 로드 실패:', error)
@@ -88,15 +96,15 @@ const addTask = async () => {
   console.log("newTaskTitle:", newTaskTitle.value)
   if (newTaskTitle.value.trim() === '') return
 
-  const column = columns.value.find(col => col.id === selectedColumnId.value)
+  const column = columns.value.find(col => col.columnId === selectedColumnId.value)
   if (!column) return
 
   try {
     const newCard = await createKanbanCard({
       title: newTaskTitle.value,
-      description: newTaskDescription.value || undefined,
+      cardInfo: newTaskDescription.value || undefined,
       status: selectedColumnId.value,
-      order: column.cards.length
+      orderNum: column.cards.length
     })
 
     column.cards.push(newCard)
@@ -108,10 +116,10 @@ const addTask = async () => {
   }
 }
 
-// 카드 업데이트 함수
+// 카드 업데이트 함수  (백엔드 구현 시 api함수 주석 열기)
 const updateCard = async (cardId: string, updates: Partial<KanbanCard>) => {
   try {
-    await updateKanbanCard({ id: cardId, ...updates })
+    // await updateKanbanCard({ id: cardId, ...updates })
   } catch (error) {
     console.error('카드 업데이트 실패:', error)
   }
@@ -124,15 +132,15 @@ const editCard = (card: KanbanCard) => {
   // TODO: 편집 모달 구현
 }
 
-// 카드 삭제 함수
+// 카드 삭제 함수 (백엔드 구현 시 api함수 주석 열기)
 const deleteCard = async (cardId: string) => {
   if (!confirm('정말 삭제하시겠습니까?')) return
 
   try {
-    await deleteKanbanCard(cardId)
+    // await deleteKanbanCard(cardId)
     // UI에서 카드 제거
     columns.value.forEach(column => {
-      column.cards = column.cards.filter(card => card.id !== cardId)
+      column.cards = column.cards.filter(card => card.cardId !== Number(cardId))
     })
   } catch (error) {
     console.error('카드 삭제 실패:', error)

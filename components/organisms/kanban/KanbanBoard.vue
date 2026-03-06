@@ -2,13 +2,7 @@
   <div class="kanban-board">
     <div v-for="column in columns" :key="column.id" class="kanban-column">
       <h3 class="column-title">{{ column.title }}</h3>
-      <Draggable 
-        v-model="column.cards" 
-        group="kanban" 
-        item-key="id" 
-        class="card-list"
-        @end="onDragEnd"
-      >
+      <Draggable v-model="column.cards" group="kanban" item-key="id" class="card-list" @end="onDragEnd">
         <template #item="{ element }">
           <div class="kanban-card">
             <div class="card-content">
@@ -43,11 +37,11 @@ const emit = defineEmits(['editCard', 'deleteCard', 'cardsReordered'])
 // 드래그 종료 시 백엔드에 순서 업데이트
 const onDragEnd = async () => {
   const allCards: { id: string; order: number; status: string }[] = []
-  
+
   props.columns.forEach(column => {
     column.cards.forEach((card, index) => {
       allCards.push({
-        id: card.id,
+        id: String(card.id),
         order: index,
         status: column.status
       })

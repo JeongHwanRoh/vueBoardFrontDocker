@@ -16,7 +16,7 @@
 
 <script setup>
 import BoardTable from "~/components/organisms/board/BoardTable.vue"; // 테이블 조회
-import Pagination from "~/components/organisms/board/Pagination.vue"; // 페이징(10개씩)
+import Pagination from "~/components/organisms/kanban/Pagination.vue"; // 페이징(10개씩)
 
 
 defineProps({

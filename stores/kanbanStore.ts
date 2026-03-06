@@ -1,75 +1,48 @@
-import { defineStore } from "pinia";
-import type { Board, Column, Task } from "~/lib/types/kanban";
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+import type { KanbanBoard, KanbanColumn, KanbanCard } from '~/lib/types/kanban'
 
-export const useKanbanStore = defineStore("kanban", {
-  state: () => ({
-    boards: [] as Board[],
-    activeBoardId: "ui-board",
-  }),
 
-  actions: {
-    initUIBoard() {
-      if (this.boards.length > 0) return;
+export const useKanbanStore = defineStore('kanban', () => {
+  // 기존 Board -> KanbanBoard
+  const board = ref<KanbanBoard>({
+    columns: [],
+    boardId: '',
+    pn: 0,
+    boardName: ''
+  })
 
-      this.boards = [
-        {
-          id: "ui-board",
-          name: "Any Board",
-          columns: [
-            { id: "todo", name: "Todo", tasks: [] },
-            { id: "progress", name: "In Progress", tasks: [] },
-            { id: "done", name: "Done", tasks: [] },
-          ],
-        },
-      ];
-    },
+  // 필요 시 개별 컬럼 접근
+  const columns = computed<KanbanColumn[]>(() => board.value.columns)
 
-    getBoardColumns(boardId: string) {
-      return this.boards.find(b => b.id === boardId)?.columns ?? [];
-    },
+  // 기존 Task -> KanbanCard
+  const addCard = (columnId: string, card: KanbanCard) => {
+    const column = board.value.columns.find((c) => c.columnId === columnId)
+    if (!column) return
+    column.cards.push(card)
+  }
 
-    getColumnTasks(boardId: string, columnId: string) {
-      return (
-        this.getBoardColumns(boardId)
-          .find(c => c.id === columnId)?.tasks ?? []
-      );
-    },
+  const updateCard = (cardId: string, updates: Partial<KanbanCard>) => {
+    for (const column of board.value.columns) {
+      const target = column.cards.find((c) => c.cardId === parseInt(cardId, 10))
+      if (target) {
+        Object.assign(target, updates)
+        return
+      }
+    }
+  }
 
-    createNewColumn(boardId: string, name: string) {
-      const board = this.boards.find(b => b.id === boardId);
-      if (!board) return;
+  const removeCard = (cardId: string) => {
+    for (const column of board.value.columns) {
+      column.cards = column.cards.filter((c) => c.cardId !== parseInt(cardId, 10))
+    }
+  }
 
-      board.columns.push({
-        id: crypto.randomUUID(),
-        name,
-        tasks: [],
-      });
-    },
-
-    addTaskToColumn(
-      boardId: string,
-      columnId: string,
-      task: Omit<Task, "id">
-    ) {
-      const column = this.getBoardColumns(boardId).find(c => c.id === columnId);
-      if (!column) return;
-
-      column.tasks.push({ ...task, id: crypto.randomUUID() });
-    },
-
-    editTask(
-      boardId: string,
-      fromColumnId: string,
-      toColumnId: string,
-      task: Task
-    ) {
-      const columns = this.getBoardColumns(boardId);
-      const from = columns.find(c => c.id === fromColumnId);
-      const to = columns.find(c => c.id === toColumnId);
-      if (!from || !to) return;
-
-      from.tasks = from.tasks.filter(t => t.id !== task.id);
-      to.tasks.push(task);
-    },
-  },
-});
+  return {
+    board,
+    columns,
+    addCard,
+    updateCard,
+    removeCard
+  }
+})

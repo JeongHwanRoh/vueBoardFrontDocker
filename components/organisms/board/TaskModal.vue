@@ -1,6 +1,6 @@
 <template>
     <div v-if="modalCheck" class="modal-wrap">
-        <div class="modal" :style="{ top: modalPosition?.top, left: modalPosition?.left }" @mousedown="handleMouseDown">
+        <div id="draggable-modal" class="modal" :style="{ top: modalPosition?.top, left: modalPosition?.left }" @mousedown="handleMouseDown">
             <div class="modal-header" style="cursor:move; user-select:none; padding-bottom:8px;">
                 <h2>업무 추가</h2>
             </div>
