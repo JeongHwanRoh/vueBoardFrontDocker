@@ -23,7 +23,7 @@
 import Draggable from 'vuedraggable'
 import type { PropType } from 'vue'
 import type { KanbanColumn, KanbanCard } from '~/lib/types/kanban'
-import { reorderCards } from '~/lib/apiService/kanbanApi'
+import { reorderCards } from '~/lib/apiService/kanbanCardApi'
 
 const props = defineProps({
   columns: {

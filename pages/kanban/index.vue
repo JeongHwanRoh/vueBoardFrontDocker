@@ -3,14 +3,18 @@ import { ref, onMounted } from 'vue'
 import type { KanbanCard, KanbanColumn, KanbanBoard } from '~/lib/types/kanban'
 import BtnBW from '~/components/atoms/BtnBW.vue'
 import KanbanBoardComponent from '~/components/organisms/kanban/KanbanBoard.vue'
-import { fetchKanbanCards, createKanbanCard} from '~/lib/apiService/kanbanApi'
+import { fetchKanbanCards, createKanbanCard} from '~/lib/apiService/kanbanCardApi'
 import TaskModal from '~/components/organisms/board/TaskModal.vue'
+import {fetchKanbanBoardId} from '~/lib/apiService/kanbanBoardApi'
 
 const modalCheck = ref(false)
 const newTaskTitle = ref('')
 const newTaskDescription = ref('')
 const selectedColumnId = ref('todo')
-const boardId='01KANBANDEFAULT00000000000' // 향후 DB에서 TB_KANBAN_BOARD에서 가져올 예정
+// const boardId='01KANBANDEFAULT00000000000' // 향후 DB에서 TB_KANBAN_BOARD에서 가져올 예정
+const boardId = ref('')
+
+
 
 // 모달 드래그 관련 상태
 const modalPosition = ref({ top: '30%', left: '50%' })
@@ -75,7 +79,9 @@ const columns = ref<KanbanColumn[]>([
 // 백엔드에서 칸반 데이터 불러오기
 const loadKanbanData = async () => {
   try {
-    const cards = await fetchKanbanCards(boardId)
+    const newBoardId= await fetchKanbanBoardId()
+    boardId.value = newBoardId.boardId
+    const cards = await fetchKanbanCards(boardId.value)
 
     // 각 컬럼별로 카드 분류
     // 'todo', 'inProgress', 'done'에 따라 카드 분류 후 order 순서대로 정렬
