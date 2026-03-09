@@ -7,7 +7,6 @@ export default defineNuxtConfig({
   css: [
     '~/assets/css/styles.min.css',
     '~/assets/css/paging.css',
-    '~/assets/css/tailwind.css',
   ],
 
   // nitor.devProxy ->  Vite devServer proxy 방식으로 변경(3.9 이상 version에서)

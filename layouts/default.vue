@@ -26,22 +26,20 @@ import AppSidebar from '../components/organisms/sidebar/AppSidebar.vue';
 .page-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  /* 전체 화면 높이 기준 */
+  min-height: 100vh;
 }
 
 .main-container {
   display: flex;
   flex-direction: row;
   flex: 1;
-  overflow: hidden;
+  min-height: 0;
 }
 
 main {
   flex: 1;
-  /* 남은 공간을 다 채움 */
   padding: 1rem;
-  overflow: hidden;
-  /* 내용이 넘칠 때 스크롤 */
+  min-height: 0;
+  overflow-y: auto;
 }
 </style>
