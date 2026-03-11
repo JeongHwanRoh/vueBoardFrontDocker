@@ -1,8 +1,8 @@
 <template>
   <div class="kanban-board">
-    <div v-for="column in columns" :key="column.id" class="kanban-column">
-      <h3 class="column-title">{{ column.title }}</h3>
-      <Draggable v-model="column.cards" group="kanban" item-key="id" class="card-list" @end="onDragEnd">
+    <div v-for="column in columns" :key="column.columnId" class="kanban-column">
+      <h3 class="column-title">{{ column.columnTitle }}</h3>
+      <Draggable v-model="column.cards" group="kanban" item-key="cardId" class="card-list" @end="onDragEnd">
         <template #item="{ element }">
           <div class="kanban-card">
             <div class="card-content">
@@ -10,7 +10,7 @@
             </div>
             <div class="card-actions">
               <button @click="$emit('editCard', element)" class="btn-edit">✏️</button>
-              <button @click="$emit('deleteCard', element.id)" class="btn-delete">🗑️</button>
+              <button @click="$emit('deleteCard', String(element.cardId))" class="btn-delete">🗑️</button>
             </div>
           </div>
         </template>
@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import Draggable from 'vuedraggable'
 import type { PropType } from 'vue'
-import type { KanbanColumn, KanbanCard } from '~/lib/types/kanban'
+import type { KanbanColumn } from '~/lib/types/kanban'
 import { reorderCards } from '~/lib/apiService/kanbanCardApi'
 
 const props = defineProps({
@@ -41,9 +41,9 @@ const onDragEnd = async () => {
   props.columns.forEach(column => {
     column.cards.forEach((card, index) => {
       allCards.push({
-        id: String(card.id),
+        id: String(card.cardId),
         order: index,
-        status: column.status
+        status: column.columnName
       })
     })
   })

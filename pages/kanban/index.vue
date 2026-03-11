@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import type { KanbanCard, KanbanColumn, KanbanBoard } from '~/lib/types/kanban'
+import { ref, onMounted, watch } from 'vue'
+import type { KanbanCard, KanbanColumn, KanbanColumnDto } from '~/lib/types/kanban'
 import BtnBW from '~/components/atoms/BtnBW.vue'
 import KanbanBoardComponent from '~/components/organisms/kanban/KanbanBoard.vue'
 import { fetchKanbanCards, createKanbanCard} from '~/lib/apiService/kanbanCardApi'
@@ -10,7 +10,7 @@ import {fetchKanbanBoardId} from '~/lib/apiService/kanbanBoardApi'
 const modalCheck = ref(false)
 const newTaskTitle = ref('')
 const newTaskDescription = ref('')
-const selectedColumnId = ref('todo')
+const selectedColumnId = ref('TODO')
 // const boardId='01KANBANDEFAULT00000000000' // 향후 DB에서 TB_KANBAN_BOARD에서 가져올 예정
 const boardId = ref('')
 
@@ -56,22 +56,22 @@ const stopDrag = () => {
 
 // 초기 칸반 데이터
 const columns = ref<KanbanColumn[]>([
-  {
-    columnId: 'todo',
-    title: '예정',
-    status: 'todo',
+  { 
+    columnId:1,
+    columnName: 'TODO',
+    columnTitle: '예정',
     cards: []
   },
   {
-    columnId: 'inProgress',
-    title: '진행중',
-    status: 'inProgress',
+    columnId:2,
+    columnName: 'IN_PROGRESS',
+    columnTitle: '진행중',
     cards: []
   },
   {
-    columnId: 'done',
-    title: '완료',
-    status: 'done',
+    columnId:3,
+    columnName: 'DONE',
+    columnTitle: '완료',
     cards: []
   }
 ])
@@ -82,14 +82,15 @@ const loadKanbanData = async () => {
     const newBoardId= await fetchKanbanBoardId()
     boardId.value = newBoardId.boardId
     const cards = await fetchKanbanCards(boardId.value)
-
+    
     // 각 컬럼별로 카드 분류
     // 'todo', 'inProgress', 'done'에 따라 카드 분류 후 order 순서대로 정렬
     // status: 어떤 컬럼에 속하는가? (todo, inProgress, done 중 하나)
-    // order: 각 컬럼 내 카드의 순서 (숫자가 낮을수록 상단에 위치=>먼저 들어온 카드)
+    // // order: 각 컬럼 내 카드의 순서 (숫자가 낮을수록 상단에 위치=>먼저 들어온 카드)
     columns.value.forEach(column => {
-      column.cards = cards.filter(card => card.status === column.status)
-        .sort((a, b) => a.orderNum - b.orderNum)  // a.orderNum-b.orderNum>0: a가 앞, a.orderNum-b.orderNum<0: b가 앞, a.orderNum-b.orderNum=0: 순서 유지
+      column.cards = cards
+        .filter(card => card.columnName === column.columnName)
+        .sort((a, b) => a.orderNum - b.orderNum)
     })
   } catch (error) {
     console.error('칸반 데이터 로드 실패:', error)
@@ -102,18 +103,26 @@ const addTask = async () => {
   console.log("newTaskTitle:", newTaskTitle.value)
   if (newTaskTitle.value.trim() === '') return
 
-  const column = columns.value.find(col => col.columnId === selectedColumnId.value)
+  const column = columns.value.find(col => col.columnName === selectedColumnId.value)
   if (!column) return
 
   try {
     const newCard = await createKanbanCard({
       title: newTaskTitle.value,
-      cardInfo: newTaskDescription.value || undefined,
-      status: selectedColumnId.value,
+      cardInfo: newTaskDescription.value || '',
+      columnName: selectedColumnId.value,
       orderNum: column.cards.length
     })
 
-    column.cards.push(newCard)
+    column.cards.push({
+      columnName: column.columnName,
+      orderNum: newCard.orderNum,
+      cardId: newCard.cardId,
+      title: newCard.title,
+      cardInfo: newTaskDescription.value || '',
+      createdAt: newCard.createdAt,
+      updatedAt: newCard.updatedAt
+    })
     newTaskTitle.value = ''
     newTaskDescription.value = ''
     modalCheck.value = false

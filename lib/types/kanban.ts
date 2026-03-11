@@ -6,35 +6,47 @@ export interface KanbanBoard {
 }
 
 export interface KanbanCard {
-  id: string;
-  boardId: string;  // Board FK 추가
+
+  cardId: number;
+  columnId: number;
   title: string;
-  description?: string;
-  status: string;
-  order: number;
-  createdAt?: string;
-  updatedAt?: string;
+  orderNum: number;
+  createdAt: string;
+  updatedAt: string;
+
+	
 }
 
 export interface KanbanColumn {
-  id: string;
-  title: string;
-  status: string;
-  cards: KanbanCard[];
+  columnName:string;
+  columnTitle: string;
+  columnId: number;
+  cards: KanbanColumnDto[];
+}
+
+export interface KanbanColumnDto{
+  columnName: string;
+  orderNum: number;
+  cardId: number;
+  title:string;
+  cardInfo: string;
+  createdAt: string;
+  updatedAt: string;
+
 }
 
 export interface CreateCardDto {
   title: string;
-  description?: string;
-  status: string;
-  order: number;
+  cardInfo: string;
+  columnName: string;
+  orderNum: number;
   // boardId는 서버에서 세션으로 자동 설정
 }
 
-export interface UpdateCardDto {
-  id: string;
-  title?: string;
-  description?: string;
-  status?: string;
-  order?: number;
-}
+// export interface UpdateCardDto {
+//   id: string;
+//   title?: string;
+//   description?: string;
+//   status?: string;
+//   order?: number;
+// }

@@ -1,11 +1,11 @@
 import axiosApi from './axiosApi';
-import type { KanbanCard, CreateCardDto, UpdateCardDto } from '~/lib/types/kanban';
+import type { KanbanCard, KanbanColumnDto, CreateCardDto} from '~/lib/types/kanban';
 
 // 칸반보드 Card 조회
-export const fetchKanbanCards = async (boardId: string): Promise<KanbanCard[]> => {
+export const fetchKanbanCards = async (boardId: string): Promise<KanbanColumnDto[]> => {
   const res = await axiosApi.get(`/kanban/card/list?boardId=${boardId}`, { withCredentials: true });
   console.log('fetchKanbanCards response:', res.data); // 응답 데이터 확인
-  return res.data;
+  return res.data as KanbanColumnDto[];
 };
 
 // 칸반보드 Card 생성 

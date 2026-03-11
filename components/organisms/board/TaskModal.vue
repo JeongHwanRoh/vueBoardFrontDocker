@@ -20,9 +20,9 @@
                 @change="updateColumnId(($event.target as HTMLSelectElement).value)"
                 style="margin-top: 8px;"
             >
-                <option value="todo">할 일</option>
-                <option value="inProgress">진행 중</option>
-                <option value="done">완료</option>
+                <option value="TODO">할 일</option>
+                <option value="IN_PROGRESS">진행 중</option>
+                <option value="DONE">완료</option>
             </select>
             <div class="modal-btn">
                 <button @click="handleAddTask">추가</button>
@@ -47,7 +47,7 @@ const props = withDefaults(defineProps<Props>(), {
     modalPosition: () => ({ top: '35%', left: '50%' }),
     newTaskTitle: '',
     newTaskDescription: '',
-    selectedColumnId: 'todo'
+    selectedColumnId: 'TODO'
 })
 
 const emit = defineEmits<{
