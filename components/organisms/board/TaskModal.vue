@@ -20,7 +20,7 @@
                 @change="updateColumnId(($event.target as HTMLSelectElement).value)"
                 style="margin-top: 8px;"
             >
-                <option value="TODO">할 일</option>
+                <option value="TODO">예정</option>
                 <option value="IN_PROGRESS">진행 중</option>
                 <option value="DONE">완료</option>
             </select>

@@ -1,7 +1,5 @@
 <template>
-  <div class="addTaskBtn">
-    <BtnBW field="업무 추가" @click="modalOpen"></BtnBW>
-  </div>
+ 
   <!-- 업무 추가 모달 -->
   <TaskModal :modalCheck="modalCheck" :modalPosition="modalPosition" v-model:newTaskTitle="newTaskTitle"
     v-model:newTaskDescription="newTaskDescription" v-model:selectedColumnId="selectedColumnId" :addTask="addTask"
@@ -10,6 +8,9 @@
   <!-- 칸반보드 Column -->
   <KanbanBoardComponent :columns="columns" @editCard="editCard" @deleteCard="deleteCard"
     @cardsReordered="loadKanbanData" />
+   <div class="addTaskBtn">
+    <BtnBW field="업무 추가" @click="modalOpen"></BtnBW>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -267,7 +268,9 @@ watch(columns, (newVal) => {
 
 .addTaskBtn {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
+  /* 우측정렬 */
+
   width: 100%;
 }
 </style>

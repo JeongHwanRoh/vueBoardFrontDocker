@@ -35,15 +35,5 @@ export default {
 </template>
 
 <style scoped>
-div>.row {
-  --bs-gutter-x: 30px;
-  --bs-gutter-y: 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex !important;
-  flex-wrap: nowrap;
-  margin-top: calc(-1 * var(--bs-gutter-y));
-  margin-right: calc(-0.5 * var(--bs-gutter-x));
-  margin-left: calc(-0.5 * var(--bs-gutter-x));
-}
+
 </style>
