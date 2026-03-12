@@ -17,13 +17,14 @@ export interface KanbanCard {
 	
 }
 
+// DB에서 가져온 card 정보를 담은 column 정보(조회용)
 export interface KanbanColumn {
   columnName:string;
   columnTitle: string;
-  columnId: number;
   cards: KanbanColumnDto[];
 }
 
+// DB에서 COLUMN, CARD, CARD_INFO를 JOIN해서 가져올 때 사용할 DTO
 export interface KanbanColumnDto{
   columnName: string;
   orderNum: number;

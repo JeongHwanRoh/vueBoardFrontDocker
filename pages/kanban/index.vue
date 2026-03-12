@@ -1,17 +1,31 @@
+<template>
+  <div class="addTaskBtn">
+    <BtnBW field="업무 추가" @click="modalOpen"></BtnBW>
+  </div>
+  <!-- 업무 추가 모달 -->
+  <TaskModal :modalCheck="modalCheck" :modalPosition="modalPosition" v-model:newTaskTitle="newTaskTitle"
+    v-model:newTaskDescription="newTaskDescription" v-model:selectedColumnId="selectedColumnId" :addTask="addTask"
+    :modalClose="modalClose" :startDrag="startDrag" />
+
+  <!-- 칸반보드 Column -->
+  <KanbanBoardComponent :columns="columns" @editCard="editCard" @deleteCard="deleteCard"
+    @cardsReordered="loadKanbanData" />
+</template>
+
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import type { KanbanCard, KanbanColumn, KanbanColumnDto } from '~/lib/types/kanban'
 import BtnBW from '~/components/atoms/BtnBW.vue'
 import KanbanBoardComponent from '~/components/organisms/kanban/KanbanBoard.vue'
-import { fetchKanbanCards, createKanbanCard} from '~/lib/apiService/kanbanCardApi'
+import { fetchKanbanCards, createKanbanCard } from '~/lib/apiService/kanbanCardApi'
 import TaskModal from '~/components/organisms/board/TaskModal.vue'
-import {fetchKanbanBoardId} from '~/lib/apiService/kanbanBoardApi'
+import { fetchKanbanBoardId } from '~/lib/apiService/kanbanBoardApi'
+
 
 const modalCheck = ref(false)
 const newTaskTitle = ref('')
 const newTaskDescription = ref('')
 const selectedColumnId = ref('TODO')
-// const boardId='01KANBANDEFAULT00000000000' // 향후 DB에서 TB_KANBAN_BOARD에서 가져올 예정
 const boardId = ref('')
 
 
@@ -56,20 +70,19 @@ const stopDrag = () => {
 
 // 초기 칸반 데이터
 const columns = ref<KanbanColumn[]>([
-  { 
-    columnId:1,
+  {
     columnName: 'TODO',
     columnTitle: '예정',
     cards: []
   },
   {
-    columnId:2,
+  
     columnName: 'IN_PROGRESS',
     columnTitle: '진행중',
     cards: []
   },
   {
-    columnId:3,
+
     columnName: 'DONE',
     columnTitle: '완료',
     cards: []
@@ -79,10 +92,10 @@ const columns = ref<KanbanColumn[]>([
 // 백엔드에서 칸반 데이터 불러오기
 const loadKanbanData = async () => {
   try {
-    const newBoardId= await fetchKanbanBoardId()
+    const newBoardId = await fetchKanbanBoardId()
     boardId.value = newBoardId.boardId
     const cards = await fetchKanbanCards(boardId.value)
-    
+
     // 각 컬럼별로 카드 분류
     // 'todo', 'inProgress', 'done'에 따라 카드 분류 후 order 순서대로 정렬
     // status: 어떤 컬럼에 속하는가? (todo, inProgress, done 중 하나)
@@ -90,7 +103,7 @@ const loadKanbanData = async () => {
     columns.value.forEach(column => {
       column.cards = cards
         .filter(card => card.columnName === column.columnName)
-        .sort((a, b) => a.orderNum - b.orderNum)
+        // .sort((a, b) => a.orderNum - b.orderNum)
     })
   } catch (error) {
     console.error('칸반 데이터 로드 실패:', error)
@@ -133,33 +146,20 @@ const addTask = async () => {
 
 // 카드 업데이트 함수  (백엔드 구현 시 api함수 주석 열기)
 const updateCard = async (cardId: string, updates: Partial<KanbanCard>) => {
-  try {
-    // await updateKanbanCard({ id: cardId, ...updates })
-  } catch (error) {
-    console.error('카드 업데이트 실패:', error)
-  }
+ console.log('카드 업데이트 ')
 }
 
 // 카드 편집 함수
 const editCard = (card: KanbanCard) => {
-  // 편집 로직 구현 (모달 열기 등)
+  // // 편집 로직 구현 (모달 열기 등)
   console.log('카드 편집:', card)
-  // TODO: 편집 모달 구현
+
 }
 
 // 카드 삭제 함수 (백엔드 구현 시 api함수 주석 열기)
 const deleteCard = async (cardId: string) => {
-  if (!confirm('정말 삭제하시겠습니까?')) return
-
-  try {
-    // await deleteKanbanCard(cardId)
-    // UI에서 카드 제거
-    columns.value.forEach(column => {
-      column.cards = column.cards.filter(card => card.cardId !== Number(cardId))
-    })
-  } catch (error) {
-    console.error('카드 삭제 실패:', error)
-  }
+  console.log('카드 삭제:', cardId)
+ 
 }
 
 // 모달 열기
@@ -184,19 +184,7 @@ watch(columns, (newVal) => {
 
 </script>
 
-<template>
-  <div class="addTaskBtn">
-    <BtnBW field="업무 추가" @click="modalOpen"></BtnBW>
-  </div>
-  <!-- 업무 추가 모달 -->
-  <TaskModal :modalCheck="modalCheck" :modalPosition="modalPosition" v-model:newTaskTitle="newTaskTitle"
-    v-model:newTaskDescription="newTaskDescription" v-model:selectedColumnId="selectedColumnId" :addTask="addTask"
-    :modalClose="modalClose" :startDrag="startDrag" />
 
-  <!-- 칸반보드 Column -->
-  <KanbanBoardComponent :columns="columns" @editCard="editCard" @deleteCard="deleteCard"
-    @cardsReordered="loadKanbanData" />
-</template>
 
 <style>
 .kanban-board {

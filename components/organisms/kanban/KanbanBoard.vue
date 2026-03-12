@@ -1,6 +1,6 @@
 <template>
   <div class="kanban-board">
-    <div v-for="column in columns" :key="column.columnId" class="kanban-column">
+    <div v-for="column in columns" :key="column.columnName" class="kanban-column">
       <h3 class="column-title">{{ column.columnTitle }}</h3>
       <Draggable v-model="column.cards" group="kanban" item-key="cardId" class="card-list" @end="onDragEnd">
         <template #item="{ element }">
