@@ -11,7 +11,7 @@ export const fetchKanbanCards = async (boardId: string): Promise<KanbanColumnDto
 // 칸반보드 Card 생성 
 /// ulid는 백엔드에서 생성, 프런트에서는 
 export const createKanbanCard = async (cardData: CreateCardDto): Promise<KanbanCard> => {
-  const res = await axiosApi.post('/kanban/card/create', cardData, { withCredentials: true })
+  const res = await axiosApi.post(`/kanban/card/create?boardId=${cardData.boardId}`, cardData, { withCredentials: true })
   return res.data
 }
 

@@ -124,7 +124,7 @@ const addTask = async () => {
       title: newTaskTitle.value,
       cardInfo: newTaskDescription.value || '',
       columnName: selectedColumnId.value,
-      orderNum: column.cards.length
+      boardId: boardId.value
     })
 
     column.cards.push({

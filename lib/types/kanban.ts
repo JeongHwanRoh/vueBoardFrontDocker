@@ -40,8 +40,7 @@ export interface CreateCardDto {
   title: string;
   cardInfo: string;
   columnName: string;
-  orderNum: number;
-  // boardId는 서버에서 세션으로 자동 설정
+  boardId: string;
 }
 
 // export interface UpdateCardDto {
