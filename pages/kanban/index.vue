@@ -15,19 +15,22 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
-import type { KanbanCard, KanbanColumn, KanbanColumnDto } from '~/lib/types/kanban'
+import { storeToRefs } from 'pinia'
+import type { KanbanCard, KanbanColumnDto } from '~/lib/types/kanban'
 import BtnBW from '~/components/atoms/BtnBW.vue'
 import KanbanBoardComponent from '~/components/organisms/kanban/KanbanBoard.vue'
-import { fetchKanbanCards, createKanbanCard } from '~/lib/apiService/kanbanCardApi'
 import TaskModal from '~/components/organisms/board/TaskModal.vue'
+import { useKanbanStore } from '~/stores/kanbanStore'
 import { fetchKanbanBoardId } from '~/lib/apiService/kanbanBoardApi'
+import { createKanbanCard, fetchKanbanCards } from '~/lib/apiService/kanbanCardApi'
 
 
 const modalCheck = ref(false)
 const newTaskTitle = ref('')
 const newTaskDescription = ref('')
 const selectedColumnId = ref('TODO')
-const boardId = ref('')
+const kanbanStore = useKanbanStore()
+const { columns, boardId } = storeToRefs(kanbanStore)
 
 
 
@@ -69,43 +72,14 @@ const stopDrag = () => {
   document.removeEventListener('mouseup', stopDrag)
 }
 
-// 초기 칸반 데이터
-const columns = ref<KanbanColumn[]>([
-  {
-    columnName: 'TODO',
-    columnTitle: '예정',
-    cards: []
-  },
-  {
-  
-    columnName: 'IN_PROGRESS',
-    columnTitle: '진행중',
-    cards: []
-  },
-  {
-
-    columnName: 'DONE',
-    columnTitle: '완료',
-    cards: []
-  }
-])
-
 // 백엔드에서 칸반 데이터 불러오기
 const loadKanbanData = async () => {
   try {
-    const newBoardId = await fetchKanbanBoardId()
-    boardId.value = newBoardId.boardId
-    const cards = await fetchKanbanCards(boardId.value)
+    const board = await fetchKanbanBoardId()
+    kanbanStore.setBoard(board)
 
-    // 각 컬럼별로 카드 분류
-    // 'todo', 'inProgress', 'done'에 따라 카드 분류 후 order 순서대로 정렬
-    // status: 어떤 컬럼에 속하는가? (todo, inProgress, done 중 하나)
-    // // order: 각 컬럼 내 카드의 순서 (숫자가 낮을수록 상단에 위치=>먼저 들어온 카드)
-    columns.value.forEach(column => {
-      column.cards = cards
-        .filter(card => card.columnName === column.columnName)
-        // .sort((a, b) => a.orderNum - b.orderNum)
-    })
+    const cards = await fetchKanbanCards(board.boardId)
+    kanbanStore.setCardsByColumn(cards)
   } catch (error) {
     console.error('칸반 데이터 로드 실패:', error)
   }
@@ -117,26 +91,31 @@ const addTask = async () => {
   console.log("newTaskTitle:", newTaskTitle.value)
   if (newTaskTitle.value.trim() === '') return
 
-  const column = columns.value.find(col => col.columnName === selectedColumnId.value)
-  if (!column) return
+  if (!boardId.value) {
+    console.error('boardId가 없어 업무를 추가할 수 없습니다.')
+    return
+  }
 
   try {
-    const newCard = await createKanbanCard({
+    const createdCard = await createKanbanCard({
       title: newTaskTitle.value,
       cardInfo: newTaskDescription.value || '',
       columnName: selectedColumnId.value,
       boardId: boardId.value
     })
 
-    column.cards.push({
-      columnName: column.columnName,
-      orderNum: newCard.orderNum,
-      cardId: newCard.cardId,
-      title: newCard.title,
+    const newCard: KanbanColumnDto = {
+      columnName: selectedColumnId.value,
+      orderNum: createdCard.orderNum,
+      cardId: createdCard.cardId,
+      title: createdCard.title,
       cardInfo: newTaskDescription.value || '',
-      createdAt: newCard.createdAt,
-      updatedAt: newCard.updatedAt
-    })
+      createdAt: createdCard.createdAt,
+      updatedAt: createdCard.updatedAt,
+    }
+
+    kanbanStore.addCardToColumn(selectedColumnId.value, newCard)
+
     newTaskTitle.value = ''
     newTaskDescription.value = ''
     modalCheck.value = false
@@ -160,7 +139,7 @@ const editCard = (card: KanbanCard) => {
 // 카드 삭제 함수 (백엔드 구현 시 api함수 주석 열기)
 const deleteCard = async (cardId: string) => {
   console.log('카드 삭제:', cardId)
- 
+  kanbanStore.deleteCard(Number(cardId))
 }
 
 // 모달 열기

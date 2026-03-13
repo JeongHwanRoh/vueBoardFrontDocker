@@ -1,48 +1,122 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import type { KanbanBoard, KanbanColumn, KanbanColumnDto } from '~/lib/types/kanban'
 
+import type {
+  CreateCardDto,
+  KanbanBoard,
+  KanbanColumn,
+  KanbanColumnDto,
+} from '~/lib/types/kanban'
 
-export const useKanbanStore = defineStore('kanban', () => {
-  // 기존 Board -> KanbanBoard
-  const board = ref<KanbanBoard>({
-    columns: [],
-    boardId: '',
-    pn: 0,
-    boardName: ''
-  })
+// 상태 타입 정의
+export interface KanbanState {
+  board: KanbanBoard | null;
+  columns: KanbanColumn[];
+  isLoading: boolean;
+  errorMessage: string | null;
+}
 
-  // 필요 시 개별 컬럼 접근
-  const columns = computed<KanbanColumn[]>(() => board.value.columns)
+// 칸반 보드 최초 렌더 시 사용하는 기본 3개 컬럼
+const createDefaultColumns = (): KanbanColumn[] => [
+  {
+    columnName: 'TODO',
+    columnTitle: '예정',
+    cards: [],
+  },
+  {
+    columnName: 'IN_PROGRESS',
+    columnTitle: '진행중',
+    cards: [],
+  },
+  {
+    columnName: 'DONE',
+    columnTitle: '완료',
+    cards: [],
+  },
+]
 
-  // 기존 Task -> KanbanCard
-  const addCard = (columnId: number, card: KanbanColumnDto) => {
-    const column = board.value.columns.find((c) => c.columnId === columnId)
-    if (!column) return
-    column.cards.push(card)
-  }
+export const useKanbanStore = defineStore('kanban', {
+  // 전역 원본 상태
+  state: (): KanbanState => ({
+    board: null,
+    columns: createDefaultColumns(),
+    isLoading: false,
+    errorMessage: null,
+  }),
 
-  // const updateCard = (cardId: string, updates: Partial<KanbanCard>) => {
-  //   for (const column of board.value.columns) {
-  //     const target = column.cards.find((c) => c.cardId === parseInt(cardId, 10))
-  //     if (target) {
-  //       Object.assign(target, updates)
-  //       return
-  //     }
-  //   }
-  // }
+  getters: {
+    // board가 없을 때도 항상 문자열을 반환하도록 보정
+    boardId: (state): string => state.board?.boardId ?? '',
+    hasBoard: (state): boolean => !!state.board?.boardId,
+    // 화면에서 전체 카드가 필요할 때 컬럼 배열을 평탄화
+    allCards: (state): KanbanColumnDto[] =>
+      state.columns.flatMap((column) => column.cards),
+  },
 
-  // const removeCard = (cardId: string) => {
-  //   for (const column of board.value.columns) {
-  //     column.cards = column.cards.filter((c) => c.cardId !== parseInt(cardId, 10))
-  //   }
-  // }
+  actions: {
+    // 조회한 board 정보를 저장
+    setBoard(board: KanbanBoard | null) {
+      this.board = board
+    },
 
-  return {
-    board,
-    columns,
-    addCard,
-    // updateCard,
-    // removeCard
-  }
+    // 컬럼 상태를 교체하고 board 내부 columns도 함께 동기화
+    setColumns(columns: KanbanColumn[]) {
+      this.columns = columns
+      if (this.board) {
+        this.board = {
+          ...this.board,
+          columns,
+        }
+      }
+    },
+
+    // 서버 카드 목록을 기본 컬럼 구조에 매핑하고 orderNum 기준 정렬
+    setCardsByColumn(cards: KanbanColumnDto[]) {
+      const nextColumns = createDefaultColumns().map((column) => ({
+        ...column,
+        cards: cards
+          .filter((card) => card.columnName === column.columnName)
+          .sort((a, b) => a.orderNum - b.orderNum),
+      }))
+
+      this.setColumns(nextColumns)
+    },
+
+    // 새 카드를 해당 컬럼에 추가하고 순서를 재정렬
+    addCardToColumn(columnName: string, card: KanbanColumnDto) {
+      const targetColumn = this.columns.find((column) => column.columnName === columnName)
+      if (!targetColumn) return
+
+      targetColumn.cards.push(card)
+      targetColumn.cards.sort((a, b) => a.orderNum - b.orderNum)
+    },
+
+    // 카드 id로 찾아 부분 업데이트
+    updateCard(cardId: number, updates: Partial<KanbanColumnDto>) {
+      for (const column of this.columns) {
+        const cardIndex = column.cards.findIndex((card) => card.cardId === cardId)
+        if (cardIndex === -1) continue
+
+        const targetCard = column.cards[cardIndex]
+        if (!targetCard) return
+
+        Object.assign(targetCard, updates)
+        return
+      }
+    },
+
+    // 모든 컬럼에서 동일 cardId를 제거
+    deleteCard(cardId: number) {
+      this.columns.forEach((column) => {
+        column.cards = column.cards.filter((card) => card.cardId !== cardId)
+      })
+    },
+
+    // 로그아웃/초기화 시 칸반 상태를 기본값으로 리셋
+    clearKanban() {
+      this.board = null
+      this.columns = createDefaultColumns()
+      this.errorMessage = null
+      this.isLoading = false
+    },
+  },
 })
