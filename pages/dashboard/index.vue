@@ -8,7 +8,7 @@
             <div class="grid-cell cell-stats">
                 <div class="stat-cards">
                     <div class="stat-card">
-                        <h2 class="stat-number">{{  }}</h2>
+                        <h2 class="stat-number">{{totalCount}}</h2>
                         <span class="stat-label">게시물</span>
                     </div>
                     <div class="stat-card">
@@ -24,7 +24,11 @@
                     <div class="card-body">
                         <h6 class="card-subtitle fw-semibold mb-3">게시판</h6>
                         <BoardTable :columns="tableColumns" :rows="boards" idKey="boardId" />
-                        
+                        <div>
+                            <!-- 페이징 버튼 -->
+                            <BoardPaging :totalCount="totalCount" :currentPage="currentPage" :totalPages="totalPages"
+                                @changePage="changePage" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -48,7 +52,7 @@
                             <router-link to="/board" class="text-primary small">전체보기 →</router-link>
                         </div>
                         <ul class="recent-list">
-                            <li v-for="b in boards" :key="b.boardId" class="recent-item">
+                            <li v-for="b in recentFiveBoards" :key="b.boardId" class="recent-item">
                                 <router-link :to="`/board/${b.boardId}`">{{ b.title }}</router-link>
                                 <span class="text-muted small">{{ b.writer }}</span>
                             </li>
@@ -122,13 +126,13 @@
 <script setup lang="ts">
 import CalendarTemplate from '~/components/molecules/calendar/calendarTemplate.vue'
 import BoardTable from '~/components/molecules/table/BoardTable.vue'
-import { useRecentFiveBoard } from '~/lib/composables/board/fetchAllBoard'
+import { useBoard, useRecentFiveBoard } from '~/lib/composables/board/fetchAllBoard'
 import KanbanBoardComponent from '~/components/organisms/kanban/KanbanBoard.vue'
 import { fetchKanbanBoardId } from '~/lib/apiService/kanbanBoardApi'
 import { fetchKanbanCards } from '~/lib/apiService/kanbanCardApi'
 import type { KanbanColumnDto } from '~/lib/types/kanban'
 
-const { boards, getLatestBoards } = useRecentFiveBoard()
+const { recentFiveBoards, getLatestBoards } = useRecentFiveBoard()
 const kanbanStore = useKanbanStore()
 const { columns, boardId } = storeToRefs(kanbanStore)
 const router = useRouter();
@@ -144,6 +148,17 @@ const circumference = 2 * Math.PI * 50 // ~314.16
 const todoArc = computed(() => totalCards.value === 0 ? 0 : (todoCount.value / totalCards.value) * circumference)
 const progressArc = computed(() => totalCards.value === 0 ? 0 : (progressCount.value / totalCards.value) * circumference)
 const doneArc = computed(() => totalCards.value === 0 ? 0 : (doneCount.value / totalCards.value) * circumference)
+// composable에서 상태+로직 가져오기
+const {
+    boards,
+    currentPage,
+    totalCount,
+    totalPages,
+    getBoardByPage,
+    changePage
+
+} = useBoard(10)
+
 
 const tableColumns = [
     { key: 'boardId', label: '번호' },
@@ -195,9 +210,10 @@ const deleteCard = async (cardId: number) => {
     kanbanStore.deleteCard(cardId)
 }
 
-onMounted(() => {
-    getLatestBoards()
-    loadKanbanData()
+onMounted(async () => {
+    await getBoardByPage();
+    await getLatestBoards();
+    await loadKanbanData();
 })
 </script>
 

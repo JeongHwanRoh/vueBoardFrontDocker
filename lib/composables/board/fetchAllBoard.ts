@@ -41,12 +41,12 @@ export const useBoard = (pageSize = 10) => {
 }
 
 export const useRecentFiveBoard = () => {
-    const boards = ref<BoardResponse[]>([]);
+    const recentFiveBoards = ref<BoardResponse[]>([]);
     // 게시글 목록 조회(페이징 제외, 최신 5개)
     const getLatestBoards = async () => {
         try {
             const res = await loadRecentFiveBoards();
-            boards.value = res.boards;
+            recentFiveBoards.value = res.boards;
 
         }catch (error) {
             console.error("공지글 조회 실패: ", error);
@@ -54,7 +54,7 @@ export const useRecentFiveBoard = () => {
 
     }
     return{
-        boards,
+        recentFiveBoards,
         getLatestBoards,
 
     }
