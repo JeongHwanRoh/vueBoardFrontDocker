@@ -12,7 +12,7 @@
               </div>
               <div class="card-actions">
                 <button @click="$emit('editCard', element)" class="btn-edit">✏️</button>
-                <button @click="$emit('deleteCard', String(element.cardId))" class="btn-delete">🗑️</button>
+                <button @click="$emit('deleteCard', Number(element.cardId))" class="btn-delete">🗑️</button>
               </div>
             </div>
           </template>
@@ -37,14 +37,14 @@ const props = defineProps({
 
 const emit = defineEmits(['editCard', 'deleteCard', 'cardsReordered'])
 
-// 드래그 종료 시 백엔드에 순서 업데이트
+// 드래그 종료 시 백엔드에 순서 업데이트 (백엔드 미구현)
 const onDragEnd = async () => {
-  const allCards: { id: string; order: number; status: string }[] = []
+  const allCards: { id: number; order: number; status: string }[] = []
 
   props.columns.forEach(column => {
     column.cards.forEach((card, index) => {
       allCards.push({
-        id: String(card.cardId),
+        id: Number(card.cardId),
         order: index,
         status: column.columnName
       })

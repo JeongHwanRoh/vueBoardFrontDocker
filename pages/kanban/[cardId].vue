@@ -31,8 +31,8 @@
                         <!-- 상태 -->
                         <div class="mb-4">
                             <label class="form-label fw-medium">상태</label>
-                            <select class="form-select" :value="selectedColumnId"
-                                @change="updateColumnId(($event.target as HTMLSelectElement).value)">
+                            <select class="form-select" :value="selectedColumnName"
+                                @change="updateColumnName(($event.target as HTMLSelectElement).value)">
                                 <option value="TODO">예정</option>
                                 <option value="IN_PROGRESS">진행 중</option>
                                 <option value="DONE">완료</option>
@@ -44,7 +44,12 @@
                             <button class="btn btn-primary" @click="$router.push('/kanban')">
                                 목록으로
                             </button>
-                            <button class="btn btn-primary" @click="">
+                            <button class="btn btn-primary" @click="updateCard(cardId, {
+                                title: newTaskTitle,
+                                cardInfo: newTaskDescription,
+                                columnName: selectedColumnName
+
+                            })">
                                 수정
                             </button>
                         </div>
@@ -60,24 +65,23 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { updateCard } from '~/lib/apiService/kanbanCardApi';
 
 const route = useRoute();
-const cardId = route.params.cardId;
+const cardId = Number(route.params.cardId);
 
-
-
-const newTaskTitle = ref(String(route.query.title ?? ''))
-const newTaskDescription = ref(String(route.query.cardInfo ?? ''))
-const selectedColumnId = ref(String(route.query.columnName ?? 'TODO'))
+const newTaskTitle = ref(String(history.state?.title ?? ''))
+const newTaskDescription = ref(String(history.state?.cardInfo ?? ''))
+const selectedColumnName = ref(String(history.state?.columnName ?? 'TODO'))
 
 const updateTitle = (value: string) => { newTaskTitle.value = value; };
 const updateDescription = (value: string) => { newTaskDescription.value = value; };
-const updateColumnId = (value: string) => { selectedColumnId.value = value; };
+const updateColumnName = (value: string) => { selectedColumnName.value = value; };
 
 console.log('카드 상세 페이지 - 카드 ID:', cardId)
 console.log('카드 상세 페이지 - 작업 제목:', newTaskTitle.value)
 console.log('카드 상세 페이지 - 작업 설명:', newTaskDescription.value)
-console.log('카드 상세 페이지 - 상태:', selectedColumnId.value)
+console.log('카드 상세 페이지 - 상태:', selectedColumnName.value)
 
 </script>
 

@@ -129,17 +129,12 @@ const addTask = async () => {
   }
 }
 
-// 카드 업데이트 함수  (백엔드 구현 시 api함수 주석 열기)
-const updateCard = async (cardId: string, updates: Partial<KanbanCard>) => {
- console.log('카드 업데이트 ', cardId, updates)
-}
-
 // 카드 편집 함수
 const editCard = (card: KanbanColumnDto) => {
   console.log('카드 편집:', card)
   router.push({
     path: `/kanban/${card.cardId}`,
-    query: {
+    state: {
       title: card.title ?? '',
       cardInfo: card.cardInfo ?? '',
       columnName: card.columnName ?? 'TODO',
@@ -148,9 +143,9 @@ const editCard = (card: KanbanColumnDto) => {
 }
 
 // 카드 삭제 함수 (백엔드 구현 시 api함수 주석 열기)
-const deleteCard = async (cardId: string) => {
+const deleteCard = async (cardId: number) => {
   console.log('카드 삭제:', cardId)
-  kanbanStore.deleteCard(Number(cardId))
+  kanbanStore.deleteCard(cardId)
 }
 
 // 모달 열기

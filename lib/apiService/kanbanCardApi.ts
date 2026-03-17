@@ -14,8 +14,12 @@ export const createKanbanCard = async (cardData: CreateCardDto): Promise<KanbanC
   const res = await axiosApi.post(`/kanban/card/create?boardId=${cardData.boardId}`, cardData, { withCredentials: true })
   return res.data
 }
+// 칸반보드 Card 업데이트 (상세페이지에서)
+export const updateCard = async (cardId: number, cardData: Partial<KanbanColumnDto>): Promise<void> => {
+  await axiosApi.patch(`/kanban/card/update?cardId=${cardId}`, cardData, { withCredentials: true });
+};
 
-// // 칸반보드 Card 순서 변경
-export const reorderCards = async (cards: { id: string; order: number; status: string }[]): Promise<void> => {
+// // 칸반보드 Card 순서 변경 (백엔드 미구현)
+export const reorderCards = async (cards: { id: number; order: number; status: string }[]): Promise<void> => {
   await axiosApi.patch('/kanban/reorder', { cards });
 };
