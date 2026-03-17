@@ -24,16 +24,41 @@ export default {
     return {
       calendarOptions: {
         plugins: [ dayGridPlugin, interactionPlugin ],
-        initialView: 'dayGridMonth'
+        initialView: 'dayGridMonth',
+        contentHeight: 'auto',
+        handleWindowResize: true
       }
     }
   }
 }
 </script>
 <template>
-  <FullCalendar :options="calendarOptions" />
+  <div class="calendar-wrapper">
+    <FullCalendar :options="calendarOptions" />
+  </div>
 </template>
 
 <style scoped>
+.calendar-wrapper {
+  width: 100%;
+  overflow: visible;
+}
 
+.calendar-wrapper :deep(.fc) {
+  font-size: 0.82rem;
+}
+
+.calendar-wrapper :deep(.fc .fc-toolbar) {
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.calendar-wrapper :deep(.fc .fc-toolbar-title) {
+  font-size: 1rem;
+}
+
+.calendar-wrapper :deep(.fc .fc-button) {
+  padding: 2px 8px;
+  font-size: 0.78rem;
+}
 </style>

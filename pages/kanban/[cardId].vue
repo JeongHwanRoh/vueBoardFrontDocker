@@ -69,19 +69,14 @@ import { updateCard } from '~/lib/apiService/kanbanCardApi';
 
 const route = useRoute();
 const cardId = Number(route.params.cardId);
-
+// state로 상세정보 받은 
 const newTaskTitle = ref(String(history.state?.title ?? ''))
 const newTaskDescription = ref(String(history.state?.cardInfo ?? ''))
 const selectedColumnName = ref(String(history.state?.columnName ?? 'TODO'))
-
+// 수정 후 업데이트된 정보
 const updateTitle = (value: string) => { newTaskTitle.value = value; };
 const updateDescription = (value: string) => { newTaskDescription.value = value; };
 const updateColumnName = (value: string) => { selectedColumnName.value = value; };
-
-console.log('카드 상세 페이지 - 카드 ID:', cardId)
-console.log('카드 상세 페이지 - 작업 제목:', newTaskTitle.value)
-console.log('카드 상세 페이지 - 작업 설명:', newTaskDescription.value)
-console.log('카드 상세 페이지 - 상태:', selectedColumnName.value)
 
 </script>
 
