@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules:['@pinia/nuxt'],
   css: [
+    'bootstrap/dist/css/bootstrap.min.css',
     '~/assets/css/styles.min.css',
     '~/assets/css/paging.css',
   ],

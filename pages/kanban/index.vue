@@ -5,11 +5,13 @@
     v-model:newTaskDescription="newTaskDescription" v-model:selectedColumnId="selectedColumnId" :addTask="addTask"
     :modalClose="modalClose" :startDrag="startDrag" />
 
-  <!-- 칸반보드 Column -->
-  <KanbanBoardComponent :columns="columns" @editCard="editCard" @deleteCard="deleteCard"
+  <!-- 칸반보드 + 버튼 래퍼 -->
+  <div class="kanban-page-wrapper">
+    <div class="addTaskBtn">
+      <BtnBW field="업무 추가" @click="modalOpen"></BtnBW>
+    </div>
+    <KanbanBoardComponent :columns="columns" @editCard="editCard" @deleteCard="deleteCard"
     @cardsReordered="loadKanbanData" />
-   <div class="addTaskBtn">
-    <BtnBW field="업무 추가" @click="modalOpen"></BtnBW>
   </div>
 </template>
 
@@ -31,7 +33,10 @@ const newTaskDescription = ref('')
 const selectedColumnId = ref('TODO')
 const kanbanStore = useKanbanStore()
 const { columns, boardId } = storeToRefs(kanbanStore)
+import { useRouter } from 'vue-router';
 
+// 상태 변수
+const router = useRouter();
 
 
 // 모달 드래그 관련 상태
@@ -126,14 +131,20 @@ const addTask = async () => {
 
 // 카드 업데이트 함수  (백엔드 구현 시 api함수 주석 열기)
 const updateCard = async (cardId: string, updates: Partial<KanbanCard>) => {
- console.log('카드 업데이트 ')
+ console.log('카드 업데이트 ', cardId, updates)
 }
 
 // 카드 편집 함수
-const editCard = (card: KanbanCard) => {
-  // // 편집 로직 구현 (모달 열기 등)
+const editCard = (card: KanbanColumnDto) => {
   console.log('카드 편집:', card)
-
+  router.push({
+    path: `/kanban/${card.cardId}`,
+    query: {
+      title: card.title ?? '',
+      cardInfo: card.cardInfo ?? '',
+      columnName: card.columnName ?? 'TODO',
+    },
+  })
 }
 
 // 카드 삭제 함수 (백엔드 구현 시 api함수 주석 열기)
@@ -167,39 +178,15 @@ watch(columns, (newVal) => {
 
 
 <style>
+.kanban-page-wrapper {
+  width: 100%;
+  margin: 24px auto 0;
+  padding: 0 32px;
+  box-sizing: border-box;
+}
+
 .kanban-board {
-  display: flex;
-  gap: 16px;
-  padding: 24px 0px;
-}
-
-.kanban-column {
-  width: 300px;
-  background: #f4f5f7;
-  border-radius: 8px;
-  padding: 12px;
-}
-
-.column-title {
-  font-weight: bold;
-  margin-bottom: 12px;
-}
-
-.card-list {
-  min-height: 100px;
-}
-
-.kanban-card {
-  background: white;
-  padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 8px;
-  cursor: grab;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.kanban-card:active {
-  cursor: grabbing;
+  width: 100%;
 }
 
 /* 모달 관련 css */
@@ -248,8 +235,18 @@ watch(columns, (newVal) => {
 .addTaskBtn {
   display: flex;
   justify-content: flex-end;
-  /* 우측정렬 */
-
   width: 100%;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 992px) {
+  .kanban-page-wrapper {
+    padding: 0 16px;
+    overflow-x: auto;
+  }
+
+  .kanban-board {
+    min-width: 320px;
+  }
 }
 </style>
