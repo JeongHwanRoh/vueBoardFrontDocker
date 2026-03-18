@@ -1,32 +1,43 @@
 <template>
     <div v-if="modalCheck" class="modal-wrap">
-        <div id="draggable-modal" class="modal" :style="{ top: modalPosition?.top, left: modalPosition?.left }" @mousedown="handleMouseDown">
-            <div class="modal-header" style="cursor:move; user-select:none; padding-bottom:8px;">
-                <h2>업무 추가</h2>
+        <div id="draggable-modal" class="modal" :style="{ top: modalPosition?.top, left: modalPosition?.left }"
+            @mousedown="handleMouseDown">
+            <div class="modal-header" style="cursor:move; user-select:none;">
+                <h4 class="mb-0 fw-semibold">업무 추가</h4>
             </div>
-            <input 
-                :value="newTaskTitle" 
-                @input="updateTitle(($event.target as HTMLInputElement).value)" 
-                placeholder="작업 제목" 
-            />
-            <textarea 
-                :value="newTaskDescription" 
-                @input="updateDescription(($event.target as HTMLTextAreaElement).value)" 
-                placeholder="작업 설명"
-                style="margin-top: 8px; padding: 8px; min-height: 60px; resize: vertical;"
-            />
-            <select 
-                :value="selectedColumnId" 
-                @change="updateColumnId(($event.target as HTMLSelectElement).value)"
-                style="margin-top: 8px;"
-            >
-                <option value="TODO">예정</option>
-                <option value="IN_PROGRESS">진행 중</option>
-                <option value="DONE">완료</option>
-            </select>
-            <div class="modal-btn">
-                <button @click="handleAddTask">추가</button>
-                <button @click="handleModalClose">닫기</button>
+            <div class="card-body p-4">
+                <!-- 작업 제목 -->
+                <div class="mb-3">
+                    <label class="form-label fw-medium">작업 제목</label>
+                    <input type="text" class="form-control" :value="newTaskTitle"
+                        @input="updateTitle(($event.target as HTMLInputElement).value)"
+                        placeholder="작업 제목을 입력하세요" />
+                </div>
+
+                <!-- 작업 설명 -->
+                <div class="mb-3">
+                    <label class="form-label fw-medium">작업 설명</label>
+                    <textarea class="form-control" rows="4" :value="newTaskDescription"
+                        @input="updateDescription(($event.target as HTMLTextAreaElement).value)"
+                        placeholder="작업 설명을 입력하세요" style="resize: vertical;" />
+                </div>
+
+                <!-- 상태 -->
+                <div class="mb-4">
+                    <label class="form-label fw-medium">상태</label>
+                    <select class="form-select" :value="selectedColumnId"
+                        @change="updateColumnId(($event.target as HTMLSelectElement).value)">
+                        <option value="TODO">예정</option>
+                        <option value="IN_PROGRESS">진행 중</option>
+                        <option value="DONE">완료</option>
+                    </select>
+                </div>
+
+                <!-- 버튼 -->
+                <div class="d-flex gap-2 justify-content-end">
+                    <button class="btn btn-primary" @click="handleAddTask">추가</button>
+                    <button class="btn btn-primary" @click="handleModalClose">닫기</button>
+                </div>
             </div>
         </div>
     </div>
@@ -81,3 +92,10 @@ const handleModalClose = () => {
     props.modalClose?.()
 }
 </script>
+
+<style scoped>
+.form-control, .form-select{
+    border: 1.5px solid #98a2b3;
+    box-shadow: none;
+}
+</style>

@@ -143,8 +143,8 @@ watch(columns, (newVal) => {
   background: #fff;
   padding: 24px;
   border-radius: 8px;
-  width: 320px;
-  height: 30vh;
+  width: 400px;
+  height: 500px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   z-index: 1001;
   position: fixed;

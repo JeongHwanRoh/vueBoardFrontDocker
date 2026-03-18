@@ -31,8 +31,8 @@
                         <!-- 상태 -->
                         <div class="mb-4">
                             <label class="form-label fw-medium">상태</label>
-                            <select class="form-select" :value="selectedColumnName"
-                                @change="updateColumnName(($event.target as HTMLSelectElement).value)">
+                            <select class="form-select" :value="selectedColumnId"
+                                @change="updateColumnId(($event.target as HTMLSelectElement).value)">
                                 <option value="TODO">예정</option>
                                 <option value="IN_PROGRESS">진행 중</option>
                                 <option value="DONE">완료</option>
@@ -47,7 +47,7 @@
                             <button class="btn btn-primary" @click="updateCard(cardId, {
                                 title: newTaskTitle,
                                 cardInfo: newTaskDescription,
-                                columnName: selectedColumnName
+                                columnName: selectedColumnId
 
                             })">
                                 수정
@@ -72,11 +72,11 @@ const cardId = Number(route.params.cardId);
 // state로 상세정보 받은 
 const newTaskTitle = ref(String(history.state?.title ?? ''))
 const newTaskDescription = ref(String(history.state?.cardInfo ?? ''))
-const selectedColumnName = ref(String(history.state?.columnName ?? 'TODO'))
+const selectedColumnId = ref(String(history.state?.columnName ?? 'TODO'))
 // 수정 후 업데이트된 정보
 const updateTitle = (value: string) => { newTaskTitle.value = value; };
 const updateDescription = (value: string) => { newTaskDescription.value = value; };
-const updateColumnName = (value: string) => { selectedColumnName.value = value; };
+const updateColumnId = (value: string) => { selectedColumnId.value = value; };
 
 </script>
 
