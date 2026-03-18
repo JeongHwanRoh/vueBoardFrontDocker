@@ -1,5 +1,4 @@
 <template>
- 
   <!-- 업무 추가 모달 -->
   <TaskModal :modalCheck="modalCheck" :modalPosition="modalPosition" v-model:newTaskTitle="newTaskTitle"
     v-model:newTaskDescription="newTaskDescription" v-model:selectedColumnId="selectedColumnId" :addTask="addTask"
@@ -17,27 +16,18 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
-import { storeToRefs } from 'pinia'
 import type { KanbanCard, KanbanColumnDto } from '~/lib/types/kanban'
 import BtnBW from '~/components/atoms/BtnBW.vue'
 import KanbanBoardComponent from '~/components/organisms/kanban/KanbanBoard.vue'
 import TaskModal from '~/components/organisms/board/TaskModal.vue'
 import { useKanbanStore } from '~/stores/kanbanStore'
-import { fetchKanbanBoardId } from '~/lib/apiService/kanbanBoardApi'
-import { createKanbanCard, fetchKanbanCards } from '~/lib/apiService/kanbanCardApi'
-
-
-const modalCheck = ref(false)
-const newTaskTitle = ref('')
-const newTaskDescription = ref('')
-const selectedColumnId = ref('TODO')
-const kanbanStore = useKanbanStore()
-const { columns, boardId } = storeToRefs(kanbanStore)
 import { useRouter } from 'vue-router';
+import { fetchAllKanban } from '~/lib/composables/kanban/fetchAllKanban'
+import { addKanbanTask } from '~/lib/composables/kanban/addKanbanTask'
 
+const kanbanStore = useKanbanStore()
 // 상태 변수
 const router = useRouter();
-
 
 // 모달 드래그 관련 상태
 const modalPosition = ref({ top: '30%', left: '50%' })
@@ -77,57 +67,21 @@ const stopDrag = () => {
   document.removeEventListener('mouseup', stopDrag)
 }
 
+// 모달 열기
+const modalOpen = () => {
+  modalCheck.value = true
+}
+
+// 모달 닫기
+const modalClose = () => {
+  modalCheck.value = false
+}
+
+// 업무 추가 (ref/store 호출은 await 전에 실행해야 컴포넌트 인스턴스 컨텍스트 유지)
+const {newTaskTitle, newTaskDescription, selectedColumnId,columns,boardId,modalCheck,addTask } = addKanbanTask()
+
 // 백엔드에서 칸반 데이터 불러오기
-const loadKanbanData = async () => {
-  try {
-    const board = await fetchKanbanBoardId()
-    kanbanStore.setBoard(board)
-
-    const cards = await fetchKanbanCards(board.boardId)
-    kanbanStore.setCardsByColumn(cards)
-  } catch (error) {
-    console.error('칸반 데이터 로드 실패:', error)
-  }
-}
-
-// 업무 추가 함수
-const addTask = async () => {
-  console.log("addTask 실행")
-  console.log("newTaskTitle:", newTaskTitle.value)
-  if (newTaskTitle.value.trim() === '') return
-
-  if (!boardId.value) {
-    console.error('boardId가 없어 업무를 추가할 수 없습니다.')
-    return
-  }
-
-  try {
-    const createdCard = await createKanbanCard({
-      title: newTaskTitle.value,
-      cardInfo: newTaskDescription.value || '',
-      columnName: selectedColumnId.value,
-      boardId: boardId.value
-    })
-
-    const newCard: KanbanColumnDto = {
-      columnName: selectedColumnId.value,
-      orderNum: createdCard.orderNum,
-      cardId: createdCard.cardId,
-      title: createdCard.title,
-      cardInfo: newTaskDescription.value || '',
-      createdAt: createdCard.createdAt,
-      updatedAt: createdCard.updatedAt,
-    }
-
-    kanbanStore.addCardToColumn(selectedColumnId.value, newCard)
-
-    newTaskTitle.value = ''
-    newTaskDescription.value = ''
-    modalCheck.value = false
-  } catch (error) {
-    console.error('업무 추가 실패:', error)
-  }
-}
+const { loadKanbanData } = fetchAllKanban()
 
 // 카드 편집 함수
 const editCard = (card: KanbanColumnDto) => {
@@ -148,16 +102,6 @@ const deleteCard = async (cardId: number) => {
   kanbanStore.deleteCard(cardId)
 }
 
-// 모달 열기
-const modalOpen = () => {
-  modalCheck.value = true
-}
-
-// 모달 닫기
-const modalClose = () => {
-  modalCheck.value = false
-}
-
 // 컴포넌트 마운트 시 데이터 로드
 onMounted(() => {
   loadKanbanData()
@@ -169,9 +113,6 @@ watch(columns, (newVal) => {
 }, { deep: true })
 
 </script>
-
-
-
 <style>
 .kanban-page-wrapper {
   width: 100%;
