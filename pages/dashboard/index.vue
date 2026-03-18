@@ -131,6 +131,7 @@ import KanbanBoardComponent from '~/components/organisms/kanban/KanbanBoard.vue'
 import { fetchKanbanBoardId } from '~/lib/apiService/kanbanBoardApi'
 import { fetchKanbanCards } from '~/lib/apiService/kanbanCardApi'
 import type { KanbanColumnDto } from '~/lib/types/kanban'
+import BoardPaging from '~/components/organisms/pagination/BoardPaging.vue'
 
 const { recentFiveBoards, getLatestBoards } = useRecentFiveBoard()
 const kanbanStore = useKanbanStore()

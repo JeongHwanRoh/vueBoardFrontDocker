@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h5 class="card-title fw-semibold mb-4">공지사항</h5>
+        <h5 class="card-title fw-semibold mb-4">게시판</h5>
         <!-- 게시판 테이블 영역 -->
         <BoardTable :columns="tableColumns" :rows="boards" idKey="boardId" />
         <div class="submitBtn">

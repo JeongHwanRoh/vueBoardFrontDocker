@@ -16,21 +16,20 @@ ex)
 -->
 
 <template>
-  <div class="row g-3">
+  <div>
     <!-- 제목 -->
     <div class="mb-3">
       <label class="form-label">{{ titleLabel }}</label>
       <input v-model="localModel[titleKey]" class="form-control" :placeholder="titlePlaceholder" />
     </div>
+    
     <!-- 내용 -->
     <div class="mb-3">
       <label class="form-label">{{ contentLabel }}</label>
       <!-- tiptap editor 적용 -->
-      <div class="page-wrapper">
-        <client-only>
-          <TipTapEditor v-model="localModel[contentKey]" />
-        </client-only>
-      </div>
+      <client-only>
+        <TipTapEditor v-model="localModel[contentKey]" />
+      </client-only>
     </div>
 
   </div>

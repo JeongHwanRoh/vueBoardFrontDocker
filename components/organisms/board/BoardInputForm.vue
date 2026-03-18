@@ -1,9 +1,7 @@
 <template>
-    <div class="row g-3">
-        <!-- 제목/내용 입력 -->
-        <BoardInput v-model="localBoard" title-key="title" content-key="content" title-label="제목"
-            content-label="내용" title-placeholder="제목을 입력하세요" content-placeholder="내용을 입력하세요" />
-    </div>
+    <!-- 제목/내용 입력 -->
+    <BoardInput v-model="localBoard" title-key="title" content-key="content" title-label="제목"
+        content-label="내용" title-placeholder="제목을 입력하세요" content-placeholder="내용을 입력하세요" />
 
     <!-- 등록/목록으로 버튼 -->
     <div id="resultBtn" class="gap-2">

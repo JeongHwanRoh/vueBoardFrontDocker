@@ -1,5 +1,4 @@
 <template>
-    <div> 총 게시물 개수: {{ totalCount }}</div>
     <div id="pageBtn" class="d-flex gap-2 mt-4">
         <button class="btn btn-primary" @click="$emit('changePage', currentPage-1)">이전페이지</button>
         <div>{{ currentPage }} / {{ totalPages }}</div>
