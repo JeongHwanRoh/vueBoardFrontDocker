@@ -93,6 +93,12 @@ onBeforeUnmount(() => {
     cursor: text;
 }
 
+/* tiptap 내 저장된 이미지 스타일 */
+.tiptap :deep(img) {
+    max-width: 100%;
+    height: auto;
+}
+
 .tiptap :focus {
     outline: none;
 }

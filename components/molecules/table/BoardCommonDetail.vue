@@ -88,4 +88,10 @@ const props = defineProps({
     background-color: transparent;
     border: var(--bs-border-width) solid #dbe1e6;
 }
+
+/* board-content 내 저장된 이미지 스타일 */
+.board-content :deep(img) {
+    max-width: 100%;
+    height: auto;
+}
 </style>
