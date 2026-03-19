@@ -19,7 +19,7 @@ export const useLoginHandler = () => {
         userStore.setUser(res.user) // PINIA에 사용자 정보 저장 
         console.log('Login - userStore state:', userStore.$state)
         alert('로그인이 완료되었습니다.')
-        router.push('/board')
+        router.push('/dashboard') // 로그인 성공 후 대시보드로 이동
       } else {
         errorMessage.value = '아이디 또는 비밀번호가 올바르지 않습니다.'
       }
