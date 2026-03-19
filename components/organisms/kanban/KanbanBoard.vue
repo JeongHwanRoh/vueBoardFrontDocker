@@ -26,33 +26,38 @@
 import Draggable from 'vuedraggable'
 import type { PropType } from 'vue'
 import type { KanbanColumn } from '~/lib/types/kanban'
+import type { ReorderCardDto } from '~/lib/types/kanban'
 import { reorderCards } from '~/lib/apiService/kanbanCardApi'
 
 const props = defineProps({
   columns: {
     type: Array as PropType<KanbanColumn[]>,
     required: true
+  },
+  boardId: {
+    type: String,
+    required: true
   }
 })
 
 const emit = defineEmits(['editCard', 'deleteCard', 'cardsReordered'])
 
-// 드래그 종료 시 백엔드에 순서 업데이트 (백엔드 미구현)
+// 드래그 종료 시 백엔드에 순서 업데이트
 const onDragEnd = async () => {
-  const allCards: { id: number; order: number; status: string }[] = []
+  const allCards: ReorderCardDto[] = []
 
   props.columns.forEach(column => {
     column.cards.forEach((card, index) => {
       allCards.push({
-        id: Number(card.cardId),
-        order: index,
-        status: column.columnName
+        cardId: Number(card.cardId),
+        columnName: column.columnName,
+        orderNum: index,
       })
     })
   })
 
   try {
-    await reorderCards(allCards)
+    await reorderCards(props.boardId, allCards)
     emit('cardsReordered')
   } catch (error) {
     console.error('카드 순서 업데이트 실패:', error)

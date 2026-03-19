@@ -1,5 +1,5 @@
 import axiosApi from './axiosApi';
-import type { KanbanCard, KanbanColumnDto, CreateCardDto, UpdateCardDto } from '~/lib/types/kanban';
+import type { KanbanCard, KanbanColumnDto, CreateCardDto, UpdateCardDto, ReorderCardDto } from '~/lib/types/kanban';
 
 // 칸반보드 Card 조회
 export const fetchKanbanCards = async (boardId: string): Promise<KanbanColumnDto[]> => {
@@ -20,9 +20,10 @@ export const updateCard = async (cardData: UpdateCardDto): Promise<void> => {
   return res.data
 };
 
-// // 칸반보드 Card 순서 변경 (백엔드 미구현)
-export const reorderCards = async (cards: { id: number; order: number; status: string }[]): Promise<void> => {
-  await axiosApi.patch('/kanban/reorder', { cards });
+// 칸반보드 Card 순서 변경 (드래그앤드롭)
+export const reorderCards = async (boardId: string, cards: ReorderCardDto[]): Promise<void> => {
+  console.log('reorderCards 요청 데이터:', cards); // 요청 데이터 확인
+  await axiosApi.patch(`/kanban/card/reorder?boardId=${boardId}`, cards, { withCredentials: true });
 };
 
 // 칸반보드 Card 삭제

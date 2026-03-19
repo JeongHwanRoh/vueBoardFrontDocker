@@ -28,10 +28,10 @@
                 </div>
             </div>
 
-            <!-- Row 1, Col 3: 달력 -->
+            <!-- Row 1, Col 3: 알림 -->
             <div class="grid-cell">
                 <div class="card dashboard-card h-100">
-                    채팅방 구현 예정
+                    업무진척도 관련 알림 기능 구현 예정(예: 마감 임박 업무, 새로 추가된 업무 등) 
                 </div>
             </div>
 
@@ -58,7 +58,7 @@
                 <div class="card dashboard-card h-100">
                     <div class="card-body">
                         <h6 class="card-subtitle fw-semibold mb-3">업무진척도</h6>
-                        <KanbanBoardComponent :columns="columns" @editCard="editCard" @deleteCard="deleteCard"
+                        <KanbanBoardComponent :columns="columns" :boardId="boardId" @editCard="editCard" @deleteCard="deleteCard"
                             @cardsReordered="loadKanbanData" />
                     </div>
                 </div>

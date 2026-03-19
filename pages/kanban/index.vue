@@ -9,7 +9,7 @@
     <div class="addTaskBtn">
       <BtnBW field="업무 추가" @click="modalOpen"></BtnBW>
     </div>
-    <KanbanBoardComponent :columns="columns" @editCard="editCard" @deleteCard="deleteCard"
+    <KanbanBoardComponent :columns="columns" :boardId="boardId" @editCard="editCard" @deleteCard="deleteCard"
     @cardsReordered="loadKanbanData" />
   </div>
 </template>
@@ -85,28 +85,6 @@ const {newTaskTitle, newTaskDescription, selectedColumnId,columns,boardId,modalC
 // 백엔드에서 칸반 데이터 불러오기
 const { loadKanbanData } = fetchAllKanban()
 
-// // 카드 편집 함수
-// const editCard = (card: KanbanColumnDto) => {
-//   console.log('카드 편집:', card)
-//   router.push({
-//     path: `/kanban/${card.cardId}`,
-//     state: {
-//       title: card.title ?? '',
-//       cardInfo: card.cardInfo ?? '',
-//       columnName: card.columnName ?? 'TODO',
-//       orderNum: card.orderNum ?? 0,
-//       boardId: boardId.value ?? '',
-//     },
-//   })
-// }
-
-// // 카드 삭제 함수
-// const deleteCard = async (cardId: number) => {
-//   console.log('카드 삭제:', cardId)
-//   await deleteCardApi(cardId)
-//   kanbanStore.deleteCard(cardId)
-// }
-
 // 카드 편집 및 삭제 함수
 const { editCard, deleteCard } = useKanbanCardActions()
 
@@ -115,10 +93,10 @@ onMounted(() => {
   loadKanbanData()
 })
 
-// 데이터 변화 감지 로직
-// watch(columns, (newVal) => {  
-//   console.log('칸반 데이터 변경:', newVal)
-// }, { deep: true })
+// 데이터 변화 감지 로직 (칸반 카드)
+watch(columns, (newVal) => {  
+  console.log('칸반 데이터 변경:', newVal)
+}, { deep: true })
 
 // [테스트] kanbanStore 상태 확인용
 watch(() => kanbanStore.columns, (cols) => {

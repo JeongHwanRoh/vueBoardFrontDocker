@@ -51,3 +51,9 @@ export interface UpdateCardDto {
   cardInfo: string;
   boardId: string;
 }
+
+export interface ReorderCardDto {
+  cardId: number;
+  columnName: string;
+  orderNum: number;
+}
