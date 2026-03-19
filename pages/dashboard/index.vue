@@ -18,11 +18,10 @@
                 </div>
             </div>
 
-            <!-- Row 1, Col 2: 달력(업무진척도 날짜 연동용) -->
+            <!-- Row 1, Col 2: 달력(일정관리 날짜 연동용) -->
             <div class="grid-cell">
                 <div class="card dashboard-card h-100">
                     <div class="card-body">
-                        <h6 class="card-subtitle fw-semibold mb-3">일정</h6>
                         <CalendarTemplate />
                     </div>
                 </div>
@@ -31,7 +30,7 @@
             <!-- Row 1, Col 3: 알림 -->
             <div class="grid-cell">
                 <div class="card dashboard-card h-100">
-                    업무진척도 관련 알림 기능 구현 예정(예: 마감 임박 업무, 새로 추가된 업무 등) 
+                        일정관리 관련 알림 기능 구현 예정(예: 마감 임박 업무, 새로 추가된 업무 등) 
                 </div>
             </div>
 
@@ -53,11 +52,11 @@
                 </div>
             </div>
 
-            <!-- Row 2, Col 2: 업무진척도 -->
+            <!-- Row 2, Col 2: 일정관리 -->
             <div class="grid-cell">
                 <div class="card dashboard-card h-100">
                     <div class="card-body">
-                        <h6 class="card-subtitle fw-semibold mb-3">업무진척도</h6>
+                        <h6 class="card-subtitle fw-semibold mb-3">일정관리</h6>
                         <KanbanBoardComponent :columns="columns" :boardId="boardId" @editCard="editCard" @deleteCard="deleteCard"
                             @cardsReordered="loadKanbanData" />
                     </div>

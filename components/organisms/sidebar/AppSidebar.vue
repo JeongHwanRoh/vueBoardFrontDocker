@@ -25,7 +25,7 @@ console.log("사이드바에서 불러온 유저 이름:",name);
 const menu = [
   { label: '메인대시보드', path: '/dashboard' },
   { label: '게시판', path: '/board' },
-  { label: '업무진척도', path: '/kanban' },
+  { label: '일정관리(개인)', path: '/kanban' },
   // { label: 'tiptap', path: '/tiptap' },
 ]
 

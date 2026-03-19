@@ -1,5 +1,9 @@
 <template>
-
+  <div class="board-header">
+    <a class="header-logo">
+      <img src="~/assets/images/Hwani.png" class="logo-image" alt="" />
+    </a>
+  </div>
 </template>
 
 <script setup>
@@ -10,11 +14,16 @@ defineProps({
 
 <style scoped>
 .board-header {
-  background-color: #ffffff;
-  border-bottom: 1px solid #ddd;
-  padding: 16px 24px;
-  text-align: center;
-  font-size: 20px;
-  font-weight: 600;
+  background-color: #162751;
+  border-bottom: 1px solid #0f1d3d;
+  padding: 30px 24px;
+  text-align: left;
+}
+
+.header-logo {
+  display: inline-block;
+  img {
+    height: 40px;
+  }
 }
 </style>
