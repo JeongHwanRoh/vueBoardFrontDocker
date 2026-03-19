@@ -44,11 +44,13 @@
                             <button class="btn btn-primary" @click="$router.push('/kanban')">
                                 목록으로
                             </button>
-                            <button class="btn btn-primary" @click="updateCard(cardId, {
+                            <button class="btn btn-primary" @click="updateCard({
+                                cardId,
+                                columnName: selectedColumnId,
                                 title: newTaskTitle,
+                                orderNum,
                                 cardInfo: newTaskDescription,
-                                columnName: selectedColumnId
-
+                                boardId,
                             })">
                                 수정
                             </button>
@@ -67,12 +69,16 @@ import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { updateCard } from '~/lib/apiService/kanbanCardApi';
 
+
+
 const route = useRoute();
 const cardId = Number(route.params.cardId);
 // state로 상세정보 받은 
 const newTaskTitle = ref(String(history.state?.title ?? ''))
 const newTaskDescription = ref(String(history.state?.cardInfo ?? ''))
 const selectedColumnId = ref(String(history.state?.columnName ?? 'TODO'))
+const orderNum = ref(Number(history.state?.orderNum ?? 0))
+const boardId = ref(String(history.state?.boardId ?? ''))
 // 수정 후 업데이트된 정보
 const updateTitle = (value: string) => { newTaskTitle.value = value; };
 const updateDescription = (value: string) => { newTaskDescription.value = value; };

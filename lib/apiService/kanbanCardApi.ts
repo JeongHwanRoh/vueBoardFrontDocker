@@ -1,5 +1,5 @@
 import axiosApi from './axiosApi';
-import type { KanbanCard, KanbanColumnDto, CreateCardDto} from '~/lib/types/kanban';
+import type { KanbanCard, KanbanColumnDto, CreateCardDto, UpdateCardDto } from '~/lib/types/kanban';
 
 // 칸반보드 Card 조회
 export const fetchKanbanCards = async (boardId: string): Promise<KanbanColumnDto[]> => {
@@ -15,8 +15,9 @@ export const createKanbanCard = async (cardData: CreateCardDto): Promise<KanbanC
   return res.data
 }
 // 칸반보드 Card 업데이트 (상세페이지에서)
-export const updateCard = async (cardId: number, cardData: Partial<KanbanColumnDto>): Promise<void> => {
-  await axiosApi.patch(`/kanban/card/update?cardId=${cardId}`, cardData, { withCredentials: true });
+export const updateCard = async (cardData: UpdateCardDto): Promise<void> => {
+  const res=await axiosApi.patch(`/kanban/card/update?boardId=${cardData.boardId}`, cardData, { withCredentials: true });
+  return res.data
 };
 
 // // 칸반보드 Card 순서 변경 (백엔드 미구현)

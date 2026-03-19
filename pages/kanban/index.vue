@@ -92,6 +92,8 @@ const editCard = (card: KanbanColumnDto) => {
       title: card.title ?? '',
       cardInfo: card.cardInfo ?? '',
       columnName: card.columnName ?? 'TODO',
+      orderNum: card.orderNum ?? 0,
+      boardId: boardId.value ?? '',
     },
   })
 }

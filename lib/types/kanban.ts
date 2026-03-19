@@ -43,10 +43,11 @@ export interface CreateCardDto {
   boardId: string;
 }
 
-// export interface UpdateCardDto {
-//   id: string;
-//   title?: string;
-//   description?: string;
-//   status?: string;
-//   order?: number;
-// }
+export interface UpdateCardDto {
+  cardId: number;
+  columnName: string;
+  title: string;
+  orderNum: number;
+  cardInfo: string;
+  boardId: string;
+}
