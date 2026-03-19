@@ -24,3 +24,8 @@ export const updateCard = async (cardData: UpdateCardDto): Promise<void> => {
 export const reorderCards = async (cards: { id: number; order: number; status: string }[]): Promise<void> => {
   await axiosApi.patch('/kanban/reorder', { cards });
 };
+
+// 칸반보드 Card 삭제
+export const deleteCard = async (cardId: number): Promise<void> => {
+  await axiosApi.delete(`/kanban/card/delete?&cardId=${cardId}`, { withCredentials: true });
+}

@@ -44,14 +44,7 @@
                             <button class="btn btn-primary" @click="$router.push('/kanban')">
                                 목록으로
                             </button>
-                            <button class="btn btn-primary" @click="updateCard({
-                                cardId,
-                                columnName: selectedColumnId,
-                                title: newTaskTitle,
-                                orderNum,
-                                cardInfo: newTaskDescription,
-                                boardId,
-                            })">
+                            <button class="btn btn-primary" @click="handleUpdate">
                                 수정
                             </button>
                         </div>
@@ -66,12 +59,13 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { updateCard } from '~/lib/apiService/kanbanCardApi';
-
-
+import { useRoute, useRouter } from 'vue-router';
+import { updateCard as updateCardApi } from '~/lib/apiService/kanbanCardApi';
+import { useKanbanStore } from '~/stores/kanbanStore';
 
 const route = useRoute();
+const router = useRouter();
+const kanbanStore = useKanbanStore();
 const cardId = Number(route.params.cardId);
 // state로 상세정보 받은 
 const newTaskTitle = ref(String(history.state?.title ?? ''))
@@ -83,6 +77,25 @@ const boardId = ref(String(history.state?.boardId ?? ''))
 const updateTitle = (value: string) => { newTaskTitle.value = value; };
 const updateDescription = (value: string) => { newTaskDescription.value = value; };
 const updateColumnId = (value: string) => { selectedColumnId.value = value; };
+
+const handleUpdate = async () => {
+  const cardData = {
+    cardId,
+    columnName: selectedColumnId.value,
+    title: newTaskTitle.value,
+    orderNum: orderNum.value,
+    cardInfo: newTaskDescription.value,
+    boardId: boardId.value,
+  }
+  await updateCardApi(cardData)
+  kanbanStore.updateCard(cardId, {
+    columnName: cardData.columnName,
+    title: cardData.title,
+    orderNum: cardData.orderNum,
+    cardInfo: cardData.cardInfo,
+  })
+  router.push('/kanban')
+};
 
 </script>
 

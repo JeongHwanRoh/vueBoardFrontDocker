@@ -24,6 +24,7 @@ import { useKanbanStore } from '~/stores/kanbanStore'
 import { useRouter } from 'vue-router';
 import { fetchAllKanban } from '~/lib/composables/kanban/fetchAllKanban'
 import { addKanbanTask } from '~/lib/composables/kanban/addKanbanTask'
+import { deleteCard as deleteCardApi } from '~/lib/apiService/kanbanCardApi'
 
 const kanbanStore = useKanbanStore()
 // 상태 변수
@@ -98,9 +99,10 @@ const editCard = (card: KanbanColumnDto) => {
   })
 }
 
-// 카드 삭제 함수 (백엔드 구현 시 api함수 주석 열기)
+// 카드 삭제 함수
 const deleteCard = async (cardId: number) => {
   console.log('카드 삭제:', cardId)
+  await deleteCardApi(cardId)
   kanbanStore.deleteCard(cardId)
 }
 

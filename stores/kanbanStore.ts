@@ -90,7 +90,7 @@ export const useKanbanStore = defineStore('kanban', {
       targetColumn.cards.sort((a, b) => a.orderNum - b.orderNum)
     },
 
-    // 카드 id로 찾아 부분 업데이트
+    // 카드 id로 찾아 부분 업데이트 (컬럼 변경 시 이동 처리 포함)
     updateCard(cardId: number, updates: Partial<KanbanColumnDto>) {
       for (const column of this.columns) {
         const cardIndex = column.cards.findIndex((card) => card.cardId === cardId)
@@ -99,7 +99,14 @@ export const useKanbanStore = defineStore('kanban', {
         const targetCard = column.cards[cardIndex]
         if (!targetCard) return
 
-        Object.assign(targetCard, updates)
+        // 컬럼이 변경된 경우 이전 컬럼에서 제거 후 새 컬럼으로 이동
+        if (updates.columnName && updates.columnName !== column.columnName) {
+          column.cards.splice(cardIndex, 1)
+          const updatedCard = { ...targetCard, ...updates }
+          this.addCardToColumn(updates.columnName, updatedCard)
+        } else {
+          Object.assign(targetCard, updates)
+        }
         return
       }
     },
