@@ -25,6 +25,7 @@ import { useRouter } from 'vue-router';
 import { fetchAllKanban } from '~/lib/composables/kanban/fetchAllKanban'
 import { addKanbanTask } from '~/lib/composables/kanban/addKanbanTask'
 import { deleteCard as deleteCardApi } from '~/lib/apiService/kanbanCardApi'
+import { useKanbanCardActions } from '~/lib/composables/kanban/useKanbanCardActions'
 
 const kanbanStore = useKanbanStore()
 // 상태 변수
@@ -84,27 +85,30 @@ const {newTaskTitle, newTaskDescription, selectedColumnId,columns,boardId,modalC
 // 백엔드에서 칸반 데이터 불러오기
 const { loadKanbanData } = fetchAllKanban()
 
-// 카드 편집 함수
-const editCard = (card: KanbanColumnDto) => {
-  console.log('카드 편집:', card)
-  router.push({
-    path: `/kanban/${card.cardId}`,
-    state: {
-      title: card.title ?? '',
-      cardInfo: card.cardInfo ?? '',
-      columnName: card.columnName ?? 'TODO',
-      orderNum: card.orderNum ?? 0,
-      boardId: boardId.value ?? '',
-    },
-  })
-}
+// // 카드 편집 함수
+// const editCard = (card: KanbanColumnDto) => {
+//   console.log('카드 편집:', card)
+//   router.push({
+//     path: `/kanban/${card.cardId}`,
+//     state: {
+//       title: card.title ?? '',
+//       cardInfo: card.cardInfo ?? '',
+//       columnName: card.columnName ?? 'TODO',
+//       orderNum: card.orderNum ?? 0,
+//       boardId: boardId.value ?? '',
+//     },
+//   })
+// }
 
-// 카드 삭제 함수
-const deleteCard = async (cardId: number) => {
-  console.log('카드 삭제:', cardId)
-  await deleteCardApi(cardId)
-  kanbanStore.deleteCard(cardId)
-}
+// // 카드 삭제 함수
+// const deleteCard = async (cardId: number) => {
+//   console.log('카드 삭제:', cardId)
+//   await deleteCardApi(cardId)
+//   kanbanStore.deleteCard(cardId)
+// }
+
+// 카드 편집 및 삭제 함수
+const { editCard, deleteCard } = useKanbanCardActions()
 
 // 컴포넌트 마운트 시 데이터 로드
 onMounted(() => {

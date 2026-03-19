@@ -8,7 +8,7 @@
             <div class="grid-cell cell-stats">
                 <div class="stat-cards">
                     <div class="stat-card">
-                        <h2 class="stat-number">{{totalCount}}</h2>
+                        <h2 class="stat-number">{{ totalCount }}</h2>
                         <span class="stat-label">게시물</span>
                     </div>
                     <div class="stat-card">
@@ -18,17 +18,12 @@
                 </div>
             </div>
 
-            <!-- Row 1, Col 2: 게시판 -->
+            <!-- Row 1, Col 2: 달력(업무진척도 날짜 연동용) -->
             <div class="grid-cell">
                 <div class="card dashboard-card h-100">
                     <div class="card-body">
-                        <h6 class="card-subtitle fw-semibold mb-3">게시판</h6>
-                        <BoardTable :columns="tableColumns" :rows="boards" idKey="boardId" />
-                        <div>
-                            <!-- 페이징 버튼 -->
-                            <BoardPaging :totalCount="totalCount" :currentPage="currentPage" :totalPages="totalPages"
-                                @changePage="changePage" />
-                        </div>
+                        <h6 class="card-subtitle fw-semibold mb-3">일정</h6>
+                        <CalendarTemplate />
                     </div>
                 </div>
             </div>
@@ -36,10 +31,7 @@
             <!-- Row 1, Col 3: 달력 -->
             <div class="grid-cell">
                 <div class="card dashboard-card h-100">
-                    <div class="card-body">
-                        <h6 class="card-subtitle fw-semibold mb-3">일정</h6>
-                        <CalendarTemplate />
-                    </div>
+                    채팅방 구현 예정
                 </div>
             </div>
 
@@ -125,21 +117,17 @@
 
 <script setup lang="ts">
 import CalendarTemplate from '~/components/molecules/calendar/calendarTemplate.vue'
-import BoardTable from '~/components/molecules/table/BoardTable.vue'
 import { useBoard, useRecentFiveBoard } from '~/lib/composables/board/fetchAllBoard'
 import KanbanBoardComponent from '~/components/organisms/kanban/KanbanBoard.vue'
-import { fetchKanbanBoardId } from '~/lib/apiService/kanbanBoardApi'
-import { fetchKanbanCards } from '~/lib/apiService/kanbanCardApi'
 import type { KanbanColumnDto } from '~/lib/types/kanban'
-import BoardPaging from '~/components/organisms/pagination/BoardPaging.vue'
+import { fetchAllKanban } from '~/lib/composables/kanban/fetchAllKanban'
+import { useKanbanCardActions } from '~/lib/composables/kanban/useKanbanCardActions'
 
 const { recentFiveBoards, getLatestBoards } = useRecentFiveBoard()
 const kanbanStore = useKanbanStore()
 const { columns, boardId } = storeToRefs(kanbanStore)
 const router = useRouter();
-
 const totalCards = computed(() => columns.value.reduce((sum, col) => sum + col.cards.length, 0))
-
 const todoCount = computed(() => columns.value.find(c => c.columnName === 'TODO')?.cards.length ?? 0)
 const progressCount = computed(() => columns.value.find(c => c.columnName === 'IN_PROGRESS')?.cards.length ?? 0)
 const doneCount = computed(() => columns.value.find(c => c.columnName === 'DONE')?.cards.length ?? 0)
@@ -149,6 +137,8 @@ const circumference = 2 * Math.PI * 50 // ~314.16
 const todoArc = computed(() => totalCards.value === 0 ? 0 : (todoCount.value / totalCards.value) * circumference)
 const progressArc = computed(() => totalCards.value === 0 ? 0 : (progressCount.value / totalCards.value) * circumference)
 const doneArc = computed(() => totalCards.value === 0 ? 0 : (doneCount.value / totalCards.value) * circumference)
+
+
 // composable에서 상태+로직 가져오기
 const {
     boards,
@@ -161,55 +151,10 @@ const {
 } = useBoard(10)
 
 
-const tableColumns = [
-    { key: 'boardId', label: '번호' },
-    {
-        key: 'title',
-        label: '제목',
-        isLink: true,
-        to: (row: any) => `/board/${row.boardId}`
-    },
-    { key: 'writer', label: '작성자' },
-    {
-        key: 'regdate',
-        label: '등록날짜',
-        format: (_: any, row: any) => formatDate(row.updatedAt || row.regdate)
-    },
-    { key: 'viewcnt', label: '조회수' }
-]
-
-const formatDate = (timestamp?: string) => {
-    if (!timestamp) return '-'
-    return new Date(timestamp + 'Z').toLocaleString('ko-KR', {
-        timeZone: 'Asia/Seoul'
-    })
-}
-
-const loadKanbanData = async () => {
-    try {
-        const board = await fetchKanbanBoardId()
-        kanbanStore.setBoard(board)
-        const cards = await fetchKanbanCards(board.boardId)
-        kanbanStore.setCardsByColumn(cards)
-    } catch (error) {
-        console.error('칸반 데이터 로드 실패:', error)
-    }
-}
-
-const editCard = (card: KanbanColumnDto) => {
-    router.push({
-        path: `/kanban/${card.cardId}`,
-        state: {
-            title: card.title ?? '',
-            cardInfo: card.cardInfo ?? '',
-            columnName: card.columnName ?? 'TODO',
-        },
-    })
-}
-
-const deleteCard = async (cardId: number) => {
-    kanbanStore.deleteCard(cardId)
-}
+// 백엔드에서 칸반 데이터 불러오기
+const { loadKanbanData } = fetchAllKanban()
+// 카드 편집 및 삭제 함수
+const { editCard, deleteCard } = useKanbanCardActions()
 
 onMounted(async () => {
     await getBoardByPage();
