@@ -31,9 +31,10 @@ export interface KanbanColumnDto{
   cardId: number;
   title:string;
   cardInfo: string;
+  startDate: string | null;
+  endDate: string | null;
   createdAt: string;
   updatedAt: string;
-
 }
 
 export interface CreateCardDto {
@@ -49,6 +50,8 @@ export interface UpdateCardDto {
   title: string;
   orderNum: number;
   cardInfo: string;
+  startDate: string | null;
+  endDate: string | null;
   boardId: string;
 }
 

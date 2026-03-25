@@ -39,6 +39,21 @@
                             </select>
                         </div>
 
+                        <!-- 예정 시작 날짜 -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">예정 시작 날짜</label>
+                            <input type="date" class="form-control" :value="startDate"
+                                @input="UpdateStartDate(($event.target as HTMLInputElement).value)" />
+                        </div>
+
+
+                        <!-- 예정 종료 날짜 -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">예정 종료 날짜</label>
+                            <input type="date" class="form-control" :value="endDate"
+                                @input="UpdateEndDate(($event.target as HTMLInputElement).value)" />
+                        </div>
+
                         <!-- 버튼 -->
                         <div class="d-flex gap-2 justify-content-end">
                             <button class="btn btn-primary" @click="$router.push('/kanban')">
@@ -73,10 +88,26 @@ const newTaskDescription = ref(String(history.state?.cardInfo ?? ''))
 const selectedColumnId = ref(String(history.state?.columnName ?? 'TODO'))
 const orderNum = ref(Number(history.state?.orderNum ?? 0))
 const boardId = ref(String(history.state?.boardId ?? ''))
+const startDate = ref<string>(String(history.state?.startDate ?? ''))
+const endDate = ref<string>(String(history.state?.endDate ?? ''))
 // 수정 후 업데이트된 정보
 const updateTitle = (value: string) => { newTaskTitle.value = value; };
 const updateDescription = (value: string) => { newTaskDescription.value = value; };
 const updateColumnId = (value: string) => { selectedColumnId.value = value; };
+const UpdateStartDate = (value: string) => {
+  if (endDate.value && value > endDate.value) {
+    alert('시작 날짜는 종료 날짜보다 이후일 수 없습니다.')
+    return
+  }
+  startDate.value = value
+}
+const UpdateEndDate = (value: string) => {
+  if (startDate.value && value < startDate.value) {
+    alert('종료 날짜는 시작 날짜보다 이전일 수 없습니다.')
+    return
+  }
+  endDate.value = value
+}
 
 const handleUpdate = async () => {
   const cardData = {
@@ -85,6 +116,8 @@ const handleUpdate = async () => {
     title: newTaskTitle.value,
     orderNum: orderNum.value,
     cardInfo: newTaskDescription.value,
+    startDate: startDate.value || null,
+    endDate: endDate.value || null,
     boardId: boardId.value,
   }
   await updateCardApi(cardData)
@@ -93,6 +126,8 @@ const handleUpdate = async () => {
     title: cardData.title,
     orderNum: cardData.orderNum,
     cardInfo: cardData.cardInfo,
+    startDate: cardData.startDate,
+    endDate: cardData.endDate,
   })
   router.push('/kanban')
 };

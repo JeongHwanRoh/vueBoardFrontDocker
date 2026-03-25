@@ -6,11 +6,22 @@
 
   <!-- 칸반보드 + 버튼 래퍼 -->
   <div class="kanban-page-wrapper">
-    <div class="addTaskBtn">
-      <BtnBW field="업무 추가" @click="modalOpen"></BtnBW>
+
+    <div class="routeBtn">
+      <div class="schedule-management-link">
+
+        <BtnBW field="일정 상태 관리" @click="moveToSchedulePage"></BtnBW>
+      </div>
+      <div class="add-task-link">
+
+        <BtnBW field="업무 추가" @click="modalOpen"></BtnBW>
+
+      </div>
     </div>
+  </div>
+  <div>
     <KanbanBoardComponent :columns="columns" :boardId="boardId" @editCard="editCard" @deleteCard="deleteCard"
-    @cardsReordered="loadKanbanData" />
+      @cardsReordered="loadKanbanData" />
   </div>
 </template>
 
@@ -79,8 +90,13 @@ const modalClose = () => {
   modalCheck.value = false
 }
 
+// 일정 상태 관리 페이지로 이동
+const moveToSchedulePage = () => {
+  router.push('/kanban/scheduler')
+}
+
 // 업무 추가 (ref/store 호출은 await 전에 실행해야 컴포넌트 인스턴스 컨텍스트 유지)
-const {newTaskTitle, newTaskDescription, selectedColumnId,columns,boardId,modalCheck,addTask } = addKanbanTask()
+const { newTaskTitle, newTaskDescription, selectedColumnId, columns, boardId, modalCheck, addTask } = addKanbanTask()
 
 // 백엔드에서 칸반 데이터 불러오기
 const { loadKanbanData } = fetchAllKanban()
@@ -94,7 +110,7 @@ onMounted(() => {
 })
 
 // 데이터 변화 감지 로직 (칸반 카드)
-watch(columns, (newVal) => {  
+watch(columns, (newVal) => {
   console.log('칸반 데이터 변경:', newVal)
 }, { deep: true })
 
@@ -112,7 +128,7 @@ watch(() => kanbanStore.columns, (cols) => {
 .kanban-page-wrapper {
   width: 100%;
   margin: 24px auto 0;
-  padding: 0 32px;
+  padding: 0 0 20px;
   box-sizing: border-box;
 }
 
@@ -163,11 +179,12 @@ watch(() => kanbanStore.columns, (cols) => {
   margin-top: 16px;
 }
 
-.addTaskBtn {
+.routeBtn {
   display: flex;
   justify-content: flex-end;
   width: 100%;
   margin-bottom: 8px;
+  gap: 10px; /* 버튼 사이 간격 추가 */
 }
 
 @media (max-width: 992px) {

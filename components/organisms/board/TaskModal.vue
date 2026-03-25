@@ -10,8 +10,7 @@
                 <div class="mb-3">
                     <label class="form-label fw-medium">작업 제목</label>
                     <input type="text" class="form-control" :value="newTaskTitle"
-                        @input="updateTitle(($event.target as HTMLInputElement).value)"
-                        placeholder="작업 제목을 입력하세요" />
+                        @input="updateTitle(($event.target as HTMLInputElement).value)" placeholder="작업 제목을 입력하세요" />
                 </div>
 
                 <!-- 작업 설명 -->
@@ -34,15 +33,33 @@
                 </div>
 
                 <!-- 버튼 -->
+                <!-- 예정 시작 날짜 -->
+                <div class="mb-3">
+                    <label class="form-label fw-medium">예정 시작 날짜</label>
+                    <input type="date" class="form-control" :value="startDate"
+                        @input="InsertStartDate(($event.target as HTMLInputElement).value)" />
+                </div>
+
+
+                <!-- 예정 종료 날짜 -->
+                <div class="mb-3">
+                    <label class="form-label fw-medium">예정 종료 날짜</label>
+                    <input type="date" class="form-control" :value="endDate"
+                        @input="InsertEndDate(($event.target as HTMLInputElement).value)" />
+                </div>
                 <div class="d-flex gap-2 justify-content-end">
                     <button class="btn btn-primary" @click="handleAddTask">추가</button>
                     <button class="btn btn-primary" @click="handleModalClose">닫기</button>
                 </div>
+
             </div>
         </div>
     </div>
 </template>
 <script setup lang="ts">
+
+const startDate = ref<string>(String(history.state?.startDate ?? ''))
+const endDate = ref<string>(String(history.state?.endDate ?? ''))
 interface Props {
     modalCheck: boolean
     modalPosition?: { top: string; left: string }
@@ -79,6 +96,20 @@ const updateDescription = (value: string) => {
 const updateColumnId = (value: string) => {
     emit('update:selectedColumnId', value)
 }
+const InsertStartDate = (value: string) => {
+  if (endDate.value && value > endDate.value) {
+    alert('시작 날짜는 종료 날짜보다 이후일 수 없습니다.')
+    return
+  }
+  startDate.value = value
+}
+const InsertEndDate = (value: string) => {
+  if (startDate.value && value < startDate.value) {
+    alert('종료 날짜는 시작 날짜보다 이전일 수 없습니다.')
+    return
+  }
+  endDate.value = value
+}
 
 const handleMouseDown = (e: MouseEvent) => {
     props.startDrag?.(e)
@@ -94,7 +125,8 @@ const handleModalClose = () => {
 </script>
 
 <style scoped>
-.form-control, .form-select{
+.form-control,
+.form-select {
     border: 1.5px solid #98a2b3;
     box-shadow: none;
 }

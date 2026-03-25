@@ -6,9 +6,9 @@
       <div class="kanban-column">
         <Draggable v-model="column.cards" group="kanban" item-key="cardId" class="card-list" @end="onDragEnd">
           <template #item="{ element }">
-            <div class="kanban-card" @click="$emit('editCard', element)">
+            <div class="kanban-card">
               <!-- .kanban-card 클릭 시 카드 편집 이벤트 발생 -->
-              <div class="card-content">
+              <div class="card-content" @click="$emit('editCard', element)">
                 {{ element.title }}
               </div>
               <div class="card-actions">

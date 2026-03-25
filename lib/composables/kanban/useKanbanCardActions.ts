@@ -19,6 +19,8 @@ export const useKanbanCardActions = () => {
         columnName: card.columnName ?? 'TODO',
         orderNum: card.orderNum ?? 0,
         boardId: boardId.value ?? '',
+        startDate: card.startDate ?? '',
+        endDate: card.endDate ?? '',
       },
     })
   }

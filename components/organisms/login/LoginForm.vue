@@ -1,13 +1,14 @@
 <!-- 실제 로그인 동작 및 입력 UI 담당 컴포넌트 -->
 <template>
   <div class="page-wrapper login-viewport radial-gradient">
-    <div class="login-card">
+    <!-- 엔터 클릭 시 로그인 -> DOM 조작 없이 @keydown.enter 사용 -->
+    <div class="login-card" @keydown.enter="onSubmit">
       <a class="logo-link">
         <img src="~/assets/images/Hwani.png" class="logo-image" alt="" />
       </a>
       <input v-model="localUserId" placeholder="아이디를 입력하세요" />
       <input v-model="localPassword" type="password" placeholder="비밀번호를 입력하세요" />
-      <button class="login-button btn btn-primary" :disabled="loading" @click="onSubmit">
+      <button id="loginBtn" class="login-button btn btn-primary" :disabled="loading" @click="onSubmit">
         로그인
       </button>
       <button class="login-button btn btn-primary" @click="$router.push('/join')">
