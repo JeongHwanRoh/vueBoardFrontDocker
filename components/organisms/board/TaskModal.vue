@@ -36,7 +36,7 @@
                 <!-- 예정 시작 날짜 -->
                 <div class="mb-3">
                     <label class="form-label fw-medium">예정 시작 날짜</label>
-                    <input type="date" class="form-control" :value="startDate"
+                    <input type="date" class="form-control" :value="newPredictedStartDate"
                         @input="InsertStartDate(($event.target as HTMLInputElement).value)" />
                 </div>
 
@@ -44,7 +44,7 @@
                 <!-- 예정 종료 날짜 -->
                 <div class="mb-3">
                     <label class="form-label fw-medium">예정 종료 날짜</label>
-                    <input type="date" class="form-control" :value="endDate"
+                    <input type="date" class="form-control" :value="newPredictedEndDate"
                         @input="InsertEndDate(($event.target as HTMLInputElement).value)" />
                 </div>
                 <div class="d-flex gap-2 justify-content-end">
@@ -58,8 +58,6 @@
 </template>
 <script setup lang="ts">
 
-const startDate = ref<string>(String(history.state?.startDate ?? ''))
-const endDate = ref<string>(String(history.state?.endDate ?? ''))
 interface Props {
     modalCheck: boolean
     modalPosition?: { top: string; left: string }
@@ -69,6 +67,8 @@ interface Props {
     newTaskTitle?: string
     newTaskDescription?: string
     selectedColumnId?: string
+    newPredictedStartDate?: string
+    newPredictedEndDate?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -82,6 +82,8 @@ const emit = defineEmits<{
     'update:newTaskTitle': [value: string]
     'update:newTaskDescription': [value: string]
     'update:selectedColumnId': [value: string]
+    'update:newPredictedStartDate': [value: string]
+    'update:newPredictedEndDate': [value: string]
 }>()
 
 // 입력 값 변경 시 emit 발생
@@ -97,18 +99,18 @@ const updateColumnId = (value: string) => {
     emit('update:selectedColumnId', value)
 }
 const InsertStartDate = (value: string) => {
-  if (endDate.value && value > endDate.value) {
+  if (props.newPredictedEndDate && value > props.newPredictedEndDate) {
     alert('시작 날짜는 종료 날짜보다 이후일 수 없습니다.')
     return
   }
-  startDate.value = value
+  emit('update:newPredictedStartDate', value)
 }
 const InsertEndDate = (value: string) => {
-  if (startDate.value && value < startDate.value) {
+  if (props.newPredictedStartDate && value < props.newPredictedStartDate) {
     alert('종료 날짜는 시작 날짜보다 이전일 수 없습니다.')
     return
   }
-  endDate.value = value
+  emit('update:newPredictedEndDate', value)
 }
 
 const handleMouseDown = (e: MouseEvent) => {

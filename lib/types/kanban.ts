@@ -31,8 +31,8 @@ export interface KanbanColumnDto{
   cardId: number;
   title:string;
   cardInfo: string;
-  startDate: string | null;
-  endDate: string | null;
+  predictedStartDate: string | null;
+  predictedEndDate: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -50,8 +50,8 @@ export interface UpdateCardDto {
   title: string;
   orderNum: number;
   cardInfo: string;
-  startDate: string | null;
-  endDate: string | null;
+  predictedStartDate: string | null;
+  predictedEndDate: string | null;
   boardId: string;
 }
 

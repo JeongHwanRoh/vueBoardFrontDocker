@@ -14,6 +14,14 @@ export const createKanbanCard = async (cardData: CreateCardDto): Promise<KanbanC
   const res = await axiosApi.post(`/kanban/card/create?boardId=${cardData.boardId}`, cardData, { withCredentials: true })
   return res.data
 }
+
+// 칸반보드 Card 일정 추가
+export const createKanbanCardSchedule = async (scheduleData: { cardId: number; predictedStartDate: string | null; predictedEndDate: string | null }): Promise<void> => {
+  console.log('createKanbanCardSchedule 요청 데이터:', scheduleData); // 요청 데이터 확인
+  await axiosApi.patch(`/kanban/card/schedule`, scheduleData, { withCredentials: true });
+}
+
+
 // 칸반보드 Card 업데이트 (상세페이지에서)
 export const updateCard = async (cardData: UpdateCardDto): Promise<void> => {
   const res=await axiosApi.patch(`/kanban/card/update?boardId=${cardData.boardId}`, cardData, { withCredentials: true });

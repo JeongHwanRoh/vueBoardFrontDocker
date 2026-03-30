@@ -42,7 +42,7 @@
                         <!-- 예정 시작 날짜 -->
                         <div class="mb-3">
                             <label class="form-label fw-medium">예정 시작 날짜</label>
-                            <input type="date" class="form-control" :value="startDate"
+                            <input type="date" class="form-control" :value="newPredictedStartDate"
                                 @input="UpdateStartDate(($event.target as HTMLInputElement).value)" />
                         </div>
 
@@ -50,7 +50,7 @@
                         <!-- 예정 종료 날짜 -->
                         <div class="mb-3">
                             <label class="form-label fw-medium">예정 종료 날짜</label>
-                            <input type="date" class="form-control" :value="endDate"
+                            <input type="date" class="form-control" :value="newPredictedEndDate"
                                 @input="UpdateEndDate(($event.target as HTMLInputElement).value)" />
                         </div>
 
@@ -73,40 +73,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { updateCard as updateCardApi } from '~/lib/apiService/kanbanCardApi';
+import { updateCard as updateCardApi, createKanbanCardSchedule } from '~/lib/apiService/kanbanCardApi';
 import { useKanbanStore } from '~/stores/kanbanStore';
 
 const route = useRoute();
 const router = useRouter();
 const kanbanStore = useKanbanStore();
 const cardId = Number(route.params.cardId);
-// state로 상세정보 받은 
-const newTaskTitle = ref(String(history.state?.title ?? ''))
-const newTaskDescription = ref(String(history.state?.cardInfo ?? ''))
-const selectedColumnId = ref(String(history.state?.columnName ?? 'TODO'))
-const orderNum = ref(Number(history.state?.orderNum ?? 0))
-const boardId = ref(String(history.state?.boardId ?? ''))
-const startDate = ref<string>(String(history.state?.startDate ?? ''))
-const endDate = ref<string>(String(history.state?.endDate ?? ''))
+// state로 상세정보 받기 (history는 브라우저 전용이므로 onMounted에서 접근)
+const newTaskTitle = ref('')
+const newTaskDescription = ref('')
+const selectedColumnId = ref('TODO')
+const orderNum = ref(0)
+const boardId = ref('')
+const newPredictedStartDate = ref<string>('')
+const newPredictedEndDate = ref<string>('')
+
+onMounted(() => {
+  newTaskTitle.value = String(history.state?.title ?? '')
+  newTaskDescription.value = String(history.state?.cardInfo ?? '')
+  selectedColumnId.value = String(history.state?.columnName ?? 'TODO')
+  orderNum.value = Number(history.state?.orderNum ?? 0)
+  boardId.value = String(history.state?.boardId ?? '')
+  newPredictedStartDate.value = String(history.state?.predictedStartDate ?? '')
+  newPredictedEndDate.value = String(history.state?.predictedEndDate ?? '')
+})
 // 수정 후 업데이트된 정보
 const updateTitle = (value: string) => { newTaskTitle.value = value; };
 const updateDescription = (value: string) => { newTaskDescription.value = value; };
 const updateColumnId = (value: string) => { selectedColumnId.value = value; };
 const UpdateStartDate = (value: string) => {
-  if (endDate.value && value > endDate.value) {
+  if (newPredictedEndDate.value && value > newPredictedEndDate.value) {
     alert('시작 날짜는 종료 날짜보다 이후일 수 없습니다.')
     return
   }
-  startDate.value = value
+  newPredictedStartDate.value = value
 }
 const UpdateEndDate = (value: string) => {
-  if (startDate.value && value < startDate.value) {
+  if (newPredictedStartDate.value && value < newPredictedStartDate.value) {
     alert('종료 날짜는 시작 날짜보다 이전일 수 없습니다.')
     return
   }
-  endDate.value = value
+  newPredictedEndDate.value = value
 }
 
 const handleUpdate = async () => {
@@ -116,18 +126,23 @@ const handleUpdate = async () => {
     title: newTaskTitle.value,
     orderNum: orderNum.value,
     cardInfo: newTaskDescription.value,
-    startDate: startDate.value || null,
-    endDate: endDate.value || null,
+    predictedStartDate: newPredictedStartDate.value || null,
+    predictedEndDate: newPredictedEndDate.value || null,
     boardId: boardId.value,
   }
   await updateCardApi(cardData)
+  await createKanbanCardSchedule({
+    cardId,
+    predictedStartDate: cardData.predictedStartDate,
+    predictedEndDate: cardData.predictedEndDate,
+  })
   kanbanStore.updateCard(cardId, {
     columnName: cardData.columnName,
     title: cardData.title,
     orderNum: cardData.orderNum,
     cardInfo: cardData.cardInfo,
-    startDate: cardData.startDate,
-    endDate: cardData.endDate,
+    predictedStartDate: cardData.predictedStartDate,
+    predictedEndDate: cardData.predictedEndDate,
   })
   router.push('/kanban')
 };

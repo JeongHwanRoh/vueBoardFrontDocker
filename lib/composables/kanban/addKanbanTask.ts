@@ -1,4 +1,4 @@
-import { createKanbanCard } from "~/lib/apiService/kanbanCardApi"
+import { createKanbanCard, createKanbanCardSchedule } from "~/lib/apiService/kanbanCardApi"
 import type { KanbanColumnDto } from "~/lib/types/kanban"
 
 export const addKanbanTask = () => {
@@ -8,6 +8,8 @@ export const addKanbanTask = () => {
     const newTaskTitle = ref('')
     const newTaskDescription = ref('')
     const selectedColumnId = ref('TODO')
+    const newPredictedStartDate = ref('')
+    const newPredictedEndDate = ref('')
     const addTask = async () => {
         console.log("addTask 실행")
         console.log("newTaskTitle:", newTaskTitle.value)
@@ -28,6 +30,13 @@ export const addKanbanTask = () => {
                 boardId: boardId.value
             })
 
+
+            await createKanbanCardSchedule({
+                cardId: createdCard.cardId,
+                predictedStartDate: newPredictedStartDate.value || null,
+                predictedEndDate: newPredictedEndDate.value || null,
+            })
+
             const newCard: KanbanColumnDto = {
                 columnName: selectedColumnId.value,
                 orderNum: createdCard.orderNum,
@@ -36,12 +45,16 @@ export const addKanbanTask = () => {
                 cardInfo: newTaskDescription.value || '',
                 createdAt: createdCard.createdAt,
                 updatedAt: createdCard.updatedAt,
+                predictedStartDate: newPredictedStartDate.value || null,
+                predictedEndDate: newPredictedEndDate.value || null,
             }
 
             kanbanStore.addCardToColumn(selectedColumnId.value, newCard)
             modalCheck.value = false
             newTaskTitle.value = ''
             newTaskDescription.value = ''
+            newPredictedStartDate.value = ''
+            newPredictedEndDate.value = ''
         } catch (error) {
             console.error('업무 추가 실패:', error)
         }
@@ -50,8 +63,10 @@ export const addKanbanTask = () => {
         newTaskTitle,
         newTaskDescription,
         selectedColumnId,
-        columns,
+        newPredictedStartDate,
+        newPredictedEndDate,
         boardId,
+        columns,
         modalCheck,
         addTask
     }
