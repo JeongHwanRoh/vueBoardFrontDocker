@@ -28,6 +28,12 @@ export const updateCard = async (cardData: UpdateCardDto): Promise<void> => {
   return res.data
 };
 
+// 칸반보드 Card 일정 업데이트
+export const updateKanbanCardSchedule = async (scheduleData: { cardId: number; predictedStartDate: string | null; predictedEndDate: string | null }): Promise<void> => {
+  console.log('updateKanbanCardSchedule 요청 데이터:', scheduleData);
+  await axiosApi.patch(`/kanban/card/schedule/update`, scheduleData, { withCredentials: true });
+}
+
 // 칸반보드 Card 순서 변경 (드래그앤드롭)
 export const reorderCards = async (boardId: string, cards: ReorderCardDto[]): Promise<void> => {
   console.log('reorderCards 요청 데이터:', cards); // 요청 데이터 확인

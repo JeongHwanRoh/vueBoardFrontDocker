@@ -75,7 +75,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { updateCard as updateCardApi, createKanbanCardSchedule } from '~/lib/apiService/kanbanCardApi';
+import { updateCard as updateCardApi, updateKanbanCardSchedule } from '~/lib/apiService/kanbanCardApi';
 import { useKanbanStore } from '~/stores/kanbanStore';
 
 const route = useRoute();
@@ -131,7 +131,7 @@ const handleUpdate = async () => {
     boardId: boardId.value,
   }
   await updateCardApi(cardData)
-  await createKanbanCardSchedule({
+  await updateKanbanCardSchedule({
     cardId,
     predictedStartDate: cardData.predictedStartDate,
     predictedEndDate: cardData.predictedEndDate,
