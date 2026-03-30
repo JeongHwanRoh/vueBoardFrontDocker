@@ -4,6 +4,8 @@
         <thead>
             <tr>
                 <th>업무명</th>
+                <th>업무구분</th>
+                <th>상세정보</th>
                 <th>예정 시작일</th>
                 <th>예정 종료일</th>
                 <th>실제 시작일</th>
@@ -14,24 +16,26 @@
         <tbody>
             <tr v-for="task in tasks" :key="task.id">
                 <td>{{ task.title }}</td>
+                <td>{{ task.classification }}</td>
+                <td>{{ task.cardInfo }}</td>
 
                 <!-- 예정 시작 날짜 -->
                 <td>
-                    <input type="date" class="form-control" :value="task.plannedStart"
+                    <input type="date" class="form-control" :value="task.predictedStartDate"
                         @input="InsertStartDate(($event.target as HTMLInputElement).value)" />
 
                 </td>
                 <!-- 예정 종료 날짜 -->
                 <td>
-                    <input type="date" class="form-control" :value="task.plannedEnd"
+                    <input type="date" class="form-control" :value="task.predictedEndDate"
                         @input="InsertEndDate(($event.target as HTMLInputElement).value)" />
                 </td>
                 <td>
-                    <input type="date" class="form-control" :value="task.actualStart"
+                    <input type="date" class="form-control" :value="task.actualStartDate"
                         @input="InsertStartDate(($event.target as HTMLInputElement).value)" />
                 </td>
                 <td>
-                    <input type="date" class="form-control" :value="task.actualEnd"
+                    <input type="date" class="form-control" :value="task.actualEndDate"
                         @input="InsertEndDate(($event.target as HTMLInputElement).value)" />
                 </td>
                 <td>{{ task.status }}</td>
@@ -58,11 +62,14 @@ const endDate = ref<string>(String(history.state?.endDate ?? ''))
 interface Task {
     id: number
     title: string
-    plannedStart: string
-    plannedEnd: string
-    actualStart: string
-    actualEnd: string
+    classification: string
+    cardInfo: string
+    predictedStartDate: string
+    predictedEndDate: string
+    actualStartDate: string
+    actualEndDate  : string
     status: string
+
 }
 
 // 샘플 데이터 (API 연동 전용)
@@ -70,19 +77,23 @@ const tasks = ref<Task[]>([
     {
         id: 1,
         title: '고객사 추가 요구사항 반영 작업',
-        plannedStart: '2024-03-01',
-        plannedEnd: '2024-03-05',
-        actualStart: '2024-03-02',
-        actualEnd: '2024-03-06',
+        classification: '개발',
+        cardInfo: '고객사 요청사항 반영',
+        predictedStartDate: '2024-03-01',
+        predictedEndDate: '2024-03-05',
+        actualStartDate: '2024-03-02',
+        actualEndDate: '2024-03-06',
         status: '완료',
     },
     {
         id: 2,
         title: '기술코드 125 단위테스트',
-        plannedStart: '2024-03-03',
-        plannedEnd: '2024-03-07',
-        actualStart: '2024-03-03',
-        actualEnd: '',
+        classification: '테스트',
+        cardInfo: '기술코드 125 단위테스트 진행',
+        predictedStartDate: '2024-03-03',
+        predictedEndDate: '2024-03-07',
+        actualStartDate: '2024-03-03',
+        actualEndDate  : '',
         status: '진행 중',
     },
 ])
