@@ -29,8 +29,8 @@
                     <label class="form-label fw-medium">상태</label>
                     <select class="form-select" v-model="localColumnId">
                         <option value="TODO">예정</option>
-                        <option value="IN_PROGRESS">진행 중</option>
-                        <option value="DONE">완료</option>
+                        <option value="IN_PROGRESS" disabled>진행 중</option>
+                        <option value="DONE" disabled>완료</option>
                     </select>
                 </div>
 
@@ -124,5 +124,9 @@ const handleModalClose = () => {
     box-shadow: none;
 }
 
-
+/* 비활성화된 옵션 스타일(상태옵션) */
+.form-select option:disabled {
+    color: #ccc; /* 옅은 회색 코드 */
+    background-color: #f9f9f9; /* 배경색도 살짝 밝게 가능 */
+}
 </style>

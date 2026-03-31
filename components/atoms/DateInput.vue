@@ -14,7 +14,7 @@
             class="hidden-date-picker"
             @change="onDateChange"
         />
-        <button class="btn btn-outline-secondary" type="button" @click="openPicker">
+        <button class="btn btn-outline-dark" type="button" @click="openPicker">
             📅
         </button>
     </div>
