@@ -1,8 +1,6 @@
 <template>
   <!-- 업무 추가 모달 -->
-  <TaskModal :modalCheck="modalCheck" :modalPosition="modalPosition" v-model:newTaskTitle="newTaskTitle"
-    v-model:newTaskDescription="newTaskDescription" v-model:selectedColumnId="selectedColumnId"
-    v-model:newPredictedStartDate="newPredictedStartDate" v-model:newPredictedEndDate="newPredictedEndDate" :addTask="addTask"
+  <TaskModal :modalCheck="modalCheck" :modalPosition="modalPosition" :addTask="addTask"
     :modalClose="modalClose" :startDrag="startDrag" />
 
   <!-- 칸반보드 + 버튼 래퍼 -->
@@ -97,7 +95,7 @@ const moveToSchedulePage = () => {
 }
 
 // 업무 추가 (ref/store 호출은 await 전에 실행해야 컴포넌트 인스턴스 컨텍스트 유지)
-const { newTaskTitle, newTaskDescription, selectedColumnId, newPredictedStartDate, newPredictedEndDate, columns, boardId, modalCheck, addTask } = addKanbanTask()
+const { columns, boardId, modalCheck, addTask } = addKanbanTask()
 
 // 백엔드에서 칸반 데이터 불러오기
 const { loadKanbanData } = fetchAllKanban()

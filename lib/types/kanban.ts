@@ -10,6 +10,7 @@ export interface KanbanCard {
   cardId: number;
   columnId: number;
   title: string;
+  classification: string;
   orderNum: number;
   createdAt: string;
   updatedAt: string;
@@ -30,6 +31,7 @@ export interface KanbanColumnDto{
   orderNum: number;
   cardId: number;
   title:string;
+  classification: string;
   cardInfo: string;
   predictedStartDate: string | null;
   predictedEndDate: string | null;
@@ -39,6 +41,7 @@ export interface KanbanColumnDto{
 
 export interface CreateCardDto {
   title: string;
+  classification: string;
   cardInfo: string;
   columnName: string;
   boardId: string;
@@ -50,6 +53,7 @@ export interface UpdateCardDto {
   title: string;
   orderNum: number;
   cardInfo: string;
+  classification: string;
   predictedStartDate: string | null;
   predictedEndDate: string | null;
   boardId: string;

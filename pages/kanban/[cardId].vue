@@ -20,6 +20,14 @@
                                 placeholder="작업 제목을 입력하세요" />
                         </div>
 
+                        <!-- 작업 구분 -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">작업 구분</label>
+                            <input type="text" class="form-control" :value="newClassification"
+                                @input="updateClassification(($event.target as HTMLInputElement).value)"
+                                placeholder="작업 구분을 입력하세요" />
+                        </div>
+
                         <!-- 작업 설명 -->
                         <div class="mb-3">
                             <label class="form-label fw-medium">작업 설명</label>
@@ -42,16 +50,14 @@
                         <!-- 예정 시작 날짜 -->
                         <div class="mb-3">
                             <label class="form-label fw-medium">예정 시작 날짜</label>
-                            <input type="date" class="form-control" :value="newPredictedStartDate"
-                                @input="UpdateStartDate(($event.target as HTMLInputElement).value)" />
+                            <DateInput v-model="newPredictedStartDate" />
                         </div>
 
 
                         <!-- 예정 종료 날짜 -->
                         <div class="mb-3">
                             <label class="form-label fw-medium">예정 종료 날짜</label>
-                            <input type="date" class="form-control" :value="newPredictedEndDate"
-                                @input="UpdateEndDate(($event.target as HTMLInputElement).value)" />
+                            <DateInput v-model="newPredictedEndDate" />
                         </div>
 
                         <!-- 버튼 -->
@@ -77,6 +83,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { updateCard as updateCardApi, updateKanbanCardSchedule } from '~/lib/apiService/kanbanCardApi';
 import { useKanbanStore } from '~/stores/kanbanStore';
+import DateInput from '~/components/atoms/DateInput.vue'
 
 const route = useRoute();
 const router = useRouter();
@@ -85,6 +92,7 @@ const cardId = Number(route.params.cardId);
 // state로 상세정보 받기 (history는 브라우저 전용이므로 onMounted에서 접근)
 const newTaskTitle = ref('')
 const newTaskDescription = ref('')
+const newClassification = ref('')
 const selectedColumnId = ref('TODO')
 const orderNum = ref(0)
 const boardId = ref('')
@@ -94,6 +102,7 @@ const newPredictedEndDate = ref<string>('')
 onMounted(() => {
   newTaskTitle.value = String(history.state?.title ?? '')
   newTaskDescription.value = String(history.state?.cardInfo ?? '')
+  newClassification.value = String(history.state?.classification ?? '')
   selectedColumnId.value = String(history.state?.columnName ?? 'TODO')
   orderNum.value = Number(history.state?.orderNum ?? 0)
   boardId.value = String(history.state?.boardId ?? '')
@@ -103,6 +112,7 @@ onMounted(() => {
 // 수정 후 업데이트된 정보
 const updateTitle = (value: string) => { newTaskTitle.value = value; };
 const updateDescription = (value: string) => { newTaskDescription.value = value; };
+const updateClassification = (value: string) => { newClassification.value = value; };
 const updateColumnId = (value: string) => { selectedColumnId.value = value; };
 const UpdateStartDate = (value: string) => {
   if (newPredictedEndDate.value && value > newPredictedEndDate.value) {
@@ -124,6 +134,7 @@ const handleUpdate = async () => {
     cardId,
     columnName: selectedColumnId.value,
     title: newTaskTitle.value,
+    classification: newClassification.value,
     orderNum: orderNum.value,
     cardInfo: newTaskDescription.value,
     predictedStartDate: newPredictedStartDate.value || null,
@@ -139,6 +150,7 @@ const handleUpdate = async () => {
   kanbanStore.updateCard(cardId, {
     columnName: cardData.columnName,
     title: cardData.title,
+    classification: cardData.classification,
     orderNum: cardData.orderNum,
     cardInfo: cardData.cardInfo,
     predictedStartDate: cardData.predictedStartDate,

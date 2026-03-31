@@ -16,6 +16,7 @@ export const useKanbanCardActions = () => {
       state: {
         title: card.title ?? '',
         cardInfo: card.cardInfo ?? '',
+        classification: card.classification ?? '',
         columnName: card.columnName ?? 'TODO',
         orderNum: card.orderNum ?? 0,
         boardId: boardId.value ?? '',
