@@ -1,6 +1,6 @@
 <template>
 
-    <schedulerTable :columns="tableColumns" :rows="tasks" idKey="cardId" />
+    <schedulerTable :columns="tableColumns" :rows="tasks" idKey="cardId" @dateChange="handleDateChange" />
     <div id="button-group" class="d-flex gap-2 justify-content-end">
         <button class="btn btn-primary" @click="saveSchedule">저장</button>
         <button class="btn btn-primary" @click="goBack">돌아가기</button>
@@ -13,6 +13,7 @@
 import { useRouter } from 'vue-router'
 import { useKanbanScheduler } from '~/lib/composables/kanban/useKanbanScheduler'
 import SchedulerTable from '~/components/molecules/kanban/schedulerTable.vue'
+import type { KanbanScheduleDto } from '~/lib/types/kanban'
 
 const router = useRouter()
 
@@ -35,6 +36,16 @@ const tableColumns = [
     { key: 'actualEndDate', label: '실제 종료일', isDate: true },
     { key: 'status', label: '상태' },
 ];
+
+const handleDateChange = ({ rowId, key, value }: { rowId: number; key: string; value: string }) => {
+    const targetRow = tasks.value.find((task) => task.cardId === rowId)
+
+    if (!targetRow) {
+        return
+    }
+
+    targetRow[key as keyof KanbanScheduleDto] = value as never
+}
 
 const saveSchedule = () => {
     // 저장 로직 구현 (API 호출 등)
