@@ -1,48 +1,6 @@
 <template>
 
-    <table class="schedule-table">
-        <thead>
-            <tr>
-                <th>업무명</th>
-                <th>업무구분</th>
-                <th>상세정보</th>
-                <th>예정 시작일</th>
-                <th>예정 종료일</th>
-                <th>실제 시작일</th>
-                <th>실제 종료일</th>
-                <th>상태</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="task in tasks" :key="task.id">
-                <td>{{ task.title }}</td>
-                <td>{{ task.classification }}</td>
-                <td>{{ task.cardInfo }}</td>
-
-                <!-- 예정 시작 날짜 -->
-                <td>
-                    <input type="date" class="form-control" :value="task.predictedStartDate"
-                        @input="InsertStartDate(($event.target as HTMLInputElement).value)" />
-
-                </td>
-                <!-- 예정 종료 날짜 -->
-                <td>
-                    <input type="date" class="form-control" :value="task.predictedEndDate"
-                        @input="InsertEndDate(($event.target as HTMLInputElement).value)" />
-                </td>
-                <td>
-                    <input type="date" class="form-control" :value="task.actualStartDate"
-                        @input="InsertStartDate(($event.target as HTMLInputElement).value)" />
-                </td>
-                <td>
-                    <input type="date" class="form-control" :value="task.actualEndDate"
-                        @input="InsertEndDate(($event.target as HTMLInputElement).value)" />
-                </td>
-                <td>{{ task.status }}</td>
-
-            </tr>
-        </tbody>
-    </table>
+    <schedulerTable :columns="tableColumns" :rows="tasks" idKey="cardId" />
     <div id="button-group" class="d-flex gap-2 justify-content-end">
         <button class="btn btn-primary" @click="saveSchedule">저장</button>
         <button class="btn btn-primary" @click="goBack">돌아가기</button>
@@ -50,83 +8,52 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+
 // router
 import { useRouter } from 'vue-router'
+import { useKanbanScheduler } from '~/lib/composables/kanban/useKanbanScheduler'
+import SchedulerTable from '~/components/molecules/kanban/schedulerTable.vue'
+
 const router = useRouter()
 
 
-const startDate = ref<string>(String(history.state?.startDate ?? ''))
-const endDate = ref<string>(String(history.state?.endDate ?? ''))
+// 테이블 조회 API
+const { tasks, fetchKanbanSchedules } = useKanbanScheduler()
 
-interface Task {
-    id: number
-    title: string
-    classification: string
-    cardInfo: string
-    predictedStartDate: string
-    predictedEndDate: string
-    actualStartDate: string
-    actualEndDate  : string
-    status: string
-
-}
+const kanbanStore = useKanbanStore()
+const { boardId } = storeToRefs(kanbanStore)
 
 // 샘플 데이터 (API 연동 전용)
-const tasks = ref<Task[]>([
-    {
-        id: 1,
-        title: '고객사 추가 요구사항 반영 작업',
-        classification: '개발',
-        cardInfo: '고객사 요청사항 반영',
-        predictedStartDate: '2024-03-01',
-        predictedEndDate: '2024-03-05',
-        actualStartDate: '2024-03-02',
-        actualEndDate: '2024-03-06',
-        status: '완료',
-    },
-    {
-        id: 2,
-        title: '기술코드 125 단위테스트',
-        classification: '테스트',
-        cardInfo: '기술코드 125 단위테스트 진행',
-        predictedStartDate: '2024-03-03',
-        predictedEndDate: '2024-03-07',
-        actualStartDate: '2024-03-03',
-        actualEndDate  : '',
-        status: '진행 중',
-    },
-])
-
-
-const InsertStartDate = (value: string) => {
-    if (endDate.value && value > endDate.value) {
-        alert('시작 날짜는 종료 날짜보다 이후일 수 없습니다.')
-        return
-    }
-    startDate.value = value
-}
-const InsertEndDate = (value: string) => {
-    if (startDate.value && value < startDate.value) {
-        alert('종료 날짜는 시작 날짜보다 이전일 수 없습니다.')
-        return
-    }
-    endDate.value = value
-}
+const tableColumns = [
+    { key: 'cardId', label: '번호' },
+    { key: 'title', label: '제목' },
+    { key: 'classification', label: '작업 구분' },
+    { key: 'cardInfo', label: '작업 설명' },
+    { key: 'predictedStartDate', label: '예정 시작일', isDate: true },
+    { key: 'predictedEndDate', label: '예정 종료일', isDate: true },
+    { key: 'actualStartDate', label: '실제 시작일', isDate: true },
+    { key: 'actualEndDate', label: '실제 종료일', isDate: true },
+    { key: 'status', label: '상태' },
+];
 
 const saveSchedule = () => {
-    // 저장 로직 구현 (API 호출 아직 미구현)
-    console.log('저장된 일정', tasks.value)
+    // 저장 로직 구현 (API 호출 등)
+    console.log('저장 버튼 클릭 - 스케줄 저장 로직 구현 필요')
 }
-
 const goBack = () => {
     // 돌아가기 로직 구현 (라우터 이동 등)
     router.push('/kanban')
 }
+
+onMounted(() => {
+    if (boardId.value) {
+        fetchKanbanSchedules(boardId.value)
+    }
+})
 </script>
 
 <style scoped>
-#button-group{
+#button-group {
     padding-top: 30px;
 }
 

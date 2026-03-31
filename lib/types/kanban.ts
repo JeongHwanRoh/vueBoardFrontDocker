@@ -64,3 +64,15 @@ export interface ReorderCardDto {
   columnName: string;
   orderNum: number;
 }
+
+export interface KanbanScheduleDto {
+    cardId: number
+    title: string
+    classification: string
+    cardInfo: string
+    predictedStartDate: string
+    predictedEndDate: string
+    actualStartDate: string
+    actualEndDate  : string
+    status: string
+}

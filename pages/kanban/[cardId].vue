@@ -100,63 +100,53 @@ const newPredictedStartDate = ref<string>('')
 const newPredictedEndDate = ref<string>('')
 
 onMounted(() => {
-  newTaskTitle.value = String(history.state?.title ?? '')
-  newTaskDescription.value = String(history.state?.cardInfo ?? '')
-  newClassification.value = String(history.state?.classification ?? '')
-  selectedColumnId.value = String(history.state?.columnName ?? 'TODO')
-  orderNum.value = Number(history.state?.orderNum ?? 0)
-  boardId.value = String(history.state?.boardId ?? '')
-  newPredictedStartDate.value = String(history.state?.predictedStartDate ?? '')
-  newPredictedEndDate.value = String(history.state?.predictedEndDate ?? '')
+    newTaskTitle.value = String(history.state?.title ?? '')
+    newTaskDescription.value = String(history.state?.cardInfo ?? '')
+    newClassification.value = String(history.state?.classification ?? '')
+    selectedColumnId.value = String(history.state?.columnName ?? 'TODO')
+    orderNum.value = Number(history.state?.orderNum ?? 0)
+    boardId.value = String(history.state?.boardId ?? '')
+    newPredictedStartDate.value = String(history.state?.predictedStartDate ?? '')
+    newPredictedEndDate.value = String(history.state?.predictedEndDate ?? '')
 })
 // 수정 후 업데이트된 정보
 const updateTitle = (value: string) => { newTaskTitle.value = value; };
 const updateDescription = (value: string) => { newTaskDescription.value = value; };
 const updateClassification = (value: string) => { newClassification.value = value; };
 const updateColumnId = (value: string) => { selectedColumnId.value = value; };
-const UpdateStartDate = (value: string) => {
-  if (newPredictedEndDate.value && value > newPredictedEndDate.value) {
-    alert('시작 날짜는 종료 날짜보다 이후일 수 없습니다.')
-    return
-  }
-  newPredictedStartDate.value = value
-}
-const UpdateEndDate = (value: string) => {
-  if (newPredictedStartDate.value && value < newPredictedStartDate.value) {
-    alert('종료 날짜는 시작 날짜보다 이전일 수 없습니다.')
-    return
-  }
-  newPredictedEndDate.value = value
-}
 
 const handleUpdate = async () => {
-  const cardData = {
-    cardId,
-    columnName: selectedColumnId.value,
-    title: newTaskTitle.value,
-    classification: newClassification.value,
-    orderNum: orderNum.value,
-    cardInfo: newTaskDescription.value,
-    predictedStartDate: newPredictedStartDate.value || null,
-    predictedEndDate: newPredictedEndDate.value || null,
-    boardId: boardId.value,
-  }
-  await updateCardApi(cardData)
-  await updateKanbanCardSchedule({
-    cardId,
-    predictedStartDate: cardData.predictedStartDate,
-    predictedEndDate: cardData.predictedEndDate,
-  })
-  kanbanStore.updateCard(cardId, {
-    columnName: cardData.columnName,
-    title: cardData.title,
-    classification: cardData.classification,
-    orderNum: cardData.orderNum,
-    cardInfo: cardData.cardInfo,
-    predictedStartDate: cardData.predictedStartDate,
-    predictedEndDate: cardData.predictedEndDate,
-  })
-  router.push('/kanban')
+    if (newPredictedStartDate.value > newPredictedEndDate.value) {
+        alert('시작 날짜는 종료 날짜보다 이후일 수 없습니다.')
+        return
+    }
+    const cardData = {
+        cardId,
+        columnName: selectedColumnId.value,
+        title: newTaskTitle.value,
+        classification: newClassification.value,
+        orderNum: orderNum.value,
+        cardInfo: newTaskDescription.value,
+        predictedStartDate: newPredictedStartDate.value || null,
+        predictedEndDate: newPredictedEndDate.value || null,
+        boardId: boardId.value,
+    }
+    await updateCardApi(cardData)
+    await updateKanbanCardSchedule({
+        cardId,
+        predictedStartDate: cardData.predictedStartDate,
+        predictedEndDate: cardData.predictedEndDate,
+    })
+    kanbanStore.updateCard(cardId, {
+        columnName: cardData.columnName,
+        title: cardData.title,
+        classification: cardData.classification,
+        orderNum: cardData.orderNum,
+        cardInfo: cardData.cardInfo,
+        predictedStartDate: cardData.predictedStartDate,
+        predictedEndDate: cardData.predictedEndDate,
+    })
+    router.push('/kanban')
 };
 
 </script>

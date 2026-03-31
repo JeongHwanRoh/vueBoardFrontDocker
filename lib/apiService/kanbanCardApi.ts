@@ -1,5 +1,5 @@
 import axiosApi from './axiosApi';
-import type { KanbanCard, KanbanColumnDto, CreateCardDto, UpdateCardDto, ReorderCardDto } from '~/lib/types/kanban';
+import type { KanbanCard, KanbanColumnDto, KanbanScheduleDto, CreateCardDto, UpdateCardDto, ReorderCardDto } from '~/lib/types/kanban';
 
 // 칸반보드 Card 조회
 export const fetchKanbanCards = async (boardId: string): Promise<KanbanColumnDto[]> => {
@@ -44,4 +44,12 @@ export const reorderCards = async (boardId: string, cards: ReorderCardDto[]): Pr
 // 칸반보드 Card 삭제
 export const deleteCard = async (cardId: number): Promise<void> => {
   await axiosApi.delete(`/kanban/card/delete?&cardId=${cardId}`, { withCredentials: true });
+}
+
+// 칸반카드 업무 리스트(일정) 조회
+export const fetchKanbanCardSchedules = async (boardId: string): Promise<KanbanScheduleDto[]> => {
+  const res = await axiosApi.get(`/kanban/card/schedule/list?boardId=${boardId}`, { withCredentials: true });
+  debugger;
+  console.log('fetchKanbanCardSchedules response:', res.data); // 응답 데이터 확인
+  return res.data as KanbanScheduleDto[];
 }

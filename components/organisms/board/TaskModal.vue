@@ -98,7 +98,7 @@ const handleMouseDown = (e: MouseEvent) => {
 }
 
 const handleAddTask = () => {
-    if (localStartDate.value && localEndDate.value && localStartDate.value > localEndDate.value) {
+    if (localStartDate.value > localEndDate.value) {
         alert('시작 날짜는 종료 날짜보다 이후일 수 없습니다.')
         return
     }

@@ -3,7 +3,7 @@
         <input
             type="text"
             class="form-control"
-            :value="modelValue"
+            :value="normalizedValue"
             placeholder="YYYY-MM-DD"
             @input="onInput"
             maxlength="10"
@@ -12,6 +12,7 @@
             type="date"
             ref="datePicker"
             class="hidden-date-picker"
+            :value="normalizedValue"
             @change="onDateChange"
         />
         <button class="btn btn-outline-dark" type="button" @click="openPicker">
@@ -25,7 +26,7 @@ interface Props {
     modelValue: string
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
     'update:modelValue': [value: string]
@@ -33,20 +34,41 @@ const emit = defineEmits<{
 
 const datePicker = ref<HTMLInputElement | null>(null)
 
-const onInput = (e: Event) => {
-    const target = e.target as HTMLInputElement
-    let val = target.value.replace(/\D/g, '')
-    let formatted = ''
 
-    if (val.length <= 4) {
-        formatted = val
-    } else if (val.length <= 6) {
-        formatted = `${val.slice(0, 4)}-${val.slice(4)}`
-    } else {
-        formatted = `${val.slice(0, 4)}-${val.slice(4, 6)}-${val.slice(6, 8)}`
+/* 
+텍스트 input 표시값을 normalizedValue로 사용
+숨겨진 type="date" input도 같은 normalizedValue 사용
+2026-04-10 00:00:00 같은 값이 들어오면 자동으로 2026-04-10으로 잘려서 표시됨
+직접 입력할 때도 기존처럼 yyyy-mm-dd 형식으로 유지됨 
+*/
+const normalizeDateValue = (value: string | null | undefined) => {
+    if (!value) return ''
+
+    const trimmed = String(value).trim()
+    const matchedDate = trimmed.match(/^\d{4}-\d{2}-\d{2}/)
+
+    if (matchedDate) {
+        return matchedDate[0]
     }
 
-    emit('update:modelValue', formatted)
+    const digits = trimmed.replace(/\D/g, '').slice(0, 8)
+
+    if (digits.length <= 4) {
+        return digits
+    }
+
+    if (digits.length <= 6) {
+        return `${digits.slice(0, 4)}-${digits.slice(4)}`
+    }
+
+    return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`
+}
+
+const normalizedValue = computed(() => normalizeDateValue(props.modelValue))
+
+const onInput = (e: Event) => {
+    const target = e.target as HTMLInputElement
+    emit('update:modelValue', normalizeDateValue(target.value))
 }
 
 const openPicker = () => {
