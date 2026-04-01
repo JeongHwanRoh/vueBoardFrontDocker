@@ -10,6 +10,7 @@
 <script setup lang="ts">
 
 import { useRouter } from 'vue-router'
+import { fetchKanbanBoardId } from '~/lib/apiService/kanbanBoardApi'
 import { useKanbanScheduleStatus } from '~/lib/composables/kanban/useKanbanScheduleStatus'
 import ScheduleStatusTable from '~/components/molecules/kanban/ScheduleStatusTable.vue'
 import type { KanbanScheduleDateKey } from '~/lib/types/kanban'
@@ -17,7 +18,6 @@ import type { KanbanScheduleDateKey } from '~/lib/types/kanban'
 const router = useRouter()
 
 const kanbanStore = useKanbanStore()
-console.log("kanbanStore.allSchedules:", kanbanStore.allSchedules)
 const { boardId, allSchedules: scheduleItems } = storeToRefs(kanbanStore)
 
 const { fetchScheduleItems, updateScheduleDate } = useKanbanScheduleStatus()
@@ -61,9 +61,23 @@ const goBack = () => {
     router.push('/kanban')
 }
 
-onMounted(() => {
-    if (boardId.value) {
-        fetchScheduleItems(boardId.value)
+onMounted(async () => {
+    // boardId가 없는 경우 보드 정보를 먼저 조회하여 스케줄 아이템을 불러올 수 있도록 함
+    let targetBoardId = boardId.value
+
+    if (!targetBoardId) {
+        try {
+            const board = await fetchKanbanBoardId()
+            kanbanStore.setBoard(board)
+            targetBoardId = board.boardId
+        } catch (error) {
+            console.error('칸반 보드 정보 조회 실패:', error)
+            return
+        }
+    }
+
+    if (targetBoardId) {
+        await fetchScheduleItems(targetBoardId)
     }
 })
 </script>
