@@ -9,7 +9,7 @@
     <div class="routeBtn">
       <div class="schedule-management-link">
 
-        <BtnBW field="일정 상태 관리" @click="moveToSchedulePage"></BtnBW>
+        <BtnBW field="일정 상태 관리" @click="moveToScheduleStatusPage"></BtnBW>
       </div>
       <div class="add-task-link">
 
@@ -90,8 +90,8 @@ const modalClose = () => {
 }
 
 // 일정 상태 관리 페이지로 이동
-const moveToSchedulePage = () => {
-  router.push('/kanban/scheduler')
+const moveToScheduleStatusPage = () => {
+  router.push('/kanban/schedule-status')
 }
 
 // 업무 추가 (ref/store 호출은 await 전에 실행해야 컴포넌트 인스턴스 컨텍스트 유지)

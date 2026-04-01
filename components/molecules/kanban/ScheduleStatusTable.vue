@@ -7,12 +7,12 @@
 
 columns 형태와 rows에 사용할 Entity 정의하고,
 <BoardTable :columns="tableColumns" :rows="notices" idKey="PK명"  />로 불러오면 됨.
-=> 칸반 스케줄러 페이지에서 복사해서 재사용(테이블 스타일만 변경)
+=> 칸반 일정 상태 관리 페이지에서 복사해서 재사용(테이블 스타일만 변경)
 
 -->
 
 <template>
-  <table class="scheduler-table">
+  <table class="schedule-status-table">
     <thead>
       <tr>
         <th v-for="col in columns" :key="col.key">
@@ -84,20 +84,20 @@ const rowIdKey=computed(()=>props.idKey ?? 'id');
 </script>
 
 <style scoped>
-.scheduler-table {
+.schedule-status-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
   color: #333;
 }
 
-.scheduler-table thead tr {
+.schedule-status-table thead tr {
   background-color: #f5f6fa;
   border-top: 2px solid #dee2e6;
   border-bottom: 2px solid #dee2e6;
 }
 
-.scheduler-table thead th {
+.schedule-status-table thead th {
   padding: 12px 10px;
   font-weight: 600;
   text-align: center;
@@ -106,20 +106,20 @@ const rowIdKey=computed(()=>props.idKey ?? 'id');
   border-right: 1px solid #e5e7eb;
 }
 
-.scheduler-table thead th:last-child {
+.schedule-status-table thead th:last-child {
   border-right: none;
 }
 
-.scheduler-table tbody tr {
+.schedule-status-table tbody tr {
   border-bottom: 1px solid #e5e7eb;
   transition: background-color 0.15s;
 }
 
-.scheduler-table tbody tr:hover {
+.schedule-status-table tbody tr:hover {
   background-color: #f0f4ff;
 }
 
-.scheduler-table tbody td {
+.schedule-status-table tbody td {
   padding: 10px 10px;
   text-align: center;
   vertical-align: middle;
@@ -127,7 +127,7 @@ const rowIdKey=computed(()=>props.idKey ?? 'id');
   color: #555;
 }
 
-.scheduler-table tbody td:last-child {
+.schedule-status-table tbody td:last-child {
   border-right: none;
 }
 </style>

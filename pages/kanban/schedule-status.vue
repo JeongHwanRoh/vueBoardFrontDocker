@@ -1,31 +1,27 @@
 <template>
 
-    <schedulerTable :columns="tableColumns" :rows="tasks" idKey="cardId" @dateChange="handleDateChange" />
+    <ScheduleStatusTable :columns="scheduleStatusColumns" :rows="scheduleItems" idKey="cardId" @dateChange="handleDateChange" />
     <div id="button-group" class="d-flex gap-2 justify-content-end">
-        <button class="btn btn-primary" @click="saveSchedule">저장</button>
+        <button class="btn btn-primary" @click="saveScheduleStatus">저장</button>
         <button class="btn btn-primary" @click="goBack">돌아가기</button>
     </div>
 </template>
 
 <script setup lang="ts">
 
-// router
 import { useRouter } from 'vue-router'
-import { useKanbanScheduler } from '~/lib/composables/kanban/useKanbanScheduler'
-import SchedulerTable from '~/components/molecules/kanban/schedulerTable.vue'
+import { useKanbanScheduleStatus } from '~/lib/composables/kanban/useKanbanScheduleStatus'
+import ScheduleStatusTable from '~/components/molecules/kanban/ScheduleStatusTable.vue'
 import type { KanbanScheduleDto } from '~/lib/types/kanban'
 
 const router = useRouter()
 
-
-// 테이블 조회 API
-const { tasks, fetchKanbanSchedules } = useKanbanScheduler()
+const { scheduleItems, fetchScheduleItems } = useKanbanScheduleStatus()
 
 const kanbanStore = useKanbanStore()
 const { boardId } = storeToRefs(kanbanStore)
 
-// 샘플 데이터 (API 연동 전용)
-const tableColumns = [
+const scheduleStatusColumns = [
     { key: 'cardId', label: '번호' },
     { key: 'title', label: '제목' },
     { key: 'classification', label: '작업 구분' },
@@ -38,7 +34,7 @@ const tableColumns = [
 ];
 
 const handleDateChange = ({ rowId, key, value }: { rowId: number; key: string; value: string }) => {
-    const targetRow = tasks.value.find((task) => task.cardId === rowId)
+    const targetRow = scheduleItems.value.find((task) => task.cardId === rowId)
 
     if (!targetRow) {
         return
@@ -47,18 +43,17 @@ const handleDateChange = ({ rowId, key, value }: { rowId: number; key: string; v
     targetRow[key as keyof KanbanScheduleDto] = value as never
 }
 
-const saveSchedule = () => {
-    // 저장 로직 구현 (API 호출 등)
+const saveScheduleStatus = () => {
     console.log('저장 버튼 클릭 - 스케줄 저장 로직 구현 필요')
 }
+
 const goBack = () => {
-    // 돌아가기 로직 구현 (라우터 이동 등)
     router.push('/kanban')
 }
 
 onMounted(() => {
     if (boardId.value) {
-        fetchKanbanSchedules(boardId.value)
+        fetchScheduleItems(boardId.value)
     }
 })
 </script>
