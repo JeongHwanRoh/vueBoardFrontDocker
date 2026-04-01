@@ -12,14 +12,15 @@
 import { useRouter } from 'vue-router'
 import { useKanbanScheduleStatus } from '~/lib/composables/kanban/useKanbanScheduleStatus'
 import ScheduleStatusTable from '~/components/molecules/kanban/ScheduleStatusTable.vue'
-import type { KanbanScheduleDto } from '~/lib/types/kanban'
+import type { KanbanScheduleDateKey } from '~/lib/types/kanban'
 
 const router = useRouter()
 
-const { scheduleItems, fetchScheduleItems } = useKanbanScheduleStatus()
-
 const kanbanStore = useKanbanStore()
-const { boardId } = storeToRefs(kanbanStore)
+console.log("kanbanStore.allSchedules:", kanbanStore.allSchedules)
+const { boardId, allSchedules: scheduleItems } = storeToRefs(kanbanStore)
+
+const { fetchScheduleItems, updateScheduleDate } = useKanbanScheduleStatus()
 
 const scheduleStatusColumns = [
     { key: 'cardId', label: '번호' },
@@ -33,18 +34,27 @@ const scheduleStatusColumns = [
     { key: 'status', label: '상태' },
 ];
 
-const handleDateChange = ({ rowId, key, value }: { rowId: number; key: string; value: string }) => {
-    const targetRow = scheduleItems.value.find((task) => task.cardId === rowId)
+const scheduleDateKeys: KanbanScheduleDateKey[] = [
+    'predictedStartDate',
+    'predictedEndDate',
+    'actualStartDate',
+    'actualEndDate',
+]
 
-    if (!targetRow) {
+const isScheduleDateKey = (key: string): key is KanbanScheduleDateKey => {
+    return scheduleDateKeys.includes(key as KanbanScheduleDateKey)
+}
+
+const handleDateChange = ({ rowId, key, value }: { rowId: number; key: string; value: string }) => {
+    if (!isScheduleDateKey(key)) {
         return
     }
 
-    targetRow[key as keyof KanbanScheduleDto] = value as never
+    updateScheduleDate(rowId, key, value || null)
 }
 
 const saveScheduleStatus = () => {
-    console.log('저장 버튼 클릭 - 스케줄 저장 로직 구현 필요')
+    console.log('저장할 스케줄 상태 payload:', scheduleItems.value)
 }
 
 const goBack = () => {

@@ -7,12 +7,12 @@
 
 columns 형태와 rows에 사용할 Entity 정의하고,
 <BoardTable :columns="tableColumns" :rows="notices" idKey="PK명"  />로 불러오면 됨.
-=> 칸반 일정 상태 관리 페이지에서 복사해서 재사용(테이블 스타일만 변경)
+=> 칸반 스케줄러 페이지에서 복사해서 재사용(테이블 스타일만 변경)
 
 -->
 
 <template>
-  <table class="schedule-status-table">
+  <table class="scheduler-table">
     <thead>
       <tr>
         <th v-for="col in columns" :key="col.key">
@@ -22,23 +22,14 @@ columns 형태와 rows에 사용할 Entity 정의하고,
     </thead>
     <tbody>
       <tr v-for="row in rows" :key="row[rowIdKey]">
-        
-        <td v-for="col in columns" :key="col.key">
-          
-          <!-- 링크 컬럼인 경우 (예: 제목 클릭 시 상세 페이지 이동) -->
-          <router-link
-            v-if="col.isLink"
-            :to="col.to ? col.to(row) : ''"
-          >
-            {{ row[col.key] }}
-          </router-link>
 
-          <!-- 날짜 입력 컬럼인 경우 DateInput 컴포넌트 렌더링 -->
-          <date-input
-            v-else-if="col.isDate"
-            :modelValue="row[col.key] ?? ''"
-            @update:modelValue="(val: string) => emit('dateChange', { rowId: row[rowIdKey], key: col.key, value: val })"
-          />
+        <td v-for="col in columns" :key="col.key">
+          <!-- 날짜 입력 컬럼인 경우 DateInput 컴포넌트 렌더링 
+            실제 시작일 (actualStartDate)이 없는 경우 실제 종료일(actualEndDate) 입력 비활성화 -->
+           
+          <date-input v-if="col.isDate" :modelValue="row[col.key] ?? ''"
+            :disabled="col.key === 'actualEndDate' && !row.actualStartDate"
+            @update:modelValue="(val: string) => emit('dateChange', { rowId: row[rowIdKey], key: col.key, value: val })" />
 
           <!-- 날짜 포맷을 위해 formatter 적용(예: formatDate 날짜 형식 변환 함수 적용) -->
           <span v-else-if="col.format">
@@ -80,24 +71,24 @@ const emit = defineEmits<{
 }>()
 
 // rowIdKey 기본값 설정 (props 변경에 자동 갱신되도록 computed 설정) 
-const rowIdKey=computed(()=>props.idKey ?? 'id');
+const rowIdKey = computed(() => props.idKey ?? 'id');
 </script>
 
 <style scoped>
-.schedule-status-table {
+.scheduler-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
   color: #333;
 }
 
-.schedule-status-table thead tr {
+.scheduler-table thead tr {
   background-color: #f5f6fa;
   border-top: 2px solid #dee2e6;
   border-bottom: 2px solid #dee2e6;
 }
 
-.schedule-status-table thead th {
+.scheduler-table thead th {
   padding: 12px 10px;
   font-weight: 600;
   text-align: center;
@@ -106,20 +97,20 @@ const rowIdKey=computed(()=>props.idKey ?? 'id');
   border-right: 1px solid #e5e7eb;
 }
 
-.schedule-status-table thead th:last-child {
+.scheduler-table thead th:last-child {
   border-right: none;
 }
 
-.schedule-status-table tbody tr {
+.scheduler-table tbody tr {
   border-bottom: 1px solid #e5e7eb;
   transition: background-color 0.15s;
 }
 
-.schedule-status-table tbody tr:hover {
+.scheduler-table tbody tr:hover {
   background-color: #f0f4ff;
 }
 
-.schedule-status-table tbody td {
+.scheduler-table tbody td {
   padding: 10px 10px;
   text-align: center;
   vertical-align: middle;
@@ -127,7 +118,7 @@ const rowIdKey=computed(()=>props.idKey ?? 'id');
   color: #555;
 }
 
-.schedule-status-table tbody td:last-child {
+.scheduler-table tbody td:last-child {
   border-right: none;
 }
 </style>

@@ -65,14 +65,22 @@ export interface ReorderCardDto {
   orderNum: number;
 }
 
+export type KanbanScheduleStatus = 'TODO' | 'IN_PROGRESS' | 'DONE'
+
+export type KanbanScheduleDateKey =
+  | 'predictedStartDate'
+  | 'predictedEndDate'
+  | 'actualStartDate'
+  | 'actualEndDate'
+
 export interface KanbanScheduleDto {
     cardId: number
     title: string
     classification: string
     cardInfo: string
-    predictedStartDate: string
-    predictedEndDate: string
-    actualStartDate: string
-    actualEndDate  : string
-    status: string
+    predictedStartDate: string | null
+    predictedEndDate: string | null
+    actualStartDate: string | null
+    actualEndDate: string | null
+    status: KanbanScheduleStatus
 }

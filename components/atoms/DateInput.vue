@@ -4,6 +4,7 @@
             type="text"
             class="form-control"
             :value="normalizedValue"
+            :disabled="props.disabled"
             placeholder="YYYY-MM-DD"
             @input="onInput"
             maxlength="10"
@@ -13,20 +14,27 @@
             ref="datePicker"
             class="hidden-date-picker"
             :value="normalizedValue"
+            :disabled="props.disabled"
             @change="onDateChange"
         />
-        <button class="btn btn-outline-dark" type="button" @click="openPicker">
+        <button class="btn btn-outline-dark" type="button" :disabled="props.disabled" @click="openPicker">
             📅
         </button>
     </div>
 </template>
 
 <script setup lang="ts">
+// DateInput.vue - 텍스트 입력과 숨겨진 날짜 입력을 동기화하여 날짜 선택 UI 제공
+// props: modelValue (날짜 문자열), disabled (입력 비활성화 여부)
 interface Props {
     modelValue: string
+    disabled?: boolean
 }
 
-const props = defineProps<Props>()
+// props 기본값 설정 (disabled는 false로 기본 설정)
+const props = withDefaults(defineProps<Props>(), {
+    disabled: false,
+})
 
 const emit = defineEmits<{
     'update:modelValue': [value: string]
@@ -67,15 +75,21 @@ const normalizeDateValue = (value: string | null | undefined) => {
 const normalizedValue = computed(() => normalizeDateValue(props.modelValue))
 
 const onInput = (e: Event) => {
+    if (props.disabled) return
+
     const target = e.target as HTMLInputElement
     emit('update:modelValue', normalizeDateValue(target.value))
 }
 
 const openPicker = () => {
+    if (props.disabled) return
+
     datePicker.value?.showPicker()
 }
 
 const onDateChange = (e: Event) => {
+    if (props.disabled) return
+
     const target = e.target as HTMLInputElement
     emit('update:modelValue', target.value)
 }

@@ -5,12 +5,15 @@ import type {
   KanbanBoard,
   KanbanColumn,
   KanbanColumnDto,
+  KanbanScheduleDateKey,
+  KanbanScheduleDto,
 } from '~/lib/types/kanban'
 
 // 상태 타입 정의
 export interface KanbanState {
   board: KanbanBoard | null;
   columns: KanbanColumn[];
+  schedules: KanbanScheduleDto[];
   isLoading: boolean;
   errorMessage: string | null;
 }
@@ -34,11 +37,56 @@ const createDefaultColumns = (): KanbanColumn[] => [
   },
 ]
 
+// 날짜 문자열을 보정하여 'YYYY-MM-DD' 형식으로 통일하는 유틸 함수
+const normalizeScheduleDateValue = (value: string | null | undefined): string | null => {
+  if (!value) return null
+
+  const trimmedValue = String(value).trim()
+  if (!trimmedValue) return null
+
+  const matchedDate = trimmedValue.match(/^\d{4}-\d{2}-\d{2}/)
+  return matchedDate ? matchedDate[0] : trimmedValue
+}
+
+// 오늘 날짜를 'YYYY-MM-DD' 형식으로 반환하는 유틸 함수 (시간대 보정 포함)
+const getTodayDateString = (): string => {
+  const today = new Date()
+  const timezoneOffset = today.getTimezoneOffset() * 60_000
+  return new Date(today.getTime() - timezoneOffset).toISOString().slice(0, 10)
+}
+
+// 실제 시작일, 실제 종료일에 따른 스케줄 상태 계산 로직
+const resolveScheduleStatus = (schedule: Pick<KanbanScheduleDto, 'actualStartDate' | 'actualEndDate'>): string | null => {
+  const actualStartDate = normalizeScheduleDateValue(schedule.actualStartDate)
+  const actualEndDate = normalizeScheduleDateValue(schedule.actualEndDate)
+
+  if (!actualStartDate) {
+    return '예정'
+  }
+
+  if (actualEndDate) {
+    return '완료'
+  }
+
+  return getTodayDateString() >= actualStartDate ? '진행중' : '예정'
+}
+
+// 서버에서 받아온 스케줄 데이터를 보정하여 날짜 형식 통일 및 상태 계산
+const normalizeSchedule = (schedule: KanbanScheduleDto): KanbanScheduleDto => ({
+  ...schedule,
+  predictedStartDate: normalizeScheduleDateValue(schedule.predictedStartDate),
+  predictedEndDate: normalizeScheduleDateValue(schedule.predictedEndDate),
+  actualStartDate: normalizeScheduleDateValue(schedule.actualStartDate),
+  actualEndDate: normalizeScheduleDateValue(schedule.actualEndDate),
+  status: resolveScheduleStatus(schedule),
+})
+
 export const useKanbanStore = defineStore('kanban', {
   // 전역 원본 상태
   state: (): KanbanState => ({
     board: null,
     columns: createDefaultColumns(),
+    schedules: [],
     isLoading: false,
     errorMessage: null,
   }),
@@ -50,6 +98,8 @@ export const useKanbanStore = defineStore('kanban', {
     // 화면에서 전체 카드가 필요할 때 컬럼 배열을 평탄화
     allCards: (state): KanbanColumnDto[] =>
       state.columns.flatMap((column) => column.cards),
+    // 화면에서 전체 스케줄이 필요할 때 schedules 배열을 반환
+    allSchedules: (state): KanbanScheduleDto[] => state.schedules,
   },
 
   actions: {
@@ -79,6 +129,26 @@ export const useKanbanStore = defineStore('kanban', {
       }))
 
       this.setColumns(nextColumns)
+    },
+
+    // 조회한 스케줄 목록을 보정하여 저장
+    setSchedules(schedules: KanbanScheduleDto[]) {
+      this.schedules = schedules.map(normalizeSchedule)
+    },
+
+    // 카드 일정 업데이트 시 해당 카드의 스케줄 정보를 찾아 날짜 보정 및 상태 재계산 후 저장
+    updateScheduleDate(cardId: number, key: KanbanScheduleDateKey, value: string | null) {
+      const targetSchedule = this.schedules.find((schedule) => schedule.cardId === cardId)
+      if (!targetSchedule) return
+
+      const normalizedValue = normalizeScheduleDateValue(value)
+      targetSchedule[key] = normalizedValue as never
+
+      if (key === 'actualStartDate' && !normalizedValue) {
+        targetSchedule.actualEndDate = null
+      }
+
+      targetSchedule.status = resolveScheduleStatus(targetSchedule)
     },
 
     // 새 카드를 해당 컬럼에 추가하고 순서를 재정렬
@@ -122,6 +192,7 @@ export const useKanbanStore = defineStore('kanban', {
     clearKanban() {
       this.board = null
       this.columns = createDefaultColumns()
+      this.schedules = []
       this.errorMessage = null
       this.isLoading = false
     },
