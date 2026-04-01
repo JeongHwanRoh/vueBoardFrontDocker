@@ -1,6 +1,7 @@
 <template>
 
-    <ScheduleStatusTable :columns="scheduleStatusColumns" :rows="scheduleItems" idKey="cardId" @dateChange="handleDateChange" />
+    <ScheduleStatusTable :columns="scheduleStatusColumns" :rows="scheduleItems" idKey="cardId"
+        @dateChange="handleDateChange" />
     <div id="button-group" class="d-flex gap-2 justify-content-end">
         <button class="btn btn-primary" @click="saveScheduleStatus">저장</button>
         <button class="btn btn-primary" @click="goBack">돌아가기</button>
@@ -13,7 +14,8 @@ import { useRouter } from 'vue-router'
 import { fetchKanbanBoardId } from '~/lib/apiService/kanbanBoardApi'
 import { useKanbanScheduleStatus } from '~/lib/composables/kanban/useKanbanScheduleStatus'
 import ScheduleStatusTable from '~/components/molecules/kanban/ScheduleStatusTable.vue'
-import type { KanbanScheduleDateKey } from '~/lib/types/kanban'
+import type { KanbanScheduleDateKey, UpdateKanbanCardScheduleStatusRequest } from '~/lib/types/kanban'
+import { updateKanbanCardScheduleStatus } from '~/lib/apiService/kanbanCardApi'
 
 const router = useRouter()
 
@@ -53,8 +55,19 @@ const handleDateChange = ({ rowId, key, value }: { rowId: number; key: string; v
     updateScheduleDate(rowId, key, value || null)
 }
 
-const saveScheduleStatus = () => {
-    console.log('저장할 스케줄 상태 payload:', scheduleItems.value)
+const saveScheduleStatus = async () => {
+    const schedulePayload: UpdateKanbanCardScheduleStatusRequest = {
+        schedules: scheduleItems.value.map((item) => ({
+            cardId: item.cardId,
+            actualStartDate: item.actualStartDate,
+            actualEndDate: item.actualEndDate,
+            status: item.status,
+        })),
+    }
+
+    // 실제 시작일, 종료일 변경된 카드 일괄 업데이트 API 호출
+    await updateKanbanCardScheduleStatus(schedulePayload)
+    console.log('저장할 스케줄 상태 payload:', schedulePayload)
 }
 
 const goBack = () => {
@@ -75,7 +88,7 @@ onMounted(async () => {
             return
         }
     }
-
+    // boardId가 확보된 이후에 상태 조회 API 호출
     if (targetBoardId) {
         await fetchScheduleItems(targetBoardId)
     }

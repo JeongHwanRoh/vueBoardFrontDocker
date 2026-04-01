@@ -1,5 +1,5 @@
 import axiosApi from './axiosApi';
-import type { KanbanCard, KanbanColumnDto, KanbanScheduleDto, CreateCardDto, UpdateCardDto, ReorderCardDto } from '~/lib/types/kanban';
+import type { KanbanCard, KanbanColumnDto, KanbanScheduleDto, CreateCardDto, UpdateCardDto, ReorderCardDto, UpdateKanbanCardScheduleStatusRequest } from '~/lib/types/kanban';
 
 // 칸반보드 Card 조회
 export const fetchKanbanCards = async (boardId: string): Promise<KanbanColumnDto[]> => {
@@ -29,10 +29,17 @@ export const updateCard = async (cardData: UpdateCardDto): Promise<void> => {
   return res.data
 };
 
-// 칸반보드 Card 일정 업데이트
+// 칸반보드 Card 일정 업데이트(상세페이지에서)
 export const updateKanbanCardSchedule = async (scheduleData: { cardId: number; predictedStartDate: string | null; predictedEndDate: string | null }): Promise<void> => {
   console.log('updateKanbanCardSchedule 요청 데이터:', scheduleData);
   await axiosApi.patch(`/kanban/card/schedule/update`, scheduleData, { withCredentials: true });
+}
+
+// 칸반보드 Card 일정 업데이트(일정 상태관리 페이지에서)
+// 실제 시작일, 종료일 변경된 카드 일괄 업데이트 API 호출
+export const updateKanbanCardScheduleStatus = async (scheduleData: UpdateKanbanCardScheduleStatusRequest): Promise<void> => {
+  console.log('updateKanbanCardScheduleStatus 요청 데이터:', scheduleData);
+  await axiosApi.patch(`/kanban/card/schedule/status/update`, scheduleData, { withCredentials: true });
 }
 
 // 칸반보드 Card 순서 변경 (드래그앤드롭)

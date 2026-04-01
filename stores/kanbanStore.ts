@@ -71,14 +71,14 @@ const resolveScheduleStatus = (schedule: Pick<KanbanScheduleDto, 'actualStartDat
   return getTodayDateString() >= actualStartDate ? '진행중' : '예정'
 }
 
-// 서버에서 받아온 스케줄 데이터를 보정하여 날짜 형식 통일 및 상태 계산
+// 서버에서 받아온 스케줄 데이터를 보정하되, 초기 status는 백엔드 값을 우선 사용
 const normalizeSchedule = (schedule: KanbanScheduleDto): KanbanScheduleDto => ({
   ...schedule,
   predictedStartDate: normalizeScheduleDateValue(schedule.predictedStartDate),
   predictedEndDate: normalizeScheduleDateValue(schedule.predictedEndDate),
   actualStartDate: normalizeScheduleDateValue(schedule.actualStartDate),
   actualEndDate: normalizeScheduleDateValue(schedule.actualEndDate),
-  status: resolveScheduleStatus(schedule),
+  status: schedule.status ?? resolveScheduleStatus(schedule),
 })
 
 export const useKanbanStore = defineStore('kanban', {
