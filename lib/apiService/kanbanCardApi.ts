@@ -9,7 +9,6 @@ export const fetchKanbanCards = async (boardId: string): Promise<KanbanColumnDto
 };
 
 // 칸반보드 Card 생성 
-/// ulid는 백엔드에서 생성, 프런트에서는 
 export const createKanbanCard = async (cardData: CreateCardDto): Promise<KanbanCard> => {
   console.log('createKanbanCard 요청 데이터:', cardData); // 요청 데이터 확인
   const res = await axiosApi.post(`/kanban/card/create?boardId=${cardData.boardId}`, cardData, { withCredentials: true })
@@ -36,10 +35,10 @@ export const updateKanbanCardSchedule = async (scheduleData: { cardId: number; p
 }
 
 // 칸반보드 Card 일정 업데이트(일정 상태관리 페이지에서)
-// 실제 시작일, 종료일 변경된 카드 일괄 업데이트 API 호출
-export const updateKanbanCardScheduleStatus = async (scheduleData: UpdateKanbanCardScheduleStatusRequest): Promise<void> => {
-  console.log('updateKanbanCardScheduleStatus 요청 데이터:', scheduleData);
-  await axiosApi.patch(`/kanban/card/schedule/status/update`, scheduleData, { withCredentials: true });
+// 일정 상태관리 페이지의 전체 스케줄 목록 일괄 업데이트 API 호출
+export const updateKanbanCardScheduleStatus = async (boardId: string, scheduleData: UpdateKanbanCardScheduleStatusRequest): Promise<void> => {
+  console.log('updateKanbanCardScheduleStatus 요청 데이터:',boardId,",", scheduleData);
+  await axiosApi.patch(`/kanban/card/schedule/status/update?boardId=${boardId}`, scheduleData, { withCredentials: true });
 }
 
 // 칸반보드 Card 순서 변경 (드래그앤드롭)

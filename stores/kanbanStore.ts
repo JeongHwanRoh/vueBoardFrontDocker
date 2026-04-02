@@ -7,6 +7,7 @@ import type {
   KanbanColumnDto,
   KanbanScheduleDateKey,
   KanbanScheduleDto,
+  KanbanScheduleStatus,
 } from '~/lib/types/kanban'
 
 // 상태 타입 정의
@@ -55,20 +56,31 @@ const getTodayDateString = (): string => {
   return new Date(today.getTime() - timezoneOffset).toISOString().slice(0, 10)
 }
 
+const normalizeScheduleStatus = (status: string | null | undefined): KanbanScheduleStatus | null => {
+  if (!status) return null;
+
+  if (['TODO', '예정'].includes(status)) return 'TODO';
+  if (['IN_PROGRESS', '진행중', '진행 중'].includes(status)) return 'IN_PROGRESS';
+  if (['DONE', '완료'].includes(status)) return 'DONE';
+
+  return null;
+};
+
 // 실제 시작일, 실제 종료일에 따른 스케줄 상태 계산 로직
-const resolveScheduleStatus = (schedule: Pick<KanbanScheduleDto, 'actualStartDate' | 'actualEndDate'>): string | null => {
+const resolveScheduleStatus = (schedule: Pick<KanbanScheduleDto, 'actualStartDate' | 'actualEndDate'>): KanbanScheduleStatus | null => {
   const actualStartDate = normalizeScheduleDateValue(schedule.actualStartDate)
   const actualEndDate = normalizeScheduleDateValue(schedule.actualEndDate)
 
   if (!actualStartDate) {
-    return '예정'
+    return 'TODO'
+
   }
 
   if (actualEndDate) {
-    return '완료'
+    return 'DONE'
   }
 
-  return getTodayDateString() >= actualStartDate ? '진행중' : '예정'
+  return getTodayDateString() >= actualStartDate ? 'IN_PROGRESS' : 'TODO'
 }
 
 // 서버에서 받아온 스케줄 데이터를 보정하되, 초기 status는 백엔드 값을 우선 사용
@@ -78,7 +90,7 @@ const normalizeSchedule = (schedule: KanbanScheduleDto): KanbanScheduleDto => ({
   predictedEndDate: normalizeScheduleDateValue(schedule.predictedEndDate),
   actualStartDate: normalizeScheduleDateValue(schedule.actualStartDate),
   actualEndDate: normalizeScheduleDateValue(schedule.actualEndDate),
-  status: schedule.status ?? resolveScheduleStatus(schedule),
+  status: normalizeScheduleStatus(schedule.status) ?? resolveScheduleStatus(schedule),
 })
 
 export const useKanbanStore = defineStore('kanban', {

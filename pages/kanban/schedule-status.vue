@@ -24,6 +24,21 @@ const { boardId, allSchedules: scheduleItems } = storeToRefs(kanbanStore)
 
 const { fetchScheduleItems, updateScheduleDate } = useKanbanScheduleStatus()
 
+// 상태값은 백엔드값으로부터 화면에 보여지는 값 매핑을 위해 별도 객체로 관리
+const statusLabelMap = {
+    TODO: '예정',
+    IN_PROGRESS: '진행중',
+    DONE: '완료',
+} as const
+
+const formatStatusLabel = (value: string | null | undefined) => {
+    if (!value) {
+        return '-'
+    }
+
+    return statusLabelMap[value as keyof typeof statusLabelMap] ?? value
+}
+
 const scheduleStatusColumns = [
     { key: 'cardId', label: '번호' },
     { key: 'title', label: '제목' },
@@ -33,7 +48,7 @@ const scheduleStatusColumns = [
     { key: 'predictedEndDate', label: '예정 종료일', isDate: true },
     { key: 'actualStartDate', label: '실제 시작일', isDate: true },
     { key: 'actualEndDate', label: '실제 종료일', isDate: true },
-    { key: 'status', label: '상태' },
+    { key: 'status', label: '상태', format: formatStatusLabel },
 ];
 
 const scheduleDateKeys: KanbanScheduleDateKey[] = [
@@ -65,8 +80,14 @@ const saveScheduleStatus = async () => {
         })),
     }
 
-    // 실제 시작일, 종료일 변경된 카드 일괄 업데이트 API 호출
-    await updateKanbanCardScheduleStatus(schedulePayload)
+    // 화면에 표시된 전체 스케줄 상태 목록을 한 번에 저장
+    try{
+        await updateKanbanCardScheduleStatus(boardId.value,schedulePayload)
+        alert("스케줄 상태가 성공적으로 저장되었습니다.")
+    } catch (error) {
+        console.error('스케줄 상태 저장 실패:', error)
+        alert("스케줄 상태 저장에 실패했습니다.")
+    }
     console.log('저장할 스케줄 상태 payload:', schedulePayload)
 }
 

@@ -71,6 +71,9 @@ export type KanbanScheduleDateKey =
   | 'actualStartDate'
   | 'actualEndDate'
 
+export type KanbanScheduleStatus = 'TODO' | 'IN_PROGRESS' | 'DONE'
+
+
 export interface KanbanScheduleDto {
     cardId: number
     // title: string
@@ -80,14 +83,14 @@ export interface KanbanScheduleDto {
     predictedEndDate: string | null
     actualStartDate: string | null
     actualEndDate: string | null
-    status: string | null
+    status: KanbanScheduleStatus | null
 }
 
 export interface UpdateKanbanScheduleStatusDto {
     cardId: number
     actualStartDate: string | null
     actualEndDate: string | null
-    status: string | null
+    status: KanbanScheduleStatus | null
 }
 
 export interface UpdateKanbanCardScheduleStatusRequest {
