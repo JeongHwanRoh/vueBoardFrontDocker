@@ -86,6 +86,7 @@ const resolveScheduleStatus = (schedule: Pick<KanbanScheduleDto, 'actualStartDat
 // 서버에서 받아온 스케줄 데이터를 보정하되, 초기 status는 백엔드 값을 우선 사용
 const normalizeSchedule = (schedule: KanbanScheduleDto): KanbanScheduleDto => ({
   ...schedule,
+  cardId: Number(schedule.cardId), // cardId는 숫자형으로 보정(혹시 모를 타입 불일치 대비)
   predictedStartDate: normalizeScheduleDateValue(schedule.predictedStartDate),
   predictedEndDate: normalizeScheduleDateValue(schedule.predictedEndDate),
   actualStartDate: normalizeScheduleDateValue(schedule.actualStartDate),
@@ -149,9 +150,19 @@ export const useKanbanStore = defineStore('kanban', {
     },
 
     // 카드 일정 업데이트 시 해당 카드의 스케줄 정보를 찾아 날짜 보정 및 상태 재계산 후 저장
+    //  updateScheduleDate가 targetSchedule을 찾을 때 schedule.cardId === cardId 대신 String(schedule.cardId) === String(cardId)로 비교하도록 수정
+    // 숫자와 문자열 형태의 cardId가 혼재할 수 있는 상황을 대비하여, 양쪽 모두 문자열로 변환하여 비교하도록 보정
     updateScheduleDate(cardId: number, key: KanbanScheduleDateKey, value: string | null) {
-      const targetSchedule = this.schedules.find((schedule) => schedule.cardId === cardId)
-      if (!targetSchedule) return
+      const targetSchedule = this.schedules.find((schedule) => String(schedule.cardId) === String(cardId))
+      if (!targetSchedule) {
+        console.warn('updateScheduleDate 대상 스케줄을 찾지 못했습니다.', {
+          cardId,
+          key,
+          value,
+          scheduleIds: this.schedules.map((schedule) => schedule.cardId),
+        })
+        return
+      }
 
       const normalizedValue = normalizeScheduleDateValue(value)
       targetSchedule[key] = normalizedValue as never

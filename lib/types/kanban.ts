@@ -93,6 +93,8 @@ export interface KanbanScheduleDto {
 // 스케줄 관리 페이지에서 카드 스케줄 상태 업데이트 시 사용할 DTO
 export interface UpdateKanbanScheduleStatusDto {
     cardId: number
+    predictedStartDate: string | null
+    predictedEndDate: string | null
     actualStartDate: string | null
     actualEndDate: string | null
     status: KanbanScheduleStatus | null

@@ -17,6 +17,8 @@ export const useSaveKanbanScheduleStatus = () => {
         const schedulePayload: UpdateKanbanCardScheduleStatusRequest = {
             schedules: scheduleItems.value.map((item) => ({
                 cardId: item.cardId,
+                predictedStartDate: item.predictedStartDate,
+                predictedEndDate: item.predictedEndDate,
                 actualStartDate: item.actualStartDate,
                 actualEndDate: item.actualEndDate,
                 status: item.status,
@@ -32,6 +34,7 @@ export const useSaveKanbanScheduleStatus = () => {
         }
 
         console.log('저장할 스케줄 상태 payload:', schedulePayload)
+        console.log('저장할 스케줄 상태 payload(JSON):', JSON.stringify(schedulePayload))
     }
 
     return {
