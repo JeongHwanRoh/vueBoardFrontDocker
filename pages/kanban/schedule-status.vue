@@ -19,7 +19,7 @@ import type { KanbanScheduleDateKey } from '~/lib/types/kanban'
 const router = useRouter()
 const kanbanStore = useKanbanStore()
 const { boardId, allSchedules: scheduleItems } = storeToRefs(kanbanStore)
-const updateScheduleDate = kanbanStore.updateScheduleDate // 스케줄 상태값 매핑 (프론트에서 보여줄 때 사용)
+const updateScheduleDate = kanbanStore.updateScheduleDate // pinia 스토어에서 스케줄 상태값 임시 업데이트 저장(프론트에서 보여줄 때 사용)
 
 // 스케줄 상태 조회 및 업데이트 API 호출
 const { fetchScheduleItems, formatStatusLabel } = useKanbanScheduleStatus()
@@ -49,7 +49,7 @@ const isScheduleDateKey = (key: string): key is KanbanScheduleDateKey => {
     return scheduleDateKeys.includes(key as KanbanScheduleDateKey)
 }
 
-// 날짜 변경 이벤트 핸들(사용자가 날짜를 변경할 때마다 해당 카드의 스케줄 상태를 프런트상에)
+// 날짜 변경 이벤트 핸들(사용자가 날짜를 변경할 때마다 해당 카드의 스케줄 상태를 프런트상에 임시 업데이트)
 const handleDateChange = ({ rowId, key, value }: { rowId: number; key: string; value: string }) => {
     if (!isScheduleDateKey(key)) {
         return

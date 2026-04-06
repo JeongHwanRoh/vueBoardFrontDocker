@@ -80,9 +80,9 @@ export type KanbanScheduleStatus = 'TODO' | 'IN_PROGRESS' | 'DONE'
 // 상세페이지에서 카드 스케줄 상태 조회 시 사용할 DTO
 export interface KanbanScheduleDto {
     cardId: number
-    // title: string
-    // classification: string
-    // cardInfo: string
+  title?: string
+  classification?: string
+  cardInfo?: string
     predictedStartDate: string | null
     predictedEndDate: string | null
     actualStartDate: string | null

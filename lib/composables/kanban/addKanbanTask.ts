@@ -11,9 +11,9 @@ export interface TaskFormData {
 }
 
 export const addKanbanTask = () => {
-    const modalCheck = ref(false)
-    const kanbanStore = useKanbanStore()
-    const { columns, boardId } = storeToRefs(kanbanStore)
+    const modalCheck = ref(false) // 모달 열림 여부 상태
+    const kanbanStore = useKanbanStore() 
+    const { columns, boardId } = storeToRefs(kanbanStore) // pinia store 값
 
     const addTask = async (data: TaskFormData) => {
         console.log("addTask 실행", data)
@@ -52,7 +52,7 @@ export const addKanbanTask = () => {
                 predictedEndDate: data.endDate || null,
             }
 
-            kanbanStore.addCardToColumn(data.columnId, newCard)
+            kanbanStore.addCardToColumn(data.columnId, newCard) // pinia 스토어에 새 카드 추가
             modalCheck.value = false
         } catch (error) {
             console.error('업무 추가 실패:', error)
