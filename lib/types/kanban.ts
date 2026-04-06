@@ -1,3 +1,4 @@
+// Kanban 관련 타입 정의
 export interface KanbanBoard {
   boardId: string;
   pn: number;
@@ -5,8 +6,8 @@ export interface KanbanBoard {
   columns: KanbanColumn[];
 }
 
+// DB에서 가져온 card 정보를 담은 column 정보(조회용)
 export interface KanbanCard {
-
   cardId: number;
   columnId: number;
   title: string;
@@ -14,8 +15,6 @@ export interface KanbanCard {
   orderNum: number;
   createdAt: string;
   updatedAt: string;
-
-	
 }
 
 // DB에서 가져온 card 정보를 담은 column 정보(조회용)
@@ -39,6 +38,7 @@ export interface KanbanColumnDto{
   updatedAt: string;
 }
 
+// DB에서 COLUMN, CARD, CARD_INFO를 JOIN해서 가져올 때 사용할 DTO
 export interface CreateCardDto {
   title: string;
   classification: string;
@@ -47,6 +47,7 @@ export interface CreateCardDto {
   boardId: string;
 }
 
+// DB에서 COLUMN, CARD, CARD_INFO를 JOIN해서 가져올 때 사용할 DTO
 export interface UpdateCardDto {
   cardId: number;
   columnName: string;
@@ -59,21 +60,24 @@ export interface UpdateCardDto {
   boardId: string;
 }
 
+// 카드 순서 변경 시 사용할 DTO
 export interface ReorderCardDto {
   cardId: number;
   columnName: string;
   orderNum: number;
 }
 
+// 카드 이동 시 사용할 DTO
 export type KanbanScheduleDateKey =
   | 'predictedStartDate'
   | 'predictedEndDate'
   | 'actualStartDate'
   | 'actualEndDate'
 
+// 스케줄 상태값 정의
 export type KanbanScheduleStatus = 'TODO' | 'IN_PROGRESS' | 'DONE'
 
-
+// 상세페이지에서 카드 스케줄 상태 조회 시 사용할 DTO
 export interface KanbanScheduleDto {
     cardId: number
     // title: string
@@ -86,6 +90,7 @@ export interface KanbanScheduleDto {
     status: KanbanScheduleStatus | null
 }
 
+// 스케줄 관리 페이지에서 카드 스케줄 상태 업데이트 시 사용할 DTO
 export interface UpdateKanbanScheduleStatusDto {
     cardId: number
     actualStartDate: string | null

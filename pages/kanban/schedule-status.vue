@@ -1,5 +1,4 @@
 <template>
-
     <ScheduleStatusTable :columns="scheduleStatusColumns" :rows="scheduleItems" idKey="cardId"
         @dateChange="handleDateChange" />
     <div id="button-group" class="d-flex gap-2 justify-content-end">
@@ -13,32 +12,20 @@
 import { useRouter } from 'vue-router'
 import { fetchKanbanBoardId } from '~/lib/apiService/kanbanBoardApi'
 import { useKanbanScheduleStatus } from '~/lib/composables/kanban/useKanbanScheduleStatus'
+import { useSaveKanbanScheduleStatus } from '~/lib/composables/kanban/saveKanbanScheduleStatus'
 import ScheduleStatusTable from '~/components/molecules/kanban/ScheduleStatusTable.vue'
-import type { KanbanScheduleDateKey, UpdateKanbanCardScheduleStatusRequest } from '~/lib/types/kanban'
-import { updateKanbanCardScheduleStatus } from '~/lib/apiService/kanbanCardApi'
+import type { KanbanScheduleDateKey } from '~/lib/types/kanban'
 
 const router = useRouter()
-
 const kanbanStore = useKanbanStore()
 const { boardId, allSchedules: scheduleItems } = storeToRefs(kanbanStore)
+const updateScheduleDate = kanbanStore.updateScheduleDate // 스케줄 상태값 매핑 (프론트에서 보여줄 때 사용)
 
-const { fetchScheduleItems, updateScheduleDate } = useKanbanScheduleStatus()
-
-// 상태값은 백엔드값으로부터 화면에 보여지는 값 매핑을 위해 별도 객체로 관리
-const statusLabelMap = {
-    TODO: '예정',
-    IN_PROGRESS: '진행중',
-    DONE: '완료',
-} as const
-
-const formatStatusLabel = (value: string | null | undefined) => {
-    if (!value) {
-        return '-'
-    }
-
-    return statusLabelMap[value as keyof typeof statusLabelMap] ?? value
-}
-
+// 스케줄 상태 조회 및 업데이트 API 호출
+const { fetchScheduleItems, formatStatusLabel } = useKanbanScheduleStatus()
+// 스케줄 상태 저장 API 호출
+const { saveScheduleStatus } = useSaveKanbanScheduleStatus()
+// 스케줄 상태 테이블 컬럼 정의
 const scheduleStatusColumns = [
     { key: 'cardId', label: '번호' },
     { key: 'title', label: '제목' },
@@ -62,33 +49,12 @@ const isScheduleDateKey = (key: string): key is KanbanScheduleDateKey => {
     return scheduleDateKeys.includes(key as KanbanScheduleDateKey)
 }
 
+// 날짜 변경 이벤트 핸들(사용자가 날짜를 변경할 때마다 해당 카드의 스케줄 상태를 프런트상에)
 const handleDateChange = ({ rowId, key, value }: { rowId: number; key: string; value: string }) => {
     if (!isScheduleDateKey(key)) {
         return
     }
-
     updateScheduleDate(rowId, key, value || null)
-}
-
-const saveScheduleStatus = async () => {
-    const schedulePayload: UpdateKanbanCardScheduleStatusRequest = {
-        schedules: scheduleItems.value.map((item) => ({
-            cardId: item.cardId,
-            actualStartDate: item.actualStartDate,
-            actualEndDate: item.actualEndDate,
-            status: item.status,
-        })),
-    }
-
-    // 화면에 표시된 전체 스케줄 상태 목록을 한 번에 저장
-    try{
-        await updateKanbanCardScheduleStatus(boardId.value,schedulePayload)
-        alert("스케줄 상태가 성공적으로 저장되었습니다.")
-    } catch (error) {
-        console.error('스케줄 상태 저장 실패:', error)
-        alert("스케줄 상태 저장에 실패했습니다.")
-    }
-    console.log('저장할 스케줄 상태 payload:', schedulePayload)
 }
 
 const goBack = () => {
