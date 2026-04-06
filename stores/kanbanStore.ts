@@ -103,7 +103,6 @@ export const useKanbanStore = defineStore('kanban', {
     isLoading: false,
     errorMessage: null,
   }),
-
   getters: {
     // board가 없을 때도 항상 문자열을 반환하도록 보정
     boardId: (state): string => state.board?.boardId ?? '',
