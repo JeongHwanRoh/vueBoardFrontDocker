@@ -20,8 +20,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
-import type { KanbanCard, KanbanColumnDto } from '~/lib/types/kanban'
+import { onMounted, watch } from 'vue'
+import type {KanbanCardDto } from '~/lib/types/kanban'
 import BtnBW from '~/components/atoms/BtnBW.vue'
 import KanbanBoardComponent from '~/components/organisms/kanban/KanbanBoard.vue'
 import TaskModal from '~/components/organisms/kanban/TaskModal.vue'
@@ -29,7 +29,6 @@ import { useKanbanStore } from '~/stores/kanbanStore'
 import { useRouter } from 'vue-router';
 import { fetchAllKanban } from '~/lib/composables/kanban/fetchAllKanban'
 import { addKanbanTask } from '~/lib/composables/kanban/addKanbanTask'
-import { deleteCard as deleteCardApi } from '~/lib/apiService/kanbanCardApi'
 import { useKanbanCardActions } from '~/lib/composables/kanban/useKanbanCardActions'
 
 const kanbanStore = useKanbanStore()
@@ -48,6 +47,7 @@ const moveToScheduleStatusPage = () => {
   router.push('/kanban/schedule-status')
 }
 // 업무 추가 API 호출 (ref/store 호출은 await 전에 실행해야 컴포넌트 인스턴스 컨텍스트 유지)
+// columns, boardId는 addKanbanTask에서 storeToRefs(pinia store값)로 가져온 값
 const { columns, boardId, modalCheck, addTask } = addKanbanTask()
 // 백엔드에서 칸반 데이터 불러오는 API 호출
 const { loadKanbanData } = fetchAllKanban()

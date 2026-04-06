@@ -25,13 +25,16 @@
 <script setup lang="ts">
 import Draggable from 'vuedraggable'
 import type { PropType } from 'vue'
-import type { KanbanColumn } from '~/lib/types/kanban'
+import type { KanbanBoardColumn } from '~/lib/types/kanban'
 import type { ReorderCardDto } from '~/lib/types/kanban'
 import { reorderCards } from '~/lib/apiService/kanbanCardApi'
 
+// columns, boardId는 addKanbanTask에서 storeToRefs(pinia store값)로 가져온 값
+// addkanbanTask -> index.vue -> KanbanBoard.vue로 props 전달
+// columns 내 데이터도 모두 pinia store에서 가져온 값이므로, KanbanBoard.vue에서는 props로 전달받은 columns를 그대로 사용하면 됨
 const props = defineProps({
   columns: {
-    type: Array as PropType<KanbanColumn[]>,
+    type: Array as PropType<KanbanBoardColumn[]>,
     required: true
   },
   boardId: {
@@ -45,7 +48,7 @@ const emit = defineEmits(['editCard', 'deleteCard', 'cardsReordered'])
 // 드래그 종료 시 백엔드에 순서 업데이트
 const onDragEnd = async () => {
   const allCards: ReorderCardDto[] = []
-
+  // 모든 컬럼의 카드 정보를 순회하여 카드 ID, 컬럼 이름, 새 순서 번호를 추출
   props.columns.forEach(column => {
     column.cards.forEach((card, index) => {
       allCards.push({
@@ -57,7 +60,7 @@ const onDragEnd = async () => {
   })
 
   try {
-    await reorderCards(props.boardId, allCards)
+    await reorderCards(props.boardId, allCards) // 백엔드 API 호출로 카드 순서 업데이트
     emit('cardsReordered')
   } catch (error) {
     console.error('카드 순서 업데이트 실패:', error)

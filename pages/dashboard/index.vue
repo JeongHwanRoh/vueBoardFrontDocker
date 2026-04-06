@@ -118,7 +118,7 @@
 import CalendarTemplate from '~/components/molecules/calendar/calendarTemplate.vue'
 import { useBoard, useRecentFiveBoard } from '~/lib/composables/board/fetchAllBoard'
 import KanbanBoardComponent from '~/components/organisms/kanban/KanbanBoard.vue'
-import type { KanbanColumnDto } from '~/lib/types/kanban'
+import type { KanbanCardDto } from '~/lib/types/kanban'
 import { fetchAllKanban } from '~/lib/composables/kanban/fetchAllKanban'
 import { useKanbanCardActions } from '~/lib/composables/kanban/useKanbanCardActions'
 

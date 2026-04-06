@@ -1,5 +1,5 @@
 import { createKanbanCard, createKanbanCardSchedule } from "~/lib/apiService/kanbanCardApi"
-import type { KanbanColumnDto } from "~/lib/types/kanban"
+import type { KanbanCardDto } from "~/lib/types/kanban"
 
 export interface TaskFormData {
     title: string
@@ -39,7 +39,7 @@ export const addKanbanTask = () => {
                 predictedEndDate: data.endDate || null,
             })
 
-            const newCard: KanbanColumnDto = {
+            const newCard: KanbanCardDto = {
                 columnName: data.columnId,
                 orderNum: createdCard.orderNum,
                 cardId: createdCard.cardId,

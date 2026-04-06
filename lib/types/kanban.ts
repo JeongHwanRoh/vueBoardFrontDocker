@@ -3,7 +3,7 @@ export interface KanbanBoard {
   boardId: string;
   pn: number;
   boardName: string;
-  columns: KanbanColumn[];
+  columns: KanbanBoardColumn[];
 }
 
 // DB에서 가져온 card 정보를 담은 column 정보(조회용)
@@ -17,15 +17,15 @@ export interface KanbanCard {
   updatedAt: string;
 }
 
-// DB에서 가져온 card 정보를 담은 column 정보(조회용)
-export interface KanbanColumn {
+// 컬럼 단위 타입
+export interface KanbanBoardColumn {
   columnName:string;
   columnTitle: string;
-  cards: KanbanColumnDto[];
+  cards: KanbanCardDto[];
 }
 
-// DB에서 COLUMN, CARD, CARD_INFO를 JOIN해서 가져올 때 사용할 DTO
-export interface KanbanColumnDto{
+// DB에서 COLUMN, CARD, CARD_INFO를 JOIN해서 가져올 때 사용할 DTO (개별 카드 정보 조회용)
+export interface KanbanCardDto{
   columnName: string;
   orderNum: number;
   cardId: number;
