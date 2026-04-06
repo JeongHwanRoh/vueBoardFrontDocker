@@ -35,7 +35,6 @@ export const useKanbanScheduleStatus = () => {
     return {
         scheduleItems,
         fetchScheduleItems,
-        // updateScheduleDate: kanbanStore.updateScheduleDate,
         formatStatusLabel,
 
     }

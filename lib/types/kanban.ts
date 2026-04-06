@@ -67,7 +67,7 @@ export interface ReorderCardDto {
   orderNum: number;
 }
 
-// 카드 이동 시 사용할 DTO
+
 export type KanbanScheduleDateKey =
   | 'predictedStartDate'
   | 'predictedEndDate'

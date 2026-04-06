@@ -80,14 +80,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { updateCard as updateCardApi, updateKanbanCardSchedule } from '~/lib/apiService/kanbanCardApi';
-import { useKanbanStore } from '~/stores/kanbanStore';
+import { useRoute } from 'vue-router';
 import DateInput from '~/components/atoms/DateInput.vue'
+import { useKanbanCardActions } from '~/lib/composables/kanban/useKanbanCardActions'
 
 const route = useRoute();
-const router = useRouter();
-const kanbanStore = useKanbanStore();
 const cardId = Number(route.params.cardId);
 // state로 상세정보 받기 (history는 브라우저 전용이므로 onMounted에서 접근)
 const newTaskTitle = ref('')
@@ -98,6 +95,18 @@ const orderNum = ref(0)
 const boardId = ref('')
 const newPredictedStartDate = ref<string>('')
 const newPredictedEndDate = ref<string>('')
+// 카드 업데이트 API 호출
+const { handleUpdate } = useKanbanCardActions({
+    cardId,
+    title: newTaskTitle,
+    description: newTaskDescription,
+    classification: newClassification,
+    columnId: selectedColumnId,
+    orderNum,
+    boardId,
+    predictedStartDate: newPredictedStartDate,
+    predictedEndDate: newPredictedEndDate,
+})
 
 onMounted(() => {
     newTaskTitle.value = String(history.state?.title ?? '')
@@ -114,40 +123,6 @@ const updateTitle = (value: string) => { newTaskTitle.value = value; };
 const updateDescription = (value: string) => { newTaskDescription.value = value; };
 const updateClassification = (value: string) => { newClassification.value = value; };
 const updateColumnId = (value: string) => { selectedColumnId.value = value; };
-
-const handleUpdate = async () => {
-    if (newPredictedStartDate.value > newPredictedEndDate.value) {
-        alert('시작 날짜는 종료 날짜보다 이후일 수 없습니다.')
-        return
-    }
-    const cardData = {
-        cardId,
-        columnName: selectedColumnId.value,
-        title: newTaskTitle.value,
-        classification: newClassification.value,
-        orderNum: orderNum.value,
-        cardInfo: newTaskDescription.value,
-        predictedStartDate: newPredictedStartDate.value || null,
-        predictedEndDate: newPredictedEndDate.value || null,
-        boardId: boardId.value,
-    }
-    await updateCardApi(cardData)
-    await updateKanbanCardSchedule({
-        cardId,
-        predictedStartDate: cardData.predictedStartDate,
-        predictedEndDate: cardData.predictedEndDate,
-    })
-    kanbanStore.updateCard(cardId, {
-        columnName: cardData.columnName,
-        title: cardData.title,
-        classification: cardData.classification,
-        orderNum: cardData.orderNum,
-        cardInfo: cardData.cardInfo,
-        predictedStartDate: cardData.predictedStartDate,
-        predictedEndDate: cardData.predictedEndDate,
-    })
-    router.push('/kanban')
-};
 
 </script>
 

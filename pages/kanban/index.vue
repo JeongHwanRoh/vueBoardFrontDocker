@@ -24,7 +24,7 @@ import { ref, onMounted, watch } from 'vue'
 import type { KanbanCard, KanbanColumnDto } from '~/lib/types/kanban'
 import BtnBW from '~/components/atoms/BtnBW.vue'
 import KanbanBoardComponent from '~/components/organisms/kanban/KanbanBoard.vue'
-import TaskModal from '~/components/organisms/board/TaskModal.vue'
+import TaskModal from '~/components/organisms/kanban/TaskModal.vue'
 import { useKanbanStore } from '~/stores/kanbanStore'
 import { useRouter } from 'vue-router';
 import { fetchAllKanban } from '~/lib/composables/kanban/fetchAllKanban'
@@ -47,11 +47,11 @@ const modalClose = () => {
 const moveToScheduleStatusPage = () => {
   router.push('/kanban/schedule-status')
 }
-// 업무 추가 (ref/store 호출은 await 전에 실행해야 컴포넌트 인스턴스 컨텍스트 유지)
+// 업무 추가 API 호출 (ref/store 호출은 await 전에 실행해야 컴포넌트 인스턴스 컨텍스트 유지)
 const { columns, boardId, modalCheck, addTask } = addKanbanTask()
-// 백엔드에서 칸반 데이터 불러오기
+// 백엔드에서 칸반 데이터 불러오는 API 호출
 const { loadKanbanData } = fetchAllKanban()
-// 카드 편집 및 삭제 함수
+// 카드 편집 및 삭제 API 호출
 const { editCard, deleteCard } = useKanbanCardActions()
 
 // 컴포넌트 마운트 시 데이터 로드
