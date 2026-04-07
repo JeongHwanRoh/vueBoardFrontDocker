@@ -21,7 +21,11 @@ columns 형태와 rows에 사용할 Entity 정의하고,
       </tr>
     </thead>
     <tbody>
-      <tr v-for="row in rows" :key="row[rowIdKey]">
+      <tr
+        v-for="row in rows"
+        :key="row[rowIdKey]"
+        :class="resolveRowClass(row)"
+      >
 
         <td v-for="col in columns" :key="col.key">
           <!-- 날짜 입력 컬럼인 경우 DateInput 컴포넌트 렌더링 
@@ -64,6 +68,7 @@ const props = defineProps<{
   columns: Column[];
   rows: any[];
   idKey: string; // row 의 unique key (default: id)
+  rowClass?: string | ((row: any) => string | string[] | Record<string, boolean> | undefined)
 }>();
 
 const emit = defineEmits<{
@@ -72,6 +77,14 @@ const emit = defineEmits<{
 
 // rowIdKey 기본값 설정 (props 변경에 자동 갱신되도록 computed 설정) 
 const rowIdKey = computed(() => props.idKey ?? 'id');
+
+const resolveRowClass = (row: any) => {
+  if (typeof props.rowClass === 'function') {
+    return props.rowClass(row)
+  }
+
+  return props.rowClass
+}
 </script>
 
 <style scoped>
@@ -110,12 +123,24 @@ const rowIdKey = computed(() => props.idKey ?? 'id');
   background-color: #f0f4ff;
 }
 
+.scheduler-table tbody tr.notification-row {
+  background-color: #eaf4ff;
+}
+
+.scheduler-table tbody tr.notification-row:hover {
+  background-color: #dceeff;
+}
+
 .scheduler-table tbody td {
   padding: 10px 10px;
   text-align: center;
   vertical-align: middle;
   border-right: 1px solid #e5e7eb;
   color: #555;
+}
+
+.scheduler-table tbody tr.notification-row td {
+  color: #1f3f68;
 }
 
 .scheduler-table tbody td:last-child {

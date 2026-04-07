@@ -30,7 +30,7 @@
             <!-- Row 1, Col 3: 알림 -->
             <div class="grid-cell">
                 <div class="card dashboard-card h-100">
-                        일정관리 관련 알림 기능 구현 예정(예: 마감 임박 업무, 새로 추가된 업무 등) 
+                    <KanbanNotification :notificationItems="notificationItems" :hasNotifications="hasNotifications" />
                 </div>
             </div>
 
@@ -117,10 +117,12 @@
 <script setup lang="ts">
 import CalendarTemplate from '~/components/molecules/calendar/calendarTemplate.vue'
 import { useBoard, useRecentFiveBoard } from '~/lib/composables/board/fetchAllBoard'
+import { useKanbanNotifications } from '~/lib/composables/kanban/useKanbanNotifications'
 import KanbanBoardComponent from '~/components/organisms/kanban/KanbanBoard.vue'
 import type { KanbanCardDto } from '~/lib/types/kanban'
 import { fetchAllKanban } from '~/lib/composables/kanban/fetchAllKanban'
 import { useKanbanCardActions } from '~/lib/composables/kanban/useKanbanCardActions'
+import KanbanNotification from '~/components/organisms/kanban/KanbanNotification.vue'
 
 const { recentFiveBoards, getLatestBoards } = useRecentFiveBoard()
 const kanbanStore = useKanbanStore()
@@ -152,6 +154,7 @@ const {
 
 // 백엔드에서 칸반 데이터 불러오기
 const { loadKanbanData } = fetchAllKanban()
+const { notificationItems, hasNotifications, fetchNotifications } = useKanbanNotifications()
 // 카드 편집 및 삭제 함수
 const { editCard, deleteCard } = useKanbanCardActions()
 
@@ -159,6 +162,7 @@ onMounted(async () => {
     await getBoardByPage();
     await getLatestBoards();
     await loadKanbanData();
+    await fetchNotifications();
 })
 </script>
 

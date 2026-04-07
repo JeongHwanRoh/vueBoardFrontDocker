@@ -1,5 +1,6 @@
 <template>
     <ScheduleStatusTable :columns="scheduleStatusColumns" :rows="scheduleItems" idKey="cardId"
+        :rowClass="getScheduleRowClass"
         @dateChange="handleDateChange" />
     <div id="button-group" class="d-flex gap-2 justify-content-end">
         <button class="btn btn-primary" @click="saveScheduleStatus">저장</button>
@@ -12,9 +13,10 @@
 import { useRouter } from 'vue-router'
 import { fetchKanbanBoardId } from '~/lib/apiService/kanbanBoardApi'
 import { useKanbanScheduleStatus } from '~/lib/composables/kanban/useKanbanScheduleStatus'
+import { useKanbanNotifications } from '~/lib/composables/kanban/useKanbanNotifications'
 import { useSaveKanbanScheduleStatus } from '~/lib/composables/kanban/saveKanbanScheduleStatus'
 import ScheduleStatusTable from '~/components/molecules/kanban/ScheduleStatusTable.vue'
-import type { KanbanScheduleDateKey } from '~/lib/types/kanban'
+import type { KanbanScheduleDateKey, KanbanScheduleDto } from '~/lib/types/kanban'
 
 const router = useRouter()
 const kanbanStore = useKanbanStore()
@@ -23,6 +25,7 @@ const updateScheduleDate = kanbanStore.updateScheduleDate // pinia 스토어에�
 
 // 스케줄 상태 조회 및 업데이트 API 호출
 const { fetchScheduleItems, formatStatusLabel } = useKanbanScheduleStatus()
+const { isNotificationRow } = useKanbanNotifications()
 // 스케줄 상태 저장 API 호출
 const { saveScheduleStatus } = useSaveKanbanScheduleStatus()
 // 스케줄 상태 테이블 컬럼 정의
@@ -55,6 +58,10 @@ const handleDateChange = ({ rowId, key, value }: { rowId: number; key: string; v
         return
     }
     updateScheduleDate(rowId, key, value || null)
+}
+
+const getScheduleRowClass = (row: KanbanScheduleDto) => {
+    return isNotificationRow(row.cardId) ? 'notification-row' : ''
 }
 
 const goBack = () => {
