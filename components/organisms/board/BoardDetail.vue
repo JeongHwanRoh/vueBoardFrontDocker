@@ -6,7 +6,6 @@
       titleKey="title"
       writerKey="writer"
       dateKey="regdate"
-      viewKey="viewcnt"
       contentKey="content"
       :formatter="props.formatter"
     />

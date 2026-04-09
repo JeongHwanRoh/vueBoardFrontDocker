@@ -6,8 +6,6 @@ export interface BoardResponse{
     pn: number;
     writer: string | null;
     regdate: string | number | null;
-    viewcnt: number;
-    category: string;
 }
 
 export interface BoardCreateRequest{

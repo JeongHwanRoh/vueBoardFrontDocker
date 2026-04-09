@@ -31,9 +31,6 @@ NoticeDetail.vue, [noticeId].vue 참고
             <span v-if="dateKey">
                 작성일: {{ formatter?.(item?.[dateKey]) }}
             </span>
-            <span v-if="viewKey">
-                조회수: {{ item?.[viewKey] }}
-            </span>
         </div>
     </div>
     <!-- 내용 부분 -->
@@ -55,7 +52,6 @@ const props = defineProps({
     titleKey: { type: String, default: "title" },  // 제목 필드명
     writerKey: { type: String, default: "writer" },
     dateKey: { type: String, default: "regdate" },
-    viewKey: { type: String, default: "viewcnt" },
     contentKey: { type: String, default: "content" },
 
     // 날짜 포맷터 함수 (상위에서 주입)

@@ -6,7 +6,6 @@
       <input v-model="newBoard.title" placeholder="제목" />
       <textarea v-model="newBoard.content" placeholder="내용"></textarea>
       <input v-model="newBoard.writerId" placeholder="작성자" readonly />
-      <input v-model="newBoard.category" placeholder="카테고리" />
 
       <div class="modal-buttons">
         <button class="submit-btn" @click="submitBoard">등록</button>
@@ -31,7 +30,6 @@ const newBoard = ref({
   title: "",
   content: "",
   writerId: "",
-  category: "",
 });
 
 // 로그인 사용자 정보가 바뀌면 작성자 자동 세팅

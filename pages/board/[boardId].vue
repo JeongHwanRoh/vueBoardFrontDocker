@@ -96,7 +96,6 @@ const tableColumns = [
     label: '등록날짜',
     format: (value: any, row: any) => formatDate(row.updatedAt || row.regdate)
   },
-  { key: 'viewcnt', label: '조회수' },
 ];
 
 // 마운트 시 실행
