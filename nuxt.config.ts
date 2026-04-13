@@ -4,6 +4,12 @@ export default defineNuxtConfig({
   builder: 'vite',
   devtools: { enabled: true },
   modules:['@pinia/nuxt'],
+  runtimeConfig:{
+    public:{
+      // .env에 NUXT_PUBLIC_API_BASE_URL가 있으면 쓰고, 없으면 기본값 사용'
+      apiBase: process.env.NUXT_PUBLIC_API_BASE,
+    }
+  },
   css: [
     'bootstrap/dist/css/bootstrap.min.css',
     '~/assets/css/styles.min.css',
@@ -16,11 +22,6 @@ export default defineNuxtConfig({
     server: {
       cors: false, // nuxt dev 서버가 CORS 헤더 추가하지 않도록 설정
       proxy: {
-        '/api': {
-          target: process.env.NUXT_PUBLIC_API_BASE, // 백엔드 주소(base url)
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ''),
-        },
         '/ws-chat': {
 
           target: process.env.NUXT_PUBLIC_API_BASE, // 백엔드 주소(base url)

@@ -1,10 +1,9 @@
 import axios, { type AxiosInstance, AxiosError } from "axios";
 
+//const config=useRuntimeConfig();
+//const apiBaseUrl: string = config.public.apiBaseUrl as string;
 const axiosApi: AxiosInstance = axios.create({
-    baseURL: "http://localhost:8092", //BASE URL
-    // headers: {
-    //     "Content-Type": "application/json", // json 형식
-    // },
+    baseURL: "http://localhost:8092", // 기본값(로컬), initApi()로 환경별 override
     withCredentials: true,
 });
 
@@ -19,6 +18,11 @@ axiosApi.interceptors.request.use((config) => {
 
     }
 );
+// Api 초기화 /plugins/api.ts에서 호출
+export function initApi(base: string) {
+    console.log("API 초기화 - Base URL:", base);
+  axiosApi.defaults.baseURL = base;
+}
 
 // 응답 인터셉터
 // 에러 메시지 공통 처리 등
