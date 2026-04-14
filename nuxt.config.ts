@@ -37,14 +37,6 @@ export default defineNuxtConfig({
 
       cors: false, // nuxt dev 서버가 CORS 헤더 추가하지 않도록 설정
       proxy: {
-        '/ws-chat': {
-
-          target: process.env.NUXT_PUBLIC_API_BASE, // 백엔드 주소(base url)
-          changeOrigin: true,
-          secure: false, // HTTP 환경에서 SSL 검사 비활성화
-          ws: true, // websocket proxy 활성화
-          rewrite: (path) => path,
-        },
         // 로컬에서만 작동하는 이미지 요청 프록시 설정
         // addResourceHandlers 에서 registry 객체가 해당 요청을 주입시켜 처리
         // 도커에서 작동하는건 routeRules 설정에서 
