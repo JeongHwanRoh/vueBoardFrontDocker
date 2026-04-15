@@ -1,9 +1,8 @@
 import axios, { type AxiosInstance, AxiosError } from "axios";
 
-//const config=useRuntimeConfig();
-//const apiBaseUrl: string = config.public.apiBaseUrl as string;
+//  axios api 요청 시 baseURL 잡기
 const axiosApi: AxiosInstance = axios.create({
-    baseURL: "http://localhost:8092", // 기본값(로컬), initApi()로 환경별 override
+    baseURL: process.env.NUXT_PUBLIC_API_BASE, 
     withCredentials: true,
 });
 
