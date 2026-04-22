@@ -14,7 +14,10 @@ export const useUserStore = defineStore('user', {
     name: null,
     email: null,
   }),
-
+  persist: {
+    key: 'user_auth',
+    storage:piniaPluginPersistedstate.localStorage() // 클라이언트사이드의 localStorage 설정
+  },
   getters: {
     isLoggedIn: (state) => !!state.memberId,
   },

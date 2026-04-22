@@ -28,7 +28,6 @@ const openFile = () => {
 }
 
 const onFileChange = async (e: Event) => {
-    debugger;
     const file = (e.target as HTMLInputElement).files?.[0]
     if (!file) return
 

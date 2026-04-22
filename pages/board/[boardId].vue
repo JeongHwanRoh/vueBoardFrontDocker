@@ -100,7 +100,6 @@ const tableColumns = [
 
 // 마운트 시 실행
 onMounted(() => {
-  debugger;
   getBoardByPage()
   fetchBoard()
   console.log(board.value)

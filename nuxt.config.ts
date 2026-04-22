@@ -16,7 +16,15 @@ export default defineNuxtConfig({
   },
   builder: 'vite',
   devtools: { enabled: true },
-  modules: ['@pinia/nuxt'],
+  modules: ['@pinia/nuxt', 'pinia-plugin-persistedstate/nuxt'],
+  // 
+  piniaPluginPersistedstate: {
+    storage: 'cookies', // 기본값은 쿠키로 두되, 개별 스토어(userStore)에서 localStorage로 덮어씀
+    cookieOptions: {
+      sameSite: 'lax',
+    },
+    debug: true, // 콘솔창에서 저장/복구 과정 조회 가능
+  },
   ssr: false, // ssr 끄기
   runtimeConfig: {
     public: {

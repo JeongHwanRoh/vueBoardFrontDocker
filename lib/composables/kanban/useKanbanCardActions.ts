@@ -51,7 +51,6 @@ export const useKanbanCardActions = (updateForm?: KanbanCardUpdateFormRefs) => {
   // 카드 업데이트 핸들러
   // handleUpdate에서 updateForm 입력받아서 updateKanbanCard로 업데이트 API 호출
   const handleUpdate = async () => {
-    debugger;
     if (!updateForm) {
       throw new Error('카드 업데이트 폼 데이터가 없습니다.')
     }

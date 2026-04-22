@@ -12,7 +12,6 @@ export const useLoginHandler = () => {
 
   const handleLogin = async (payload: { userId: string; password: string }) => {
     errorMessage.value = ''
-    debugger;
     console.log('Login payload:', payload )
     try {
       const res = await login(payload.userId, payload.password)

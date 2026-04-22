@@ -55,7 +55,6 @@ export const deleteCard = async (cardId: number): Promise<void> => {
 // 칸반카드 업무 리스트(일정) 조회
 export const fetchKanbanCardSchedules = async (boardId: string): Promise<KanbanScheduleDto[]> => {
   const res = await axiosApi.get(`/kanban/card/schedule/list?boardId=${boardId}`, { withCredentials: true });
-  debugger;
   console.log('fetchKanbanCardSchedules response:', res.data); // 응답 데이터 확인
   return res.data as KanbanScheduleDto[];
 }
