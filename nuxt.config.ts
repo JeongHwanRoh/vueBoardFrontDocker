@@ -1,6 +1,16 @@
 import { fileURLToPath } from 'node:url'
 
 export default defineNuxtConfig({
+  // 로컬 개발서버(nuxt dev) HTTPS 설정
+  // mkcert로 생성한 인증서 파일 경로 (vueBoardFront 기준 상위 디렉토리)
+  devServer:{
+    https:{
+      key:'../localhost+2-key.pem',
+      cert:'../localhost+2.pem'
+    },
+    host:'0.0.0.0',
+    port: 3000,
+  },
   routeRules: {
     // 로컬, 도커에서 모두 작동하는 프록시 설정
     // 백엔드 addResourceHandlers 에서 registry 객체가 해당 요청을 주입시켜 처리
@@ -29,7 +39,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       // .env에 NUXT_PUBLIC_API_BASE_URL가 있으면 쓰고, 없으면 기본값 사용'
-      apiBase: process.env.NUXT_PUBLIC_API_BASE,
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://localhost:8443',
     }
   },
   css: [
