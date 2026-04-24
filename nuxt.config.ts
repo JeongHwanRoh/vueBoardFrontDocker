@@ -39,7 +39,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       // .env에 NUXT_PUBLIC_API_BASE_URL가 있으면 쓰고, 없으면 기본값 사용'
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://localhost:8443',
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://localhost/api',
     }
   },
   css: [
