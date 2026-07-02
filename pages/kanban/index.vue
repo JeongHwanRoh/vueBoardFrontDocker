@@ -61,15 +61,15 @@ onMounted(() => {
 
 // 데이터 변화 감지 로직 (칸반 카드)
 watch(columns, (newVal) => {
-  console.log('칸반 데이터 변경:', newVal)
+  // console.log('칸반 데이터 변경:', newVal)
 }, { deep: true })
 
 // [테스트] kanbanStore 상태 확인용
 watch(() => kanbanStore.columns, (cols) => {
-  console.log('[kanbanStore] boardId:', kanbanStore.boardId)
-  console.log('[kanbanStore] columns:', JSON.parse(JSON.stringify(cols)))
+  // console.log('[kanbanStore] boardId:', kanbanStore.boardId)
+  // console.log('[kanbanStore] columns:', JSON.parse(JSON.stringify(cols)))
   cols.forEach(col => {
-    console.log(`[kanbanStore] ${col.columnName}(${col.columnTitle}): ${col.cards.length}건`, col.cards)
+    // console.log(`[kanbanStore] ${col.columnName}(${col.columnTitle}): ${col.cards.length}건`, col.cards)
   })
 }, { deep: true })
 

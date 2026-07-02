@@ -16,7 +16,7 @@ export const logout = async () => {
   try {
     const res = await axiosApi.post('/logout');
 
-    console.log('로그아웃 성공');
+    // console.log('로그아웃 성공');
     return res.data;
 
   } catch (err) {
@@ -40,13 +40,13 @@ TOBE) CSR 방식으로 전환 -> runtimeconfig에 설정된 환경변수값인 b
 export const getMe = async (headers?: Record<string, string>) => {
   const config = useRuntimeConfig()
   const baseURL = config.public.apiBase
-  console.log("config에서 가져온 baseURL", baseURL)
+  // console.log("config에서 가져온 baseURL", baseURL)
   try {
     const res = await axiosApi.get(`${baseURL}/me`, {
       withCredentials: true, // 쿠키 포함해서 요청
       headers,
     })
-    console.log('새로고침시 인증된 사용자 정보:', res.data)
+    // console.log('새로고침시 인증된 사용자 정보:', res.data)
     return res.data
   } catch (error) {
     console.error("사용자 정보 재조회 실패: ", error)

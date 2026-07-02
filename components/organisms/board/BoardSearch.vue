@@ -47,7 +47,6 @@ watch(
     () => props.searchKeyword,
     (newVal) => {
         localKeyword.value = newVal;
-        console.log("props: ", props.filteredBoards)
     }
 );
 </script>

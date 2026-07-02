@@ -25,7 +25,7 @@ export const useKanbanCardActions = (updateForm?: KanbanCardUpdateFormRefs) => {
 
   // 카드 편집 함수
   const editCard = (card: KanbanCardDto) => {
-    console.log('카드 편집:', card)
+    // console.log('카드 편집:', card)
     router.push({
       path: `/kanban/${card.cardId}`,
       state: {
@@ -43,7 +43,7 @@ export const useKanbanCardActions = (updateForm?: KanbanCardUpdateFormRefs) => {
 
   // 카드 삭제 함수
   const deleteCard = async (cardId: number) => {
-    console.log('카드 삭제:', cardId)
+    // console.log('카드 삭제:', cardId)
     await deleteCardApi(cardId)
     kanbanStore.deleteCard(cardId)
   }

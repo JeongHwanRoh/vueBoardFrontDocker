@@ -16,14 +16,14 @@ const onSubmitJoin = async (payload: {
   email: string
 }) => {
   try {
-    console.log('회원가입 요청:', payload)
+    // console.log('회원가입 요청:', payload)
 
     const res = await joinApi.join(payload)
 
     // 성공 (201 Created)
     if (res.status === 201) {
       alert('회원가입이 완료되었습니다.')
-      console.log('회원가입 성공:', res.data)
+      // console.log('회원가입 성공:', res.data)
       router.push('/login') // 로그인 페이지 이동
     }
   } catch (error: any) {

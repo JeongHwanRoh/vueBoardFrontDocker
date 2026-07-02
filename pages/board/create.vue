@@ -21,7 +21,7 @@ const goBack = () => {
 
 //수정모드일 경우 기존 데이터 로드
 onMounted(async () => {
-    console.log("쿼리스트링으로 보내진 boardId값 : ", boardId.value);
+    // console.log("쿼리스트링으로 보내진 boardId값 : ", boardId.value);
     if (isUpdate.value) {
         // 게시글 불러오기
         const res1 = await loadBoardDetail(boardId.value!); // ! : Non-null assertion Operator (업데이트 모드에서만 호출)

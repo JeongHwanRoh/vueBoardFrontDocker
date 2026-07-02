@@ -18,8 +18,8 @@ export const fetchBoardAndDelete = () => {
             if (!boardId.value) throw new Error("유효하지 않은 게시글 ID입니다.");
             const res = await loadBoardDetail(boardId.value);
             board.value = res;
-            console.log("상세조회res:", res);
-            console.log("상세조회res:", res.content);
+            // console.log("상세조회res:", res);
+            // console.log("상세조회res:", res.content);
         } catch (error) {
             console.error("게시글 상세조회 실패:", error);
         }
@@ -35,7 +35,7 @@ export const fetchBoardAndDelete = () => {
 
             router.push('/board')
         } catch (error:any) {
-            console.log('게시글 삭제 실패 메시지:', error)
+            // console.log('게시글 삭제 실패 메시지:', error)
             if(error.response?.status===403){
                 alert(error.response.data.title)
             }else{

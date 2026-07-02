@@ -117,7 +117,7 @@ const onDrag = (e: MouseEvent) => {
   const top = e.clientY - dragOffset.y  // y좌표에서 dragOffset.y를 빼서 모달의 좌상단이 마우스 위치에 오도록 계산
   modalPosition.value.left = left + 'px' // 계산된 left값을 모달 위치에 적용
   modalPosition.value.top = top + 'px'  // 계산된 top값을 모달 위치에 적용
-  console.log('드래그 중 - left:', left, 'top:', top)
+  // // console.log('드래그 중 - left:', left, 'top:', top)
 }
 
 // 모달 드래그 종료

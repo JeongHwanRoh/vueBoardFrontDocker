@@ -74,7 +74,7 @@ function addNotice() {
 // 마운트 시 실행
 onMounted(async () => {
     await getBoardByPage();
-    // console.log("boardid값: ", boards.value[0]?.boardId);
+    // // console.log("boardid값: ", boards.value[0]?.boardId);
 
 })
 </script>

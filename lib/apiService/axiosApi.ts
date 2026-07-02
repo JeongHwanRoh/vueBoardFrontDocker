@@ -19,7 +19,7 @@ axiosApi.interceptors.request.use((config) => {
 );
 // Api 초기화 /plugins/api.ts에서 호출
 export function initApi(base: string) {
-    console.log("API 초기화 - Base URL:", base);
+    //// console.log("API 초기화 - Base URL:", base);
   axiosApi.defaults.baseURL = base;
 }
 

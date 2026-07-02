@@ -33,8 +33,8 @@ export const useSaveKanbanScheduleStatus = () => {
             alert("스케줄 상태 저장에 실패했습니다.")
         }
 
-        console.log('저장할 스케줄 상태 payload:', schedulePayload)
-        console.log('저장할 스케줄 상태 payload(JSON):', JSON.stringify(schedulePayload))
+        // console.log('저장할 스케줄 상태 payload:', schedulePayload)
+        // console.log('저장할 스케줄 상태 payload(JSON):', JSON.stringify(schedulePayload))
     }
 
     return {

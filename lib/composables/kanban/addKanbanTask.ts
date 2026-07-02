@@ -16,7 +16,7 @@ export const addKanbanTask = () => {
     const { columns, boardId } = storeToRefs(kanbanStore) // pinia store 값
 
     const addTask = async (data: TaskFormData) => {
-        console.log("addTask 실행", data)
+        // console.log("addTask 실행", data)
         if (data.title.trim() === '') return
 
         if (!boardId.value) {

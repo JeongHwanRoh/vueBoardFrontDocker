@@ -12,10 +12,10 @@ export const useBoard = (pageSize = 10) => {
         try {
             const res = await loadBoards(currentPage.value, pageSize);
             boards.value = res.boards;
-            console.log("res값", res);
+            // console.log("res값", res);
             totalCount.value = res.totalCount; // 총 개수
-            console.log("response값", boards.value);
-            console.log("boardid값: ", boards.value[0]?.boardId);
+            // console.log("response값", boards.value);
+            // console.log("boardid값: ", boards.value[0]?.boardId);
         } catch (error) {
             console.error("공지글 조회 실패: ", error);
         }

@@ -102,7 +102,7 @@ const tableColumns = [
 onMounted(() => {
   getBoardByPage()
   fetchBoard()
-  console.log(board.value)
+  // console.log(board.value)
 })
 
 </script>

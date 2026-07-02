@@ -13,7 +13,7 @@ export const loadBoards = async (currentPage: number, pageSize: number) => {
 export const loadRecentFiveBoards = async () => {
 
     const res = await axiosApi.get("/board/listRecentFive");
-    console.log("최신 5개 게시글 res값", res);
+    // console.log("최신 5개 게시글 res값", res);
     return res.data;
 
 }

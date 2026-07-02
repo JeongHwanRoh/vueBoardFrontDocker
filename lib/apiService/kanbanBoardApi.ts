@@ -5,6 +5,6 @@ import type { KanbanBoard } from '~/lib/types/kanban';
 export const fetchKanbanBoardId = async (): Promise<KanbanBoard> => {
 
     const res = await axiosApi.get('/kanban/board/boardId', { withCredentials: true });
-    console.log('fetchKanbanBoardId response:', res.data); // 응답 데이터 확인
+    // console.log('fetchKanbanBoardId response:', res.data); // 응답 데이터 확인
     return res.data;
 }

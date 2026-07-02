@@ -20,7 +20,7 @@ export default defineNuxtRouteMiddleware((to) => {
         return navigateTo('/board');
     }
 
-    console.log('Global Auth Middleware 실행 - 클라이언트 사이드');
+    // console.log('Global Auth Middleware 실행 - 클라이언트 사이드');
 
     // pinia-plugin-persistedstate가 플러그인 단계에서 이미 localStorage 복구를 완료함
     // 따라서 여기서는 스토어 상태만 확인하면 됨

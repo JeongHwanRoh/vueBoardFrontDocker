@@ -33,7 +33,7 @@ export const submitBoards = async () => {
     // 등록 완료(신규생성 또는 수정)
     const submitBoard = async (updatedBoard: BoardCreateRequest) => {
         board.value = updatedBoard;
-        console.log("submitBoard - board value : ", board.value);
+        // console.log("submitBoard - board value : ", board.value);
         // 제목, 내용 값 추출
         const title = board.value?.title?.trim();
         const content = board.value?.content?.trim();
@@ -54,16 +54,16 @@ export const submitBoards = async () => {
                 alert("게시글 수정이 완료되었습니다.")
             } catch (error: any) {
                 if (error.response) { //response 에러인 경우
-                    console.log("error response:", error.response);
+                    // console.log("error response:", error.response);
                     // 권한 에러(403 Forbidden)
                     if (error.response.status === 403) {
-                        console.log("error response : ", error.response)
+                        // console.log("error response : ", error.response)
                         alert(error.response.data?.title ?? "본인이 작성한 공지만 수정 가능합니다.") // 본인이 작성한 공지만 수정할 수 있습니다.
                     } else {
                         alert("서버 에러 발생")
                     }
                 } else if (error.request) { //request 에러인 경우
-                    console.log("error request:", error.request);
+                    // console.log("error request:", error.request);
                     alert("서버에서 응답이 없습니다. (네트워크/CORS/서버에러)")
                 }
                 else {
@@ -79,11 +79,11 @@ export const submitBoards = async () => {
             newBoardId.value = targetId; // 필요할 경우 저장
             alert('게시글 등록이 완료되었습니다.')
         }
-        console.log("submitBoard - targetId:", targetId);
+        // console.log("submitBoard - targetId:", targetId);
         // 업로드한 이미지 저장 로직(targetId)
         if (targetId !== null) {
             const result = await saveUploadedImage(targetId, content);
-            console.log("saveUploadedImage result:", result);
+            // console.log("saveUploadedImage result:", result);
 
             if (!result) {
                 alert("이미지 저장 중 오류가 발생했습니다.");
@@ -91,7 +91,7 @@ export const submitBoards = async () => {
 
             // TB_BOARD.CONTENT 내 이미지 URL 경로도 TB_BOARD_IMAGE의 IMAGE_URL로 변경 처리
             const result2=await updateBoardContent(targetId);
-            console.log("updateBoardContent result:", result2);
+            // console.log("updateBoardContent result:", result2);
 
         }
 

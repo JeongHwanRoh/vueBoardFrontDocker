@@ -1,11 +1,19 @@
 .login-view {
   text-align: center;
   margin-top: 100px;
+  padding: 0 16px;
 }
 
 .login-container {
-  width: 300px;
+  width: 100%;
+  max-width: 360px;
   margin: 0 auto;
   text-align: center;
+}
+
+@media (max-width: 768px) {
+  .login-view {
+    margin-top: 60px;
+  }
 }
 
